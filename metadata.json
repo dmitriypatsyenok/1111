@@ -1,6 +1,0 @@
-{
-  "name": "Ierihon3 School Helper",
-  "description": "Telegram Mini App for class schedule, homework, lunch polls, 2-level duty zones system, and birthday calendar.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
