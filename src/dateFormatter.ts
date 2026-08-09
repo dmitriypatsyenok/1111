@@ -100,7 +100,7 @@ export function getNextLessonDate(
 
   const excludeSet = new Set(existingDueDates);
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
-  const sched = (schedules && schedules[activeProfile]) || (schedules && schedules.base) || (schedules ? Object.values(schedules)[0] : {}) || {};
+  const primarySched = (schedules && schedules[activeProfile]) || (schedules && schedules.base) || (schedules ? Object.values(schedules)[0] : {}) || {};
 
   for (let i = 1; i <= 60; i++) {
     const candidate = new Date(today);
@@ -113,12 +113,25 @@ export function getNextLessonDate(
     if (excludeSet.has(candidateISO)) continue;
 
     const dayKey = dayKeysMap[dayOfWeek - 1];
-    const dayLessons: string[] = (sched as any)[dayKey] || [];
+    let dayLessons: string[] = (primarySched as any)[dayKey] || [];
 
-    const hasSubject = dayLessons.some(item => {
+    let hasSubject = dayLessons.some(item => {
       const meta = parseLessonName(item, SUBJECT_DB);
       return meta.key === cleanKey;
     });
+
+    if (!hasSubject && schedules && typeof schedules === 'object') {
+      for (const pKey in schedules) {
+        const profSched = schedules[pKey];
+        if (profSched && profSched[dayKey]) {
+          const profLessons: string[] = profSched[dayKey] || [];
+          if (profLessons.some(item => parseLessonName(item, SUBJECT_DB).key === cleanKey)) {
+            hasSubject = true;
+            break;
+          }
+        }
+      }
+    }
 
     if (hasSubject) {
       return candidateISO;

@@ -73,6 +73,15 @@ export default function App() {
     return DEFAULT_SCHEDULES;
   });
 
+  useEffect(() => {
+    if (schedules && Object.keys(schedules).length > 0) {
+      const keys = Object.keys(schedules);
+      if (!keys.includes(activeProfile)) {
+        setActiveProfile(keys[0] as ProfileKey);
+      }
+    }
+  }, [schedules, activeProfile]);
+
   // Homework
   const [homework, setHomework] = useState<HomeworkStore>(() => {
     const saved = localStorage.getItem('ierihon_homework');

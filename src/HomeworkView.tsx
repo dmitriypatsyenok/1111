@@ -28,25 +28,25 @@ export const PROFILE_SUBJECT_KEYS = new Set([
 ]);
 
 export function getHomeworkStorageKey(subjKey: string, activeProfile: ProfileKey): string {
-  const cleanKey = subjKey.replace(/^(base|math|chem|prof)_/, '');
+  const cleanKey = extractSubjectKey(subjKey);
 
-  // Russian language: shared for math & chem profiles (prof_rus_lang), separate for base profile (base_rus_lang)
+  // Russian language: profile subject for math & chem profiles (shared prof_rus_lang)
   if (cleanKey === 'rus_lang') {
     if (activeProfile === 'math' || activeProfile === 'chem') {
-      return `prof_${cleanKey}`;
+      return 'prof_rus_lang';
     }
-    return `base_${cleanKey}`;
+    return 'base_rus_lang';
   }
 
-  // Math subjects: profile-specific for math profile
-  if (cleanKey === 'math' || cleanKey === 'algebra' || cleanKey === 'geometry') {
+  // Math profile subjects: math, algebra, geometry
+  if (['math', 'algebra', 'geometry'].includes(cleanKey)) {
     if (activeProfile === 'math') {
       return `math_${cleanKey}`;
     }
     return `base_${cleanKey}`;
   }
 
-  // Chemistry subject: profile-specific for chem profile
+  // Chemistry profile subject: chem
   if (cleanKey === 'chem') {
     if (activeProfile === 'chem') {
       return `chem_${cleanKey}`;
@@ -54,15 +54,31 @@ export function getHomeworkStorageKey(subjKey: string, activeProfile: ProfileKey
     return `base_${cleanKey}`;
   }
 
-  // Physics subject: profile-specific for math profile if needed
-  if (cleanKey === 'physics') {
-    if (activeProfile === 'math') {
-      return `math_${cleanKey}`;
-    }
-    return `base_${cleanKey}`;
+  // All other subjects are non-profile and stay base/common for all profiles
+  return `base_${cleanKey}`;
+}
+
+export function getSubjectHwList(subjKey: string, activeProfile: ProfileKey, homeworkStore: HomeworkStore): HomeworkItem[] {
+  const cleanKey = extractSubjectKey(subjKey);
+  const storageKey = getHomeworkStorageKey(subjKey, activeProfile);
+
+  if (homeworkStore[storageKey] && homeworkStore[storageKey].length > 0) {
+    return homeworkStore[storageKey];
+  }
+  if (homeworkStore[`base_${cleanKey}`] && homeworkStore[`base_${cleanKey}`].length > 0) {
+    return homeworkStore[`base_${cleanKey}`];
+  }
+  if (homeworkStore[cleanKey] && homeworkStore[cleanKey].length > 0) {
+    return homeworkStore[cleanKey];
+  }
+  if (homeworkStore[`prof_${cleanKey}`] && homeworkStore[`prof_${cleanKey}`].length > 0) {
+    return homeworkStore[`prof_${cleanKey}`];
+  }
+  if (homeworkStore[subjKey] && homeworkStore[subjKey].length > 0) {
+    return homeworkStore[subjKey];
   }
 
-  return cleanKey;
+  return [];
 }
 
 export const HomeworkView: React.FC<HomeworkViewProps> = ({
@@ -93,16 +109,14 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const availableProfileKeys = (schedules && Object.keys(schedules).length > 0) ? (Object.keys(schedules) as ProfileKey[]) : ['base'];
   const effectiveProfile = availableProfileKeys.includes(activeProfile) ? activeProfile : availableProfileKeys[0];
 
-  const getSubjectHwList = (subjKey: string) => {
-    const cleanKey = extractSubjectKey(subjKey);
-    const storageKey = getHomeworkStorageKey(subjKey, effectiveProfile);
-    return homeworkStore[storageKey] || homeworkStore[subjKey] || homeworkStore[cleanKey] || homeworkStore[`base_${cleanKey}`] || [];
+  const getSubjectHwListLocal = (subjKey: string) => {
+    return getSubjectHwList(subjKey, effectiveProfile, homeworkStore);
   };
 
   // Calculate next lesson date excluding existing homework dates
   const getSubjectNextLessonDate = (subjKey: string) => {
     const cleanKey = extractSubjectKey(subjKey);
-    const currentList = getSubjectHwList(subjKey);
+    const currentList = getSubjectHwListLocal(subjKey);
     const existingDueDates = currentList.map(item => item.due).filter(Boolean);
     return getNextLessonDate(cleanKey, schedules, effectiveProfile, existingDueDates);
   };
@@ -203,7 +217,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               const timeStr = LESSON_TIMES[num - 1] || '';
               const subjKey = meta.key || 'math';
               const storageKey = getHomeworkStorageKey(subjKey, effectiveProfile);
-              const hwList = getSubjectHwList(subjKey);
+              const hwList = getSubjectHwListLocal(subjKey);
               const hasHw = hwList.length > 0;
 
               return (
@@ -251,7 +265,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
         <div className="grid grid-cols-2 gap-2.5">
           {SUBJECT_LIST.map(s => {
             const storageKey = getHomeworkStorageKey(s.key, effectiveProfile);
-            const list = getSubjectHwList(s.key);
+            const list = getSubjectHwListLocal(s.key);
             const hasHw = list.length > 0;
 
             return (
@@ -284,7 +298,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const dbItem = SUBJECT_DB[baseSubjectKey];
   const listFound = SUBJECT_LIST.find(s => s.key === baseSubjectKey);
 
-  const currentHwList = getSubjectHwList(activeSubjectKey);
+  const currentHwList = getSubjectHwListLocal(activeSubjectKey);
   const nextLessonISO = getSubjectNextLessonDate(baseSubjectKey);
   const nextLessonFormatted = formatCustomDate(nextLessonISO, 'day_month_long', lang);
 
