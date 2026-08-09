@@ -140,20 +140,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    onSuccess: (parsed: any) => void,
-    msg: string
+    onSuccess: (content: any) => void
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = event => {
       try {
-        const parsed = JSON.parse(event.target?.result as string);
-        onSuccess(parsed);
-        alert(msg);
-        haptic('success');
-      } catch (err) {
-        alert('Ошибка при чтении файла JSON');
+        const text = event.target?.result as string;
+        onSuccess(text);
+      } catch (err: any) {
+        alert(err?.message || (lang === 'be' ? 'Памылка пры чытанні файла' : 'Ошибка при чтении файла'));
         haptic('error');
       }
     };
@@ -507,52 +504,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         type="file"
         accept=".json"
         className="hidden"
-        onChange={e =>
-          handleFileChange(
-            e,
-            onImportSchedules,
-            lang === 'be' ? 'Расклад загружаны!' : 'Расписание успешно загружено!'
-          )
-        }
+        onChange={e => handleFileChange(e, onImportSchedules)}
       />
       <input
         ref={hwFileRef}
         type="file"
         accept=".json"
         className="hidden"
-        onChange={e =>
-          handleFileChange(
-            e,
-            onImportHomework,
-            lang === 'be' ? 'Заданні загружаны!' : 'Домашние задания восстановлены!'
-          )
-        }
+        onChange={e => handleFileChange(e, onImportHomework)}
       />
       <input
         ref={dutyFileRef}
         type="file"
         accept=".json"
         className="hidden"
-        onChange={e =>
-          handleFileChange(
-            e,
-            onImportDuties,
-            lang === 'be' ? 'Дзяжурствы загружаны!' : 'График дежурств обновлен!'
-          )
-        }
+        onChange={e => handleFileChange(e, onImportDuties)}
       />
       <input
         ref={bdayFileRef}
         type="file"
         accept=".json"
         className="hidden"
-        onChange={e =>
-          handleFileChange(
-            e,
-            onImportBirthdays,
-            lang === 'be' ? 'Дні нараджэння загружаны!' : 'Список дней рождения обновлен!'
-          )
-        }
+        onChange={e => handleFileChange(e, onImportBirthdays)}
       />
     </div>
   );

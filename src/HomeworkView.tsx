@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DayKey, HomeworkItem, HomeworkStore, Language, ProfileKey, ScheduleProfiles, ScreenType } from './types';
 import { translate } from './i18n';
 import { LESSON_TIMES, SUBJECT_LIST, SUBJECT_DB } from './defaultData';
-import { formatCustomDate, getNextLessonDate, parseLessonName } from './dateFormatter';
+import { formatCustomDate, getNextLessonDate, parseLessonName, extractSubjectKey } from './dateFormatter';
 import { Search, ChevronRight, Edit2, Trash2, Calendar, Plus } from 'lucide-react';
 import { haptic } from './telegram';
 
@@ -90,7 +90,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const daysDict = translate('t_days_s', lang) as any;
 
   // Profile keys list
-  const availableProfileKeys: ProfileKey[] = ['base', 'math', 'chem'];
+  const availableProfileKeys = Object.keys(schedules || {}) as ProfileKey[];
 
   // Calculate next lesson date excluding existing homework dates
   const getSubjectNextLessonDate = (subjKey: string) => {
@@ -270,7 +270,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   }
 
   // Detail Mode
-  const baseSubjectKey = activeSubjectKey.replace(/^(base|math|chem|prof)_/, '');
+  const baseSubjectKey = extractSubjectKey(activeSubjectKey);
   const storageKey = getHomeworkStorageKey(activeSubjectKey, activeProfile);
 
   const dbItem = SUBJECT_DB[baseSubjectKey];

@@ -1,6 +1,6 @@
 export type Language = 'ru' | 'be';
 
-export type ProfileKey = 'base' | 'math' | 'chem';
+export type ProfileKey = string;
 export type DayKey = 'pn' | 'vt' | 'sr' | 'cht' | 'pt';
 
 export interface SubjectMeta {
@@ -69,9 +69,7 @@ export interface DaySchedules {
 }
 
 export interface ScheduleProfiles {
-  base: DaySchedules & { title?: string };
-  math: DaySchedules & { title?: string };
-  chem: DaySchedules & { title?: string };
+  [profileKey: string]: DaySchedules & { title?: string };
 }
 
 export type ScreenType =

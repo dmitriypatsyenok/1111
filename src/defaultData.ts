@@ -73,8 +73,10 @@ export const LESSON_TIMES = [
 ];
 
 export const SUBJECT_DB: Record<string, SubjectMeta> = {
-  algebra:     { key: "math", ru: "Алгебра", be: "Алгебра", ic: "➗" },
-  geometry:    { key: "math", ru: "Геометрия", be: "Геаметрыя", ic: "📐" },
+  algebra:     { key: "algebra", ru: "Алгебра", be: "Алгебра", ic: "➗" },
+  alg:         { key: "algebra", ru: "Алгебра", be: "Алгебра", ic: "➗" },
+  geometry:    { key: "geometry", ru: "Геометрия", be: "Геаметрыя", ic: "📐" },
+  geom:        { key: "geometry", ru: "Геометрия", be: "Геаметрыя", ic: "📐" },
   math:        { key: "math", ru: "Математика", be: "Матэматыка", ic: "➗" },
   rus_lang:    { key: "rus_lang", ru: "Русский язык", be: "Руская мова", ic: "🇷🇺" },
   rus_lit:     { key: "rus_lit", ru: "Русская литература", be: "Руская літаратура", ic: "📚" },
@@ -101,6 +103,8 @@ export const SUBJECT_LIST = [
   { key: "rus_lang", ru: "🇷🇺 Русский язык", be: "🇷🇺 Руская мова" },
   { key: "rus_lit",  ru: "📚 Русская литература", be: "📚 Руская літаратура" },
   { key: "eng_lang", ru: "🌍 Английский язык", be: "🌍 Англійская мова" },
+  { key: "algebra",  ru: "➗ Алгебра", be: "➗ Алгебра" },
+  { key: "geometry", ru: "📐 Геометрия", be: "📐 Геаметрыя" },
   { key: "math",     ru: "➗ Математика", be: "➗ Матэматыка" },
   { key: "history",  ru: "🏛 История Беларуси", be: "🏛 Гісторыя Беларусі" },
   { key: "society",  ru: "⚖️ Обществоведение", be: "⚖️ Грамадазнаўства" },

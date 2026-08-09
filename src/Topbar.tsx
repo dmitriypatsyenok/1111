@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 import { ScreenType, Language } from './types';
 import { translate } from './i18n';
 import { SUBJECT_LIST, SUBJECT_DB } from './defaultData';
+import { extractSubjectKey } from './dateFormatter';
 
 interface TopbarProps {
   currentScreen: ScreenType;
@@ -38,7 +39,7 @@ export const Topbar: React.FC<TopbarProps> = ({
       case 'hw-subjects':
         return translate('search_subject', lang);
       case 'hw-detail': {
-        const cleanKey = (activeSubjectKey || '').replace(/^(base|math|chem|prof)_/, '');
+        const cleanKey = extractSubjectKey(activeSubjectKey || '');
         const dbItem = SUBJECT_DB[cleanKey];
         if (dbItem) {
           return `${dbItem.ic} ${dbItem[lang]}`;

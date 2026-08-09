@@ -48,11 +48,30 @@ export function getMonthNominal(monthNumber: number, lang: Language): string {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-export function parseLessonName(rawName: string, subjectDb: Record<string, any>) {
+import { DayKey, ScheduleProfiles } from './types';
+import { SUBJECT_DB } from './defaultData';
+
+export function extractSubjectKey(subjKey: string, subjectDb: Record<string, any> = SUBJECT_DB): string {
+  if (!subjKey) return 'math';
+  if (subjectDb[subjKey]) return subjKey;
+
+  const parts = subjKey.split('_');
+  for (let i = 1; i < parts.length; i++) {
+    const candidate = parts.slice(i).join('_');
+    if (subjectDb[candidate]) {
+      return candidate;
+    }
+  }
+
+  return subjKey.replace(/^[^_]+_/, '');
+}
+
+export function parseLessonName(rawName: string, subjectDb: Record<string, any> = SUBJECT_DB) {
   if (!rawName) return { key: 'math', ru: '', be: '', ic: '📘' };
   const n = rawName.toLowerCase();
   for (let key in subjectDb) {
     const item = subjectDb[key];
+    if (!item) continue;
     if (n.includes(item.ru.toLowerCase()) || n.includes(item.be.toLowerCase()) || n.includes(key)) {
       return item;
     }
@@ -69,21 +88,19 @@ export function getNextSchoolDay(startDateObj: Date): Date {
   return d;
 }
 
-import { SUBJECT_DB } from './defaultData';
-
 export function getNextLessonDate(
   subjKey: string,
   schedules: any,
   activeProfile: string,
   existingDueDates: string[] = []
 ): string {
-  const cleanKey = subjKey.replace(/^(base|math|chem|prof)_/, '');
+  const cleanKey = extractSubjectKey(subjKey, SUBJECT_DB);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const excludeSet = new Set(existingDueDates);
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
-  const sched = schedules[activeProfile] || schedules.base || {};
+  const sched = (schedules && schedules[activeProfile]) || (schedules && schedules.base) || (schedules ? Object.values(schedules)[0] : {}) || {};
 
   for (let i = 1; i <= 60; i++) {
     const candidate = new Date(today);
@@ -96,7 +113,7 @@ export function getNextLessonDate(
     if (excludeSet.has(candidateISO)) continue;
 
     const dayKey = dayKeysMap[dayOfWeek - 1];
-    const dayLessons: string[] = sched[dayKey] || [];
+    const dayLessons: string[] = (sched as any)[dayKey] || [];
 
     const hasSubject = dayLessons.some(item => {
       const meta = parseLessonName(item, SUBJECT_DB);
@@ -113,4 +130,82 @@ export function getNextLessonDate(
     fallback = getNextSchoolDay(fallback);
   }
   return fallback.toISOString().slice(0, 10);
+}
+
+export function parseAndNormalizeSchedule(rawInput: any): ScheduleProfiles {
+  let parsed: any = rawInput;
+
+  if (typeof rawInput === 'string') {
+    let cleaned = rawInput.trim();
+    if (cleaned.charCodeAt(0) === 0xFEFF) {
+      cleaned = cleaned.slice(1);
+    }
+    // Remove JS comments if present
+    cleaned = cleaned.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+    // Remove trailing commas before closing braces/brackets
+    cleaned = cleaned.replace(/,\s*([}\]])/g, '$1');
+
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch (e) {
+      try {
+        const relaxed = cleaned.replace(/'/g, '"');
+        parsed = JSON.parse(relaxed);
+      } catch (err) {
+        throw new Error('Некорректный синтаксис JSON файла.');
+      }
+    }
+  }
+
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Файл расписания должен быть JSON объектом.');
+  }
+
+  // Unwrap common wrapper keys if user exported or formatted inside a parent field
+  if (parsed.schedules && typeof parsed.schedules === 'object' && !Array.isArray(parsed.schedules)) {
+    parsed = parsed.schedules;
+  } else if (parsed.profiles && typeof parsed.profiles === 'object' && !Array.isArray(parsed.profiles)) {
+    parsed = parsed.profiles;
+  } else if (parsed.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data)) {
+    parsed = parsed.data;
+  }
+
+  const result: ScheduleProfiles = {};
+  const dayKeys: DayKey[] = ['pn', 'vt', 'sr', 'cht', 'pt'];
+
+  const keys = Object.keys(parsed);
+  if (keys.length === 0) {
+    throw new Error('В файле расписания нет сохраненных профилей.');
+  }
+
+  keys.forEach(pKey => {
+    const item = parsed[pKey];
+    if (item && typeof item === 'object' && !Array.isArray(item)) {
+      const profileTitle = typeof item.title === 'string' && item.title.trim()
+        ? item.title.trim()
+        : (pKey === 'base' ? 'База' : pKey === 'math' ? 'Математика' : pKey === 'chem' ? 'Химия' : pKey);
+
+      const profileObj: any = {
+        title: profileTitle
+      };
+
+      dayKeys.forEach(dKey => {
+        if (Array.isArray(item[dKey])) {
+          profileObj[dKey] = item[dKey].map((s: any) => String(s));
+        } else if (typeof item[dKey] === 'string') {
+          profileObj[dKey] = item[dKey].split('\n').filter((s: string) => s.trim());
+        } else {
+          profileObj[dKey] = [];
+        }
+      });
+
+      result[pKey] = profileObj;
+    }
+  });
+
+  if (Object.keys(result).length === 0) {
+    throw new Error('Не удалось прочитать структуры профилей из файла.');
+  }
+
+  return result;
 }

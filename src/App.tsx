@@ -28,6 +28,7 @@ import { EventsView } from './EventsView';
 import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
+import { parseAndNormalizeSchedule } from './dateFormatter';
 import { translate } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { getNextSchoolDay, getNextLessonDate } from './dateFormatter';
@@ -851,24 +852,80 @@ export default function App() {
   };
 
   // IMPORT HANDLERS
-  const handleImportSchedules = (data: ScheduleProfiles) => {
-    setSchedules(data);
-    updateDocData('schedules', data);
+  const handleImportSchedules = (data: any) => {
+    try {
+      const normalized = parseAndNormalizeSchedule(data);
+      setSchedules(normalized);
+      updateDocData('schedules', normalized);
+
+      const availKeys = Object.keys(normalized) as ProfileKey[];
+      if (!availKeys.includes(activeProfile)) {
+        setActiveProfile(availKeys[0] || 'base');
+      }
+
+      haptic('success');
+      alert(lang === 'be' ? 'Расклад паспяхова загружаны!' : 'Расписание успешно загружено!');
+    } catch (err: any) {
+      alert(err?.message || (lang === 'be' ? 'Памылка загрузкі распісання' : 'Ошибка при загрузке расписания'));
+      haptic('error');
+    }
   };
 
-  const handleImportHomework = (data: HomeworkStore) => {
-    setHomework(data);
-    updateDocData('homework', data);
+  const parseJsonData = (data: any) => {
+    if (typeof data === 'string') {
+      let cleaned = data.trim();
+      if (cleaned.charCodeAt(0) === 0xFEFF) cleaned = cleaned.slice(1);
+      cleaned = cleaned.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+      cleaned = cleaned.replace(/,\s*([}\]])/g, '$1');
+      try {
+        return JSON.parse(cleaned);
+      } catch (e) {
+        return JSON.parse(cleaned.replace(/'/g, '"'));
+      }
+    }
+    return data;
   };
 
-  const handleImportDuties = (data: DutiesStore) => {
-    setDuties(data);
-    updateDocData('duties', data);
+  const handleImportHomework = (data: any) => {
+    try {
+      const parsed = parseJsonData(data);
+      if (!parsed || typeof parsed !== 'object') throw new Error('Некорректный файл JSON');
+      setHomework(parsed);
+      updateDocData('homework', parsed);
+      haptic('success');
+      alert(lang === 'be' ? 'Заданні загружаны!' : 'Домашние задания восстановлены!');
+    } catch (err: any) {
+      alert(err?.message || 'Ошибка при импорте домашних заданий');
+      haptic('error');
+    }
   };
 
-  const handleImportBirthdays = (data: BirthdayItem[]) => {
-    setBirthdays(data);
-    updateDocData('birthdays', data);
+  const handleImportDuties = (data: any) => {
+    try {
+      const parsed = parseJsonData(data);
+      if (!parsed || typeof parsed !== 'object') throw new Error('Некорректный файл JSON');
+      setDuties(parsed);
+      updateDocData('duties', parsed);
+      haptic('success');
+      alert(lang === 'be' ? 'Дзяжурствы загружаны!' : 'График дежурств обновлен!');
+    } catch (err: any) {
+      alert(err?.message || 'Ошибка при импорте графика дежурств');
+      haptic('error');
+    }
+  };
+
+  const handleImportBirthdays = (data: any) => {
+    try {
+      const parsed = parseJsonData(data);
+      if (!Array.isArray(parsed)) throw new Error('Файл дней рождения должен быть массивом');
+      setBirthdays(parsed);
+      updateDocData('birthdays', parsed);
+      haptic('success');
+      alert(lang === 'be' ? 'Дні нараджэння загружаны!' : 'Список дней рождения обновлен!');
+    } catch (err: any) {
+      alert(err?.message || 'Ошибка при импорте дней рождения');
+      haptic('error');
+    }
   };
 
   // Render Screen Content
