@@ -92,9 +92,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   // Profile keys list
   const availableProfileKeys: ProfileKey[] = ['base', 'math', 'chem'];
 
-  // Calculate next lesson date
+  // Calculate next lesson date excluding existing homework dates
   const getSubjectNextLessonDate = (subjKey: string) => {
-    return getNextLessonDate(subjKey, schedules, activeProfile);
+    const storageKey = getHomeworkStorageKey(subjKey, activeProfile);
+    const currentList = homeworkStore[storageKey] || homeworkStore[subjKey] || [];
+    const existingDueDates = currentList.map(item => item.due).filter(Boolean);
+    return getNextLessonDate(subjKey, schedules, activeProfile, existingDueDates);
   };
 
   if (viewMode === 'main') {

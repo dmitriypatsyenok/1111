@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, DutyZone, Language } from './types';
 import { translate } from './i18n';
 import { STANDARD_DUTY_ZONES } from './defaultData';
-import { Plus, Search, Trash2, UserPlus, MapPin, User, ChevronDown } from 'lucide-react';
+import { Plus, Search, Trash2, UserPlus, MapPin, User, Edit2, Check } from 'lucide-react';
 import { haptic } from './telegram';
 
 interface DutiesViewProps {
@@ -14,6 +14,7 @@ interface DutiesViewProps {
   onCreateZone: (day: DayKey, zoneName: string) => void;
   onDeleteZone: (day: DayKey, zoneId: string) => void;
   onAssignStudent: (day: DayKey, zoneId: string, studentName: string) => void;
+  onUpdateZone: (day: DayKey, zoneId: string, newName: string, students: string[]) => void;
   onRemoveStudent: (day: DayKey, zoneId: string, studentIndex: number) => void;
 }
 
@@ -26,6 +27,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
   onCreateZone,
   onDeleteZone,
   onAssignStudent,
+  onUpdateZone,
   onRemoveStudent
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,10 +36,12 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
   const [isZoneModalOpen, setIsZoneModalOpen] = useState(false);
   const [customZoneName, setCustomZoneName] = useState('');
 
-  // Student Assign Modal State
-  const [assignTargetZone, setAssignTargetZone] = useState<DutyZone | null>(null);
-  const [selectedRosterStudent, setSelectedRosterStudent] = useState('');
-  const [customStudentName, setCustomStudentName] = useState('');
+  // Multi-Student Assign & Edit Zone Modal State
+  const [editingZone, setEditingZone] = useState<DutyZone | null>(null);
+  const [editedZoneName, setEditedZoneName] = useState('');
+  const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
+  const [rosterFilter, setRosterFilter] = useState('');
+  const [manualStudentInput, setManualStudentInput] = useState('');
 
   const dayKeys: DayKey[] = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const daysDict = translate('t_days_s', lang) as any;
@@ -53,14 +57,60 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
     haptic('success');
   };
 
-  // Handle Assign Student Submit
-  const handleAssignStudentSubmit = () => {
-    const finalName = (customStudentName || selectedRosterStudent).trim();
-    if (!finalName || !assignTargetZone) return;
-    onAssignStudent(activeDay, assignTargetZone.id, finalName);
-    setAssignTargetZone(null);
-    setSelectedRosterStudent('');
-    setCustomStudentName('');
+  // Open Multi-Assign & Edit Modal
+  const openEditModal = (zone: DutyZone) => {
+    setEditingZone(zone);
+    setEditedZoneName(zone.name);
+    setSelectedStudents([...zone.students]);
+    setRosterFilter('');
+    setManualStudentInput('');
+    haptic('light');
+  };
+
+  // Toggle student selection
+  const toggleStudent = (name: string) => {
+    setSelectedStudents(prev => {
+      if (prev.includes(name)) {
+        return prev.filter(s => s !== name);
+      } else {
+        return [...prev, name];
+      }
+    });
+    haptic('selection');
+  };
+
+  const handleSelectAllRoster = () => {
+    const allNames = birthdays.map(b => b.name);
+    const merged = Array.from(new Set([...selectedStudents, ...allNames]));
+    setSelectedStudents(merged);
+    haptic('medium');
+  };
+
+  const handleDeselectAllRoster = () => {
+    setSelectedStudents([]);
+    haptic('light');
+  };
+
+  // Save Modal Changes
+  const handleSaveEditedZone = () => {
+    if (!editingZone) return;
+    const finalZoneName = editedZoneName.trim() || editingZone.name;
+
+    let finalStudents = [...selectedStudents];
+    if (manualStudentInput.trim()) {
+      const added = manualStudentInput
+        .split(/[,;\n]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      added.forEach(name => {
+        if (!finalStudents.includes(name)) {
+          finalStudents.push(name);
+        }
+      });
+    }
+
+    onUpdateZone(activeDay, editingZone.id, finalZoneName, finalStudents);
+    setEditingZone(null);
     haptic('success');
   };
 
@@ -94,6 +144,19 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
   }
 
   const currentDayZones = duties[activeDay] || [];
+
+  // Prepare roster list for edit modal including existing students
+  const combinedRoster: BirthdayItem[] = [...birthdays];
+  if (editingZone) {
+    selectedStudents.forEach(st => {
+      if (!combinedRoster.some(b => b.name === st)) {
+        combinedRoster.push({ name: st, date: '' });
+      }
+    });
+  }
+  const filteredRoster = combinedRoster.filter(b =>
+    b.name.toLowerCase().includes(rosterFilter.trim().toLowerCase())
+  );
 
   return (
     <div className="space-y-3.5 animate-fade-in">
@@ -197,17 +260,27 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                       <MapPin className="w-4 h-4 text-indigo-400" />
                       <span>{zone.name}</span>
                     </div>
-                    <button
-                      onClick={() => {
-                        if (confirm(translate('confirm_delete_zone', lang))) {
-                          onDeleteZone(activeDay, zone.id);
-                          haptic('success');
-                        }
-                      }}
-                      className="w-7 h-7 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center hover:bg-rose-500/25 transition-all"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => openEditModal(zone)}
+                        className="w-7 h-7 rounded-xl bg-indigo-600/15 text-indigo-400 flex items-center justify-center hover:bg-indigo-600/25 transition-all"
+                        title={translate('edit', lang)}
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(translate('confirm_delete_zone', lang))) {
+                            onDeleteZone(activeDay, zone.id);
+                            haptic('success');
+                          }
+                        }}
+                        className="w-7 h-7 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center hover:bg-rose-500/25 transition-all"
+                        title={translate('delete', lang)}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Assigned Students */}
@@ -239,13 +312,9 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                     </div>
                   )}
 
-                  {/* Assign Student Button */}
+                  {/* Multi-Assign & Edit Button */}
                   <button
-                    onClick={() => {
-                      setAssignTargetZone(zone);
-                      setSelectedRosterStudent('');
-                      setCustomStudentName('');
-                    }}
+                    onClick={() => openEditModal(zone)}
                     className="w-full py-2.5 rounded-2xl bg-[#161616] hover:bg-[#1f1f1f] text-xs font-bold text-indigo-400 border border-[#2a2a2a] hover:border-indigo-500/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
@@ -315,67 +384,128 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
         </div>
       )}
 
-      {/* ASSIGN STUDENT MODAL */}
-      {assignTargetZone && (
+      {/* EDIT ZONE & MULTI-STUDENT ASSIGN MODAL */}
+      {editingZone && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up max-h-[85vh] overflow-y-auto custom-scrollbar">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
-              {translate('assign_student', lang)} ({assignTargetZone.name})
+            <h3 className="text-sm font-bold text-white flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+                {translate('edit_duty_zone', lang)}
+              </span>
+              <span className="text-xs text-indigo-400 font-medium">
+                {translate('selected_count', lang)} {selectedStudents.length}
+              </span>
             </h3>
 
+            {/* Zone Name Input */}
             <div>
-              <label className="text-[11px] font-bold text-[#888] mb-1.5 block">
-                {lang === 'be' ? 'Абраць са спісу класа' : 'Выбрать из списка класса'}
+              <label className="text-[11px] font-bold text-[#888] mb-1 block">
+                {lang === 'be' ? 'Назва зоны:' : 'Название зоны:'}
               </label>
-              <div className="relative">
-                <select
-                  value={selectedRosterStudent}
-                  onChange={e => {
-                    setSelectedRosterStudent(e.target.value);
-                    if (e.target.value) setCustomStudentName('');
-                  }}
-                  className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 pr-8 appearance-none focus:outline-none focus:border-indigo-500"
-                >
-                  <option value="">
-                    -- {lang === 'be' ? 'Абярыце вучня' : 'Выберите ученика'} --
-                  </option>
-                  {birthdays.map((b, idx) => (
-                    <option key={idx} value={b.name}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-4 h-4 text-[#888] absolute right-3 top-3.5 pointer-events-none" />
+              <input
+                type="text"
+                value={editedZoneName}
+                onChange={e => setEditedZoneName(e.target.value)}
+                placeholder={translate('zone_name_placeholder', lang)}
+                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            {/* Class Roster Multi-Select Section */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-bold text-[#888] block">
+                  {translate('select_students', lang)}
+                </label>
+                <div className="flex gap-2 text-[10px]">
+                  <button
+                    type="button"
+                    onClick={handleSelectAllRoster}
+                    className="text-indigo-400 hover:text-indigo-300 font-semibold"
+                  >
+                    {translate('select_all', lang)}
+                  </button>
+                  <span className="text-[#444]">|</span>
+                  <button
+                    type="button"
+                    onClick={handleDeselectAllRoster}
+                    className="text-rose-400 hover:text-rose-300 font-semibold"
+                  >
+                    {translate('deselect_all', lang)}
+                  </button>
+                </div>
+              </div>
+
+              {/* Roster Search Filter */}
+              <input
+                type="text"
+                value={rosterFilter}
+                onChange={e => setRosterFilter(e.target.value)}
+                placeholder={lang === 'be' ? 'Пошук па спісе...' : 'Поиск по списку...'}
+                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-xl text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 placeholder:text-[#555]"
+              />
+
+              {/* Roster Checkbox List */}
+              <div className="max-h-48 overflow-y-auto bg-[#141414] border border-[#222] rounded-2xl p-2 space-y-1 custom-scrollbar">
+                {filteredRoster.length === 0 ? (
+                  <div className="text-[11px] text-[#666] text-center py-3">
+                    {lang === 'be' ? 'Вучні не знойдзены' : 'Ученики не найдены'}
+                  </div>
+                ) : (
+                  filteredRoster.map((b, idx) => {
+                    const isSelected = selectedStudents.includes(b.name);
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => toggleStudent(b.name)}
+                        className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-indigo-600/20 border border-indigo-500/40 text-white font-bold'
+                            : 'bg-[#1a1a1a] hover:bg-[#222] text-[#aaa] border border-transparent'
+                        }`}
+                      >
+                        <span className="text-xs">{b.name}</span>
+                        <div
+                          className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
+                            isSelected
+                              ? 'bg-indigo-600 border-indigo-500 text-white'
+                              : 'border-[#444] bg-[#222]'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
 
-            <div className="text-xs font-bold text-[#888] pt-1">
-              {lang === 'be' ? 'або ўвядзіце ўручную' : 'или введите вручную'}:
+            {/* Manual Custom Students */}
+            <div className="space-y-1 pt-1">
+              <label className="text-[11px] font-bold text-[#888] block">
+                {translate('add_custom_student', lang)}
+              </label>
+              <input
+                type="text"
+                value={manualStudentInput}
+                onChange={e => setManualStudentInput(e.target.value)}
+                placeholder={translate('custom_student_ph', lang)}
+                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+              />
             </div>
 
-            <input
-              type="text"
-              value={customStudentName}
-              onChange={e => {
-                setCustomStudentName(e.target.value);
-                if (e.target.value) setSelectedRosterStudent('');
-              }}
-              placeholder={lang === 'be' ? 'Імя і Прозвішча' : 'Имя и Фамилия'}
-              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
-            />
-
-            <div className="flex gap-2.5 pt-1">
+            <div className="flex gap-2.5 pt-2">
               <button
-                onClick={() => setAssignTargetZone(null)}
+                onClick={() => setEditingZone(null)}
                 className="flex-1 py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-white font-bold hover:bg-[#222] transition-all"
               >
                 {translate('cancel', lang)}
               </button>
               <button
-                onClick={handleAssignStudentSubmit}
-                disabled={!selectedRosterStudent && !customStudentName.trim()}
-                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 disabled:opacity-40 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
+                onClick={handleSaveEditedZone}
+                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
               >
                 {translate('save', lang)}
               </button>

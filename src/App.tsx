@@ -30,7 +30,7 @@ import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
 import { translate } from './i18n';
 import { Users, Calendar } from 'lucide-react';
-import { getNextSchoolDay } from './dateFormatter';
+import { getNextSchoolDay, getNextLessonDate } from './dateFormatter';
 import { subscribeToDoc, updateDocData } from './firebase';
 
 export default function App() {
@@ -463,6 +463,33 @@ export default function App() {
     });
   };
 
+  const handleUpdateZone = (
+    dayKey: DayKey,
+    zoneId: string,
+    newName: string,
+    students: string[]
+  ) => {
+    setDuties(prev => {
+      const dayZones = prev[dayKey] || [];
+      const updatedZones = dayZones.map(z => {
+        if (z.id === zoneId) {
+          return {
+            ...z,
+            name: newName.trim() || z.name,
+            students
+          };
+        }
+        return z;
+      });
+      const nextDuties = {
+        ...prev,
+        [dayKey]: updatedZones
+      };
+      updateDocData('duties', nextDuties);
+      return nextDuties;
+    });
+  };
+
   const handleRemoveStudentFromZone = (
     dayKey: DayKey,
     zoneId: string,
@@ -494,7 +521,9 @@ export default function App() {
   const handleSaveHomework = (subjectKey: string, text: string) => {
     setHomework(prev => {
       const currentList = prev[subjectKey] || [];
-      const dueISO = getNextSchoolDay(new Date()).toISOString().slice(0, 10);
+      const baseKey = subjectKey.replace(/^(base|math|chem|prof)_/, '');
+      const existingDueDates = currentList.map(item => item.due).filter(Boolean);
+      const dueISO = getNextLessonDate(baseKey, schedules, activeProfile, existingDueDates);
       const newItem = {
         id: Date.now().toString(),
         text,
@@ -626,7 +655,21 @@ export default function App() {
   // CANTEEN POLL HANDLERS
   const handleCreatePoll = () => {
     const today = new Date();
-    const targetDate = getNextSchoolDay(today).toISOString().slice(0, 10);
+
+    // Collect all existing poll target dates
+    const existingPollDates = new Set<string>();
+    if (currentPoll && currentPoll.date) {
+      existingPollDates.add(currentPoll.date);
+    }
+    pollHistory.forEach(p => {
+      if (p.date) existingPollDates.add(p.date);
+    });
+
+    let candidate = getNextSchoolDay(today);
+    while (existingPollDates.has(candidate.toISOString().slice(0, 10))) {
+      candidate = getNextSchoolDay(candidate);
+    }
+    const targetDate = candidate.toISOString().slice(0, 10);
 
     let updatedHistory = pollHistory;
     if (currentPoll && currentPoll.voters && currentPoll.voters.length > 0 && currentPoll.id !== '1') {
@@ -1089,6 +1132,7 @@ export default function App() {
             onCreateZone={handleCreateZone}
             onDeleteZone={handleDeleteZone}
             onAssignStudent={handleAssignStudentToZone}
+            onUpdateZone={handleUpdateZone}
             onRemoveStudent={handleRemoveStudentFromZone}
           />
         );

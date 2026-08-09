@@ -74,21 +74,26 @@ import { SUBJECT_DB } from './defaultData';
 export function getNextLessonDate(
   subjKey: string,
   schedules: any,
-  activeProfile: string
+  activeProfile: string,
+  existingDueDates: string[] = []
 ): string {
-  const cleanKey = subjKey.replace(/^(base|math|chem)_/, '');
+  const cleanKey = subjKey.replace(/^(base|math|chem|prof)_/, '');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const excludeSet = new Set(existingDueDates);
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const sched = schedules[activeProfile] || schedules.base || {};
 
-  for (let i = 1; i <= 21; i++) {
+  for (let i = 1; i <= 60; i++) {
     const candidate = new Date(today);
     candidate.setDate(candidate.getDate() + i);
     const dayOfWeek = candidate.getDay();
 
     if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+    const candidateISO = candidate.toISOString().slice(0, 10);
+    if (excludeSet.has(candidateISO)) continue;
 
     const dayKey = dayKeysMap[dayOfWeek - 1];
     const dayLessons: string[] = sched[dayKey] || [];
@@ -99,10 +104,13 @@ export function getNextLessonDate(
     });
 
     if (hasSubject) {
-      return candidate.toISOString().slice(0, 10);
+      return candidateISO;
     }
   }
 
-  const fallback = getNextSchoolDay(today);
+  let fallback = getNextSchoolDay(today);
+  while (excludeSet.has(fallback.toISOString().slice(0, 10))) {
+    fallback = getNextSchoolDay(fallback);
+  }
   return fallback.toISOString().slice(0, 10);
 }

@@ -483,19 +483,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             />
           </div>
 
-          <div>
-            <label className="text-[11px] font-semibold text-[#888] block mb-1">
-              {translate('tg_app_url_label', lang)}
-            </label>
-            <input
-              type="text"
-              value={tgAppUrl}
-              onChange={e => setTgAppUrl(e.target.value)}
-              placeholder={translate('tg_app_url_ph', lang)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
-            />
-          </div>
-
           <div className="flex flex-col gap-2 pt-2">
             <button
               onClick={handleSaveTg}
