@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { ScreenType, Language } from './types';
 import { translate } from './i18n';
-import { SUBJECT_LIST } from './defaultData';
+import { SUBJECT_LIST, SUBJECT_DB } from './defaultData';
 
 interface TopbarProps {
   currentScreen: ScreenType;
@@ -38,9 +38,16 @@ export const Topbar: React.FC<TopbarProps> = ({
       case 'hw-subjects':
         return translate('search_subject', lang);
       case 'hw-detail': {
-        const cleanKey = (activeSubjectKey || '').replace(/^(base|math|chem)_/, '');
+        const cleanKey = (activeSubjectKey || '').replace(/^(base|math|chem|prof)_/, '');
+        const dbItem = SUBJECT_DB[cleanKey];
+        if (dbItem) {
+          return `${dbItem.ic} ${dbItem[lang]}`;
+        }
         const found = SUBJECT_LIST.find(s => s.key === cleanKey);
-        return found ? found[lang] : translate('t_hw', lang);
+        if (found) {
+          return found[lang];
+        }
+        return translate('t_hw', lang);
       }
       case 'canteen':
         return translate('t_food', lang);

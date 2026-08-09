@@ -273,6 +273,9 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const baseSubjectKey = activeSubjectKey.replace(/^(base|math|chem|prof)_/, '');
   const storageKey = getHomeworkStorageKey(activeSubjectKey, activeProfile);
 
+  const dbItem = SUBJECT_DB[baseSubjectKey];
+  const listFound = SUBJECT_LIST.find(s => s.key === baseSubjectKey);
+
   const currentHwList = homeworkStore[storageKey] || [];
   const nextLessonISO = getSubjectNextLessonDate(baseSubjectKey);
   const nextLessonFormatted = formatCustomDate(nextLessonISO, 'day_month_long', lang);
@@ -295,6 +298,21 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
   return (
     <div className="space-y-3.5 animate-fade-in">
+      {/* Subject Banner */}
+      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0 text-xl">
+          {dbItem?.ic || '📚'}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-bold text-white truncate">
+            {dbItem ? dbItem[lang] : (listFound ? listFound[lang] : baseSubjectKey)}
+          </div>
+          <div className="text-[11px] text-[#888] mt-0.5">
+            {translate('t_hw', lang)}
+          </div>
+        </div>
+      </div>
+
       {/* Tabs */}
       <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
         <button
