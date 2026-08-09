@@ -116,6 +116,34 @@ async function startServer() {
 
       console.log('Registering Telegram setWebhook URL:', webhookUrl);
 
+      // Register /app and /start commands with Telegram so BotFather menu updates automatically
+      try {
+        fetch(`https://api.telegram.org/bot${cleanToken}/setMyCommands`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            commands: [
+              { command: 'app', description: '📱 Открыть приложение Иерихон3' },
+              { command: 'start', description: '🚀 Запустить и открыть приложение' }
+            ]
+          })
+        }).catch(e => console.error('Error setting my commands:', e));
+
+        if (appUrl) {
+          fetch(`https://api.telegram.org/bot${cleanToken}/setChatMenuButton`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              menu_button: appUrl.includes('t.me/')
+                ? { type: 'default' }
+                : { type: 'web_app', text: 'Открыть App', web_app: { url: appUrl } }
+            })
+          }).catch(e => console.error('Error setting menu button:', e));
+        }
+      } catch (cmdErr) {
+        console.error('Failed to register bot commands:', cmdErr);
+      }
+
       let tgData: any = {};
       try {
         const controller = new AbortController();
@@ -184,24 +212,20 @@ async function startServer() {
       if (!update || !update.message) return;
 
       const message = update.message;
-      const text = message.text || message.caption || '';
+      const text = (message.text || message.caption || '').trim();
       const chatId = message.chat?.id;
       const messageId = message.message_id;
+      const isPrivate = message.chat?.type === 'private';
 
-      if (!chatId || !text) return;
+      if (!chatId) return;
 
-      // Check if message starts with /app
-      const cleanText = text.trim();
-      const isAppCommand =
-        cleanText.startsWith('/app') ||
-        cleanText.startsWith('/start app') ||
-        cleanText === '/app';
-
-      if (!isAppCommand) return;
+      // Respond to any command (e.g. /start, /app, /menu) OR any text message in private chat
+      const isCommand = text.startsWith('/');
+      if (!isCommand && !isPrivate) return;
 
       const botToken = (token as string) || process.env.TELEGRAM_BOT_TOKEN;
       if (!botToken) {
-        console.warn('Telegram webhook received /app but bot token is missing');
+        console.warn('Telegram webhook received update but bot token is missing');
         return;
       }
 
@@ -209,8 +233,8 @@ async function startServer() {
       const shouldAutoDelete = autoDelete !== 'false';
       const delaySec = Number(deleteDelay) || 30;
 
-      // 1. Delete user's /app command message
-      if (shouldAutoDelete) {
+      // 1. Delete user command message if enabled
+      if (shouldAutoDelete && isCommand) {
         fetch(`https://api.telegram.org/bot${botToken}/deleteMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -221,16 +245,16 @@ async function startServer() {
         }).catch(err => console.error('Error deleting user command message:', err));
       }
 
-      // 2. Send bot reply with button to Telegram Mini App
+      // 2. Prepare button
+      let buttonObj: any;
+      if (targetAppUrl.includes('t.me/')) {
+        buttonObj = { text: '🚀 Открыть приложение Иерихон3', url: targetAppUrl };
+      } else {
+        buttonObj = { text: '🚀 Открыть приложение Иерихон3', web_app: { url: targetAppUrl } };
+      }
+
       const replyMarkup = {
-        inline_keyboard: [
-          [
-            {
-              text: '🚀 Открыть приложение',
-              url: targetAppUrl
-            }
-          ]
-        ]
+        inline_keyboard: [[buttonObj]]
       };
 
       const sendRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -238,13 +262,14 @@ async function startServer() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: '📱 *Иерихон3* — Нажмите кнопку ниже, чтобы открыть приложение:',
+          text: '📱 *Школа Иерихон3*\n\nНажмите кнопку ниже, чтобы открыть учебную систему:',
           parse_mode: 'Markdown',
           reply_markup: replyMarkup
         })
       });
 
       const sendData = await sendRes.json();
+      console.log('Telegram sendMessage result:', sendData);
 
       // 3. Schedule auto-delete of bot response message if enabled
       if (shouldAutoDelete && sendData.ok && sendData.result?.message_id) {
