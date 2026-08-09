@@ -22,3 +22,8 @@ body {
   color: #ededed;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
+
+input, textarea, select {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}

@@ -16,7 +16,8 @@ import {
   DEFAULT_SCHEDULES,
   INITIAL_BIRTHDAYS,
   INITIAL_DUTIES,
-  INITIAL_HW
+  INITIAL_HW,
+  SUBJECT_DB
 } from './defaultData';
 import { initTelegramApp, haptic, tg, getTelegramUserName, sendNotification } from './telegram';
 import { Topbar } from './Topbar';
@@ -547,11 +548,29 @@ export default function App() {
       return nextHw;
     });
 
+    const baseKey = extractSubjectKey(subjectKey);
+    const dbItem = SUBJECT_DB[baseKey];
+    const subjNameRu = dbItem ? dbItem.ru : baseKey;
+    const subjNameBe = dbItem ? dbItem.be : baseKey;
+
+    const isProf = (
+      (baseKey === 'rus_lang' && (activeProfile === 'math' || activeProfile === 'chem' || subjectKey.startsWith('prof_'))) ||
+      ((['math', 'algebra', 'geometry'].includes(baseKey)) && (activeProfile === 'math' || subjectKey.startsWith('math_') || subjectKey.startsWith('prof_'))) ||
+      (baseKey === 'chem' && (activeProfile === 'chem' || subjectKey.startsWith('chem_') || subjectKey.startsWith('prof_')))
+    );
+
+    const levelRu = isProf ? 'Профильный' : 'Базовый';
+    const levelBe = isProf ? 'Прафільны' : 'Базавы';
+
     const ruTitle = '📚 Новое домашнее задание';
-    const ruMsg = text;
+    const ruMsg = `Предмет: ${subjNameRu} (${levelRu})`;
+
+    const beTitle = '📚 Новае дамашняе заданне';
+    const beMsg = `Прадмет: ${subjNameBe} (${levelBe})`;
+
     sendNotification(
-      lang === 'be' ? '📚 Новае дамашняе заданне' : ruTitle,
-      text,
+      lang === 'be' ? beTitle : ruTitle,
+      lang === 'be' ? beMsg : ruMsg,
       ruTitle,
       ruMsg
     );
@@ -1260,7 +1279,7 @@ export default function App() {
   };
 
   return (
-    <div className="max-w-[500px] mx-auto min-h-screen bg-[#0a0a0a] text-[#ededed] flex flex-col font-sans select-none pb-safe">
+    <div className="max-w-[500px] mx-auto min-h-screen bg-[#0a0a0a] text-[#ededed] flex flex-col font-sans pb-safe">
       <Topbar
         currentScreen={currentScreen}
         screenHistory={screenHistory}
