@@ -1106,6 +1106,7 @@ export default function App() {
             birthdays={birthdays}
             currentPoll={currentPoll}
             pollHistory={pollHistory}
+            tgConfig={tgConfig}
             onSetLang={handleSetLang}
             onImportSchedules={handleImportSchedules}
             onImportHomework={handleImportHomework}
@@ -1114,6 +1115,7 @@ export default function App() {
             onClearAllHomework={handleClearAllHomework}
             onDeletePoll={handleDeletePoll}
             onClearAllData={handleClearAllData}
+            onSaveTgConfig={handleSaveTgConfig}
           />
         );
 
