@@ -6,20 +6,51 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  // Safe JSON body parser with error handling
+  app.use(express.json({ limit: '1mb' }));
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err) {
+      console.error('Express body parser error:', err.message);
+      return res.status(200).json({ success: false, error: 'Ошибка формата JSON в запросе' });
+    }
+    next();
+  });
+
+  // Check Webhook Info Endpoint
+  app.get('/api/telegram-webhook-info', async (req, res) => {
+    try {
+      const token = (req.query.token as string || '').trim();
+      if (!token) {
+        return res.status(200).json({ success: false, error: 'Токен не передан' });
+      }
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
+      const tgRes = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`, {
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      const tgData = await tgRes.json();
+      res.status(200).json({ success: !!tgData.ok, tgResult: tgData });
+    } catch (err: any) {
+      res.status(200).json({ success: false, error: err.message || 'Ошибка запроса к Telegram API' });
+    }
+  });
 
   // Webhook Setup Endpoint
   app.post('/api/telegram-setup-webhook', async (req, res) => {
     try {
       const { token, appUrl, autoDelete, deleteDelay, clientOrigin, customWebhookUrl } = req.body || {};
-      if (!token || !token.trim()) {
+      
+      const cleanToken = (token || '').toString().trim().replace(/^["']|["']$/g, '');
+      if (!cleanToken) {
         return res.status(200).json({
           success: false,
           error: 'Токен бота не передан. Укажите токен в поле Bot Token.'
         });
       }
-
-      const botToken = token.trim();
 
       // Determine public HTTPS origin
       let origin = '';
@@ -30,23 +61,20 @@ async function startServer() {
         if (rawHost.includes(',')) {
           rawHost = rawHost.split(',')[0].trim();
         }
-        const proto = (req.headers['x-forwarded-proto'] as string) || (req.secure ? 'https' : 'http');
         if (rawHost && !rawHost.includes('localhost') && !rawHost.includes('127.0.0.1')) {
-          origin = `https://${rawHost}`;
-        } else if (proto === 'https' && rawHost) {
           origin = `https://${rawHost}`;
         }
       }
 
-      let webhookUrl = customWebhookUrl ? customWebhookUrl.trim() : '';
+      let webhookUrl = (customWebhookUrl || '').toString().trim();
       if (!webhookUrl) {
         if (!origin || !origin.startsWith('https://')) {
           return res.status(200).json({
             success: false,
-            error: 'Telegram требует HTTPS адрес. Не удалось автоматически определить публичный URL приложения.'
+            error: 'Telegram требует HTTPS адрес. Не удалось определить публичный URL. Укажите clientOrigin или customWebhookUrl.'
           });
         }
-        webhookUrl = `${origin}/api/telegram-webhook?token=${encodeURIComponent(botToken)}` +
+        webhookUrl = `${origin}/api/telegram-webhook?token=${encodeURIComponent(cleanToken)}` +
           `&appUrl=${encodeURIComponent(appUrl || '')}` +
           `&autoDelete=${autoDelete !== false}` +
           `&deleteDelay=${deleteDelay || 30}`;
@@ -56,17 +84,22 @@ async function startServer() {
 
       let tgData: any = {};
       try {
-        const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
+        const tgRes = await fetch(`https://api.telegram.org/bot${cleanToken}/setWebhook`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             url: webhookUrl,
             allowed_updates: ['message', 'edited_message']
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeout);
 
         const text = await tgRes.text();
-        console.log('Telegram setWebhook response:', text);
+        console.log('Telegram setWebhook raw response:', text);
         try {
           tgData = JSON.parse(text);
         } catch {
@@ -74,29 +107,34 @@ async function startServer() {
         }
       } catch (fetchErr: any) {
         console.error('Fetch error calling Telegram API:', fetchErr);
-        tgData = { ok: false, description: fetchErr.message || 'Ошибка соединения с Telegram API' };
+        tgData = {
+          ok: false,
+          description: fetchErr.name === 'AbortError'
+            ? 'Превышено время ожидания ответа от Telegram API (таймаут 10с)'
+            : (fetchErr.message || 'Ошибка соединения с Telegram API')
+        };
       }
 
       let errorMessage = '';
       if (!tgData.ok) {
         if (tgData.description?.includes('Unauthorized') || tgData.error_code === 401) {
-          errorMessage = 'Неверный Токен Бота (Unauthorized). Проверьте токен, полученный у @BotFather.';
+          errorMessage = 'Неверный Токен Бота (401 Unauthorized). Проверьте токен, полученный у @BotFather.';
         } else if (tgData.description?.includes('HTTPS') || tgData.description?.includes('url')) {
-          errorMessage = `Ошибка URL для Webhook: ${tgData.description}`;
+          errorMessage = `Telegram отклонил URL: ${tgData.description}`;
         } else {
           errorMessage = tgData.description || 'Telegram отклонил Webhook';
         }
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         success: !!tgData.ok,
         tgResult: tgData,
         webhookUrl,
         error: errorMessage || undefined
       });
     } catch (err: any) {
-      console.error('Error setting Telegram webhook:', err);
-      res.status(200).json({ success: false, error: err.message || 'Не удалось выполнить запрос' });
+      console.error('Unhandled error in telegram-setup-webhook route:', err);
+      return res.status(200).json({ success: false, error: err.message || 'Неизвестная ошибка сервера' });
     }
   });
 

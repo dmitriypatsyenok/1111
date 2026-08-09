@@ -116,7 +116,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   const handleSetupWebhook = async () => {
-    const token = tgToken.trim();
+    const token = tgToken.trim().replace(/^["']|["']$/g, '');
     const appUrl = tgAppUrl.trim();
     if (!token) {
       alert(lang === 'be' ? 'Калі ласка, увядзіце Токен Бота!' : 'Пожалуйста, введите Токен Бота!');
@@ -124,7 +124,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     }
     setWebhookLoading(true);
     setWebhookStatus(null);
+
+    const clientOrigin = window.location.origin.startsWith('https://')
+      ? window.location.origin
+      : 'https://ais-dev-ht72mmxdpodvpwxsnmrk43-775979266019.europe-west2.run.app';
+
+    const calculatedWebhookUrl = `${clientOrigin}/api/telegram-webhook?token=${encodeURIComponent(token)}` +
+      `&appUrl=${encodeURIComponent(appUrl || '')}` +
+      `&autoDelete=${tgAutoDelete !== false}` +
+      `&deleteDelay=${tgDeleteDelay || 30}`;
+
     try {
+      // Step 1: Try server endpoint
       const res = await fetch('/api/telegram-setup-webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -133,7 +144,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           appUrl,
           autoDelete: tgAutoDelete,
           deleteDelay: tgDeleteDelay,
-          clientOrigin: window.location.origin
+          clientOrigin
         })
       });
 
@@ -145,17 +156,42 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         data = { success: false, error: resText || 'Server error' };
       }
 
-      if (data.success) {
+      if (data.success && data.tgResult?.ok) {
         setWebhookStatus({
           success: true,
-          msg: translate('tg_webhook_success', lang)
+          msg: translate('tg_webhook_success', lang) + ` (URL: ${data.webhookUrl || calculatedWebhookUrl})`
+        });
+        haptic('success');
+        return;
+      }
+
+      // Step 2: Client-side direct call fallback to Telegram API
+      console.log('Server setup failed or returned error. Trying direct Telegram API call...');
+      const tgDirectRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: calculatedWebhookUrl,
+          allowed_updates: ['message', 'edited_message']
+        })
+      });
+
+      const tgDirectData = await tgDirectRes.json();
+      if (tgDirectData.ok) {
+        setWebhookStatus({
+          success: true,
+          msg: translate('tg_webhook_success', lang) + ` (URL: ${calculatedWebhookUrl})`
         });
         haptic('success');
       } else {
-        const desc = data.error || data.tgResult?.description || translate('tg_webhook_error', lang);
+        const errDesc = tgDirectData.description || data.error || data.tgResult?.description || translate('tg_webhook_error', lang);
+        let friendlyErr = errDesc;
+        if (errDesc.includes('Unauthorized') || tgDirectData.error_code === 401) {
+          friendlyErr = 'Неверный Токен Бота! Проверьте токен, полученный у @BotFather.';
+        }
         setWebhookStatus({
           success: false,
-          msg: (lang === 'be' ? 'Памылка: ' : 'Ошибка: ') + desc
+          msg: (lang === 'be' ? 'Памылка: ' : 'Ошибка: ') + friendlyErr
         });
         haptic('error');
       }
@@ -165,6 +201,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         msg: translate('tg_webhook_error', lang) + ' (' + err.message + ')'
       });
       haptic('error');
+    } finally {
+      setWebhookLoading(false);
+    }
+  };
+
+  const handleCheckWebhookStatus = async () => {
+    const token = tgToken.trim().replace(/^["']|["']$/g, '');
+    if (!token) {
+      alert('Укажите Токен Бота');
+      return;
+    }
+    setWebhookLoading(true);
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`);
+      const data = await res.json();
+      if (data.ok) {
+        const info = data.result;
+        const msg = info.url
+          ? `✓ Webhook подключен к:\n${info.url}\n(Ожидающих сообщений: ${info.pending_update_count}${info.last_error_message ? `, Последняя ошибка Telegram: ${info.last_error_message}` : ''})`
+          : '⚠ Webhook НЕ активирован в Telegram для этого бота.';
+        alert(msg);
+      } else {
+        alert('Ошибка Telegram API: ' + (data.description || 'Неизвестная ошибка'));
+      }
+    } catch (err: any) {
+      alert('Не удалось проверить статус: ' + err.message);
     } finally {
       setWebhookLoading(false);
     }
@@ -620,6 +682,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 <Bell className="w-3.5 h-3.5" />
               )}
               {translate('tg_setup_webhook_btn', lang)}
+            </button>
+
+            <button
+              onClick={handleCheckWebhookStatus}
+              disabled={webhookLoading}
+              className="w-full py-2 bg-[#141414] hover:bg-[#1a1a1a] border border-[#2a2a2a] text-[#aaa] hover:text-white font-medium text-[11px] rounded-xl flex items-center justify-center gap-1.5 transition-all"
+            >
+              🔍 {lang === 'be' ? 'Праверыць статус Webhook' : 'Проверить статус Webhook в Telegram'}
             </button>
           </div>
 
