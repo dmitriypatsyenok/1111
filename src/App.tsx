@@ -28,10 +28,9 @@ import { EventsView } from './EventsView';
 import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
-import { parseAndNormalizeSchedule } from './dateFormatter';
+import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate } from './dateFormatter';
 import { translate } from './i18n';
 import { Users, Calendar } from 'lucide-react';
-import { getNextSchoolDay, getNextLessonDate } from './dateFormatter';
 import { subscribeToDoc, updateDocData } from './firebase';
 
 export default function App() {
@@ -522,7 +521,7 @@ export default function App() {
   const handleSaveHomework = (subjectKey: string, text: string) => {
     setHomework(prev => {
       const currentList = prev[subjectKey] || [];
-      const baseKey = subjectKey.replace(/^(base|math|chem|prof)_/, '');
+      const baseKey = extractSubjectKey(subjectKey);
       const existingDueDates = currentList.map(item => item.due).filter(Boolean);
       const dueISO = getNextLessonDate(baseKey, schedules, activeProfile, existingDueDates);
       const newItem = {
@@ -551,10 +550,19 @@ export default function App() {
 
   const handleEditHomework = (subjectKey: string, id: string, newText: string) => {
     setHomework(prev => {
-      const currentList = prev[subjectKey] || [];
+      let targetKey = subjectKey;
+      if (!prev[targetKey] || !prev[targetKey].some(item => item.id === id)) {
+        for (let k in prev) {
+          if (prev[k]?.some(item => item.id === id)) {
+            targetKey = k;
+            break;
+          }
+        }
+      }
+      const currentList = prev[targetKey] || [];
       const nextHw = {
         ...prev,
-        [subjectKey]: currentList.map(item =>
+        [targetKey]: currentList.map(item =>
           item.id === id ? { ...item, text: newText } : item
         )
       };
@@ -565,10 +573,19 @@ export default function App() {
 
   const handleDeleteHomework = (subjectKey: string, id: string) => {
     setHomework(prev => {
-      const currentList = prev[subjectKey] || [];
+      let targetKey = subjectKey;
+      if (!prev[targetKey] || !prev[targetKey].some(item => item.id === id)) {
+        for (let k in prev) {
+          if (prev[k]?.some(item => item.id === id)) {
+            targetKey = k;
+            break;
+          }
+        }
+      }
+      const currentList = prev[targetKey] || [];
       const nextHw = {
         ...prev,
-        [subjectKey]: currentList.filter(item => item.id !== id)
+        [targetKey]: currentList.filter(item => item.id !== id)
       };
       updateDocData('homework', nextHw);
       return nextHw;
@@ -634,6 +651,8 @@ export default function App() {
       };
       const emptyPollHistory: PollData[] = [];
 
+      setSchedules(DEFAULT_SCHEDULES);
+      setActiveProfile('base');
       setHomework(emptyHw);
       setDuties(emptyDuties);
       setEvents(emptyEvents);
@@ -641,6 +660,7 @@ export default function App() {
       setPollHistory(emptyPollHistory);
       setIsPollActive(false);
 
+      updateDocData('schedules', DEFAULT_SCHEDULES);
       updateDocData('homework', emptyHw);
       updateDocData('duties', emptyDuties);
       updateDocData('events', emptyEvents);

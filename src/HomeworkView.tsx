@@ -90,18 +90,26 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const daysDict = translate('t_days_s', lang) as any;
 
   // Profile keys list
-  const availableProfileKeys = Object.keys(schedules || {}) as ProfileKey[];
+  const availableProfileKeys = (schedules && Object.keys(schedules).length > 0) ? (Object.keys(schedules) as ProfileKey[]) : ['base'];
+  const effectiveProfile = availableProfileKeys.includes(activeProfile) ? activeProfile : availableProfileKeys[0];
+
+  const getSubjectHwList = (subjKey: string) => {
+    const cleanKey = extractSubjectKey(subjKey);
+    const storageKey = getHomeworkStorageKey(subjKey, effectiveProfile);
+    return homeworkStore[storageKey] || homeworkStore[subjKey] || homeworkStore[cleanKey] || homeworkStore[`base_${cleanKey}`] || [];
+  };
 
   // Calculate next lesson date excluding existing homework dates
   const getSubjectNextLessonDate = (subjKey: string) => {
-    const storageKey = getHomeworkStorageKey(subjKey, activeProfile);
-    const currentList = homeworkStore[storageKey] || homeworkStore[subjKey] || [];
+    const cleanKey = extractSubjectKey(subjKey);
+    const currentList = getSubjectHwList(subjKey);
     const existingDueDates = currentList.map(item => item.due).filter(Boolean);
-    return getNextLessonDate(subjKey, schedules, activeProfile, existingDueDates);
+    return getNextLessonDate(cleanKey, schedules, effectiveProfile, existingDueDates);
   };
 
   if (viewMode === 'main') {
-    const rawList = (schedules[activeProfile] || schedules.base || {})[activeHwDay] || [];
+    const activeSched = schedules[effectiveProfile] || schedules.base || Object.values(schedules || {})[0] || {};
+    const rawList = activeSched[activeHwDay] || [];
 
     return (
       <div className="space-y-3.5 animate-fade-in">
@@ -112,8 +120,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
           </div>
           <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
             {availableProfileKeys.map(pKey => {
-              const profTitle = schedules[pKey]?.title || (pKey === 'base' ? 'База' : pKey === 'math' ? 'Матем' : 'Химия');
-              const isActive = activeProfile === pKey;
+              const profTitle = schedules[pKey]?.title || (pKey === 'base' ? 'База' : pKey === 'math' ? 'Матем' : pKey === 'chem' ? 'Химия' : pKey);
+              const isActive = effectiveProfile === pKey;
               return (
                 <button
                   key={pKey}
@@ -194,8 +202,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               const displayName = meta[lang] || nameStr;
               const timeStr = LESSON_TIMES[num - 1] || '';
               const subjKey = meta.key || 'math';
-              const storageKey = getHomeworkStorageKey(subjKey, activeProfile);
-              const hwList = homeworkStore[storageKey] || homeworkStore[subjKey] || [];
+              const storageKey = getHomeworkStorageKey(subjKey, effectiveProfile);
+              const hwList = getSubjectHwList(subjKey);
               const hasHw = hwList.length > 0;
 
               return (
@@ -242,8 +250,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
         </div>
         <div className="grid grid-cols-2 gap-2.5">
           {SUBJECT_LIST.map(s => {
-            const storageKey = getHomeworkStorageKey(s.key, activeProfile);
-            const list = homeworkStore[storageKey] || homeworkStore[s.key] || [];
+            const storageKey = getHomeworkStorageKey(s.key, effectiveProfile);
+            const list = getSubjectHwList(s.key);
             const hasHw = list.length > 0;
 
             return (
@@ -271,12 +279,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
   // Detail Mode
   const baseSubjectKey = extractSubjectKey(activeSubjectKey);
-  const storageKey = getHomeworkStorageKey(activeSubjectKey, activeProfile);
+  const storageKey = getHomeworkStorageKey(activeSubjectKey, effectiveProfile);
 
   const dbItem = SUBJECT_DB[baseSubjectKey];
   const listFound = SUBJECT_LIST.find(s => s.key === baseSubjectKey);
 
-  const currentHwList = homeworkStore[storageKey] || [];
+  const currentHwList = getSubjectHwList(activeSubjectKey);
   const nextLessonISO = getSubjectNextLessonDate(baseSubjectKey);
   const nextLessonFormatted = formatCustomDate(nextLessonISO, 'day_month_long', lang);
 

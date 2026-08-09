@@ -58,7 +58,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
       const dayKey = dayKeysMap[dayOfWeek - 1];
-      const sched = (schedules[activeProfile] || schedules.base || {})[dayKey] || [];
+      const sched = (schedules[activeProfile] || schedules.base || Object.values(schedules || {})[0] || {})[dayKey] || [];
 
       if (!sched.length) {
         setWidgetData({

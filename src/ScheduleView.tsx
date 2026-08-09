@@ -75,7 +75,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   // Days View
   const daysDict = translate('t_days_s', lang) as any;
   const fullDaysDict = translate('t_days', lang) as any;
-  const rawList = (schedules[activeProfile] || schedules.base || {})[activeDay] || [];
+  const rawList = (schedules[activeProfile] || schedules.base || Object.values(schedules || {})[0] || {})[activeDay] || [];
 
   return (
     <div className="space-y-3.5 animate-fade-in">
