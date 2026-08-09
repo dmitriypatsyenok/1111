@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "entities": {
+    "AppData": {
+      "collectionName": "app_data",
+      "description": "Shared school application data for real-time synchronization across devices",
+      "fields": {
+        "content": {
+          "type": "map",
+          "description": "JSON object holding domain state (schedules, homework, duties, birthdays, events, canteen poll)"
+        },
+        "updatedAt": {
+          "type": "timestamp",
+          "description": "Timestamp of the last update"
+        }
+      }
+    }
+  }
+}
