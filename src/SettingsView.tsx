@@ -122,6 +122,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       alert(lang === 'be' ? 'Калі ласка, увядзіце Токен Бота!' : 'Пожалуйста, введите Токен Бота!');
       return;
     }
+
+    if (token.includes('t.me') || token.includes('http://') || token.includes('https://') || !token.includes(':')) {
+      const errMsg = 'Токен бота не должен быть ссылкой (https://t.me/...)! Введите Токен Бота из @BotFather (выглядит как 1234567890:ABCdefG...). Ссылку на WebApp вставляйте в поле "App URL".';
+      setWebhookStatus({
+        success: false,
+        msg: 'Ошибка: ' + errMsg
+      });
+      alert(errMsg);
+      return;
+    }
     setWebhookLoading(true);
     setWebhookStatus(null);
 
@@ -187,7 +197,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         const errDesc = tgDirectData.description || data.error || data.tgResult?.description || translate('tg_webhook_error', lang);
         let friendlyErr = errDesc;
         if (errDesc.includes('Unauthorized') || tgDirectData.error_code === 401) {
-          friendlyErr = 'Неверный Токен Бота! Проверьте токен, полученный у @BotFather.';
+          friendlyErr = 'Неверный или обрезанный Токен Бота (401 Unauthorized).\n• Проверьте, что токен скопирован полностью из @BotFather без пропущенных символов в конце.\n• Если токен был обновлен/отозван, скопируйте новый из @BotFather (/mybots -> API Token).';
         }
         setWebhookStatus({
           success: false,
@@ -206,10 +216,36 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     }
   };
 
-  const handleCheckWebhookStatus = async () => {
+  const handleTestBotToken = async () => {
     const token = tgToken.trim().replace(/^["']|["']$/g, '');
     if (!token) {
       alert('Укажите Токен Бота');
+      return;
+    }
+    setWebhookLoading(true);
+    try {
+      const res = await fetch(`/api/telegram-get-me?token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+      if (data.success && data.bot) {
+        alert(`✓ Бот успешно найден в Telegram!\nИмя бота: @${data.bot.username}\nНазвание: ${data.bot.first_name}\nID: ${data.bot.id}\n\nТокен полностью ВЕРЕН и АКТИВЕН!`);
+      } else {
+        alert(`❌ Ошибка Telegram (Код ${data.errorCode || 401}):\n${data.error}\n\nПричина: Telegram отклонил этот токен. Зайдите в @BotFather -> /mybots -> Выберите бота -> API Token -> скопируйте новый токен.`);
+      }
+    } catch (err: any) {
+      alert('Не удалось связаться с Telegram: ' + err.message);
+    } finally {
+      setWebhookLoading(false);
+    }
+  };
+
+  const handleCheckWebhookStatus = async () => {
+    const token = tgToken.trim().replace(/^["']|["']$/g, '');
+    if (!token) {
+      alert('Укажите Токен Бота в настройках');
+      return;
+    }
+    if (token.includes('t.me') || token.includes('http://') || token.includes('https://') || !token.includes(':')) {
+      alert('Токен бота не должен быть ссылкой (https://t.me/...)! Введите Токен Бота из @BotFather (выглядит как 1234567890:ABCdefG...). Ссылку на WebApp вставляйте в поле "App URL".');
       return;
     }
     setWebhookLoading(true);
@@ -593,8 +629,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               value={tgToken}
               onChange={e => setTgToken(e.target.value)}
               placeholder={translate('tg_bot_token_ph', lang)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all mb-1.5"
             />
+            <button
+              onClick={handleTestBotToken}
+              disabled={webhookLoading || !tgToken.trim()}
+              className="px-2.5 py-1 bg-[#1a1a1a] hover:bg-[#222] border border-[#2e2e2e] text-[10px] text-indigo-400 hover:text-indigo-300 rounded-lg transition-all disabled:opacity-40"
+            >
+              ⚡ Проверить активность токена в Telegram
+            </button>
           </div>
 
           <div>
@@ -701,10 +744,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           {webhookStatus && (
             <div
-              className={`p-2.5 rounded-xl text-xs font-medium border animate-fade-in ${
+              className={`p-3 rounded-xl text-xs font-medium border whitespace-pre-line leading-relaxed animate-fade-in ${
                 webhookStatus.success
                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
               }`}
             >
               {webhookStatus.msg}

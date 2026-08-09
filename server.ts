@@ -16,6 +16,40 @@ async function startServer() {
     next();
   });
 
+  // Check Bot Token Endpoint (getMe)
+  app.get('/api/telegram-get-me', async (req, res) => {
+    try {
+      const token = (req.query.token as string || '').trim().replace(/^["']|["']$/g, '');
+      if (!token) {
+        return res.status(200).json({ success: false, error: 'Токен не передан' });
+      }
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
+      const tgRes = await fetch(`https://api.telegram.org/bot${token}/getMe`, {
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      const tgData = await tgRes.json();
+      if (tgData.ok) {
+        res.status(200).json({
+          success: true,
+          bot: tgData.result
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+          errorCode: tgData.error_code,
+          error: tgData.description || 'Недействительный токен бота'
+        });
+      }
+    } catch (err: any) {
+      res.status(200).json({ success: false, error: err.message || 'Ошибка запроса к Telegram API' });
+    }
+  });
+
   // Check Webhook Info Endpoint
   app.get('/api/telegram-webhook-info', async (req, res) => {
     try {
