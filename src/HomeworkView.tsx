@@ -62,34 +62,19 @@ export function getSubjectHwList(subjKey: string, activeProfile: ProfileKey, hom
   const cleanKey = extractSubjectKey(subjKey);
   const primaryKey = getHomeworkStorageKey(subjKey, activeProfile);
 
-  const keysToCheck = [
-    primaryKey,
-    cleanKey === 'rus_lang' ? 'prof_rus_lang' : '',
-    cleanKey === 'rus_lang' ? 'base_rus_lang' : '',
-    `base_${cleanKey}`,
-    `prof_${cleanKey}`,
-    `math_${cleanKey}`,
-    `chem_${cleanKey}`,
-    cleanKey,
-    subjKey
-  ].filter(Boolean);
-
-  const seenIds = new Set<string>();
-  const result: HomeworkItem[] = [];
-
-  for (const k of keysToCheck) {
-    const list = homeworkStore[k];
-    if (Array.isArray(list)) {
-      for (const item of list) {
-        if (item && item.id && !seenIds.has(item.id)) {
-          seenIds.add(item.id);
-          result.push(item);
-        }
-      }
-    }
+  if (homeworkStore[primaryKey] && homeworkStore[primaryKey].length > 0) {
+    return homeworkStore[primaryKey];
   }
 
-  return result;
+  if (homeworkStore[cleanKey] && homeworkStore[cleanKey].length > 0) {
+    return homeworkStore[cleanKey];
+  }
+
+  if (homeworkStore[subjKey] && homeworkStore[subjKey].length > 0) {
+    return homeworkStore[subjKey];
+  }
+
+  return [];
 }
 
 export const HomeworkView: React.FC<HomeworkViewProps> = ({

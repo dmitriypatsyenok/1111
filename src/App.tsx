@@ -553,11 +553,20 @@ export default function App() {
     const subjNameRu = dbItem ? dbItem.ru : baseKey;
     const subjNameBe = dbItem ? dbItem.be : baseKey;
 
-    const isProf = (
-      (baseKey === 'rus_lang' && (activeProfile === 'math' || activeProfile === 'chem' || subjectKey.startsWith('prof_'))) ||
-      ((['math', 'algebra', 'geometry'].includes(baseKey)) && (activeProfile === 'math' || subjectKey.startsWith('math_') || subjectKey.startsWith('prof_'))) ||
-      (baseKey === 'chem' && (activeProfile === 'chem' || subjectKey.startsWith('chem_') || subjectKey.startsWith('prof_')))
-    );
+    let isProf = false;
+    if (subjectKey.startsWith('prof_') || subjectKey.startsWith('math_') || subjectKey.startsWith('chem_')) {
+      isProf = true;
+    } else if (subjectKey.startsWith('base_')) {
+      isProf = false;
+    } else {
+      if (baseKey === 'rus_lang') {
+        isProf = activeProfile === 'math' || activeProfile === 'chem';
+      } else if (['math', 'algebra', 'geometry'].includes(baseKey)) {
+        isProf = activeProfile === 'math';
+      } else if (baseKey === 'chem') {
+        isProf = activeProfile === 'chem';
+      }
+    }
 
     const levelRu = isProf ? 'Профильный' : 'Базовый';
     const levelBe = isProf ? 'Прафільны' : 'Базавы';
