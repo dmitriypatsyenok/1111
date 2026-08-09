@@ -105,10 +105,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     localStorage.setItem('ierihon_tg_token', token);
     localStorage.setItem('ierihon_tg_chat_id', chatId);
     localStorage.setItem('ierihon_tg_app_url', appUrl);
-    localStorage.setItem('ierihon_tg_auto_delete', String(tgAutoDelete));
-    localStorage.setItem('ierihon_tg_delete_delay', String(tgDeleteDelay));
     if (onSaveTgConfig) {
-      onSaveTgConfig(token, chatId, appUrl, tgAutoDelete, tgDeleteDelay);
+      onSaveTgConfig(token, chatId, appUrl, false, 0);
     }
     setSavedTgMsg(true);
     haptic('success');
@@ -140,9 +138,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       : 'https://ais-dev-ht72mmxdpodvpwxsnmrk43-775979266019.europe-west2.run.app';
 
     const calculatedWebhookUrl = `${clientOrigin}/api/telegram-webhook?token=${encodeURIComponent(token)}` +
-      `&appUrl=${encodeURIComponent(appUrl || '')}` +
-      `&autoDelete=${tgAutoDelete !== false}` +
-      `&deleteDelay=${tgDeleteDelay || 30}`;
+      `&appUrl=${encodeURIComponent(appUrl || '')}`;
 
     try {
       // Step 1: Try server endpoint
@@ -152,8 +148,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         body: JSON.stringify({
           token,
           appUrl,
-          autoDelete: tgAutoDelete,
-          deleteDelay: tgDeleteDelay,
           clientOrigin
         })
       });
@@ -664,45 +658,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               placeholder={translate('tg_app_url_ph', lang)}
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
             />
-          </div>
-
-          <div className="pt-1 border-t border-[#1a1a1a] space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-white font-medium">
-                {translate('tg_auto_delete_label', lang)}
-              </span>
-              <button
-                type="button"
-                onClick={() => setTgAutoDelete(!tgAutoDelete)}
-                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 ${
-                  tgAutoDelete ? 'bg-indigo-600' : 'bg-[#222]'
-                }`}
-              >
-                <div
-                  className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                    tgAutoDelete ? 'left-6' : 'left-1'
-                  }`}
-                />
-              </button>
-            </div>
-
-            {tgAutoDelete && (
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] text-[#888]">
-                  {translate('tg_delete_delay_label', lang)}
-                </span>
-                <select
-                  value={tgDeleteDelay}
-                  onChange={e => setTgDeleteDelay(Number(e.target.value))}
-                  className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
-                >
-                  <option value={15}>15 сек</option>
-                  <option value={30}>30 сек (Стандарт)</option>
-                  <option value={60}>60 сек (1 мин)</option>
-                  <option value={120}>120 сек (2 мин)</option>
-                </select>
-              </div>
-            )}
           </div>
 
           <div className="flex flex-col gap-2 pt-2">

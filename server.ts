@@ -109,9 +109,7 @@ async function startServer() {
           });
         }
         webhookUrl = `${origin}/api/telegram-webhook?token=${encodeURIComponent(cleanToken)}` +
-          `&appUrl=${encodeURIComponent(appUrl || '')}` +
-          `&autoDelete=${autoDelete !== false}` +
-          `&deleteDelay=${deleteDelay || 30}`;
+          `&appUrl=${encodeURIComponent(appUrl || '')}`;
       }
 
       console.log('Registering Telegram setWebhook URL:', webhookUrl);
@@ -206,7 +204,7 @@ async function startServer() {
     res.status(200).send('OK');
 
     try {
-      const { token, appUrl, autoDelete, deleteDelay } = req.query;
+      const { token, appUrl } = req.query;
       const update = req.body;
 
       if (!update || !update.message) return;
@@ -214,7 +212,6 @@ async function startServer() {
       const message = update.message;
       const text = (message.text || message.caption || '').trim();
       const chatId = message.chat?.id;
-      const messageId = message.message_id;
       const isPrivate = message.chat?.type === 'private';
 
       if (!chatId) return;
@@ -230,22 +227,8 @@ async function startServer() {
       }
 
       const targetAppUrl = (appUrl as string) || 'https://t.me/ierihon_testbot/app';
-      const shouldAutoDelete = autoDelete !== 'false';
-      const delaySec = Number(deleteDelay) || 30;
 
-      // 1. Delete user command message if enabled
-      if (shouldAutoDelete && isCommand) {
-        fetch(`https://api.telegram.org/bot${botToken}/deleteMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            message_id: messageId
-          })
-        }).catch(err => console.error('Error deleting user command message:', err));
-      }
-
-      // 2. Prepare button
+      // Prepare button
       let buttonObj: any;
       if (targetAppUrl.includes('t.me/')) {
         buttonObj = { text: '🚀 Открыть приложение Иерихон3', url: targetAppUrl };
@@ -257,34 +240,20 @@ async function startServer() {
         inline_keyboard: [[buttonObj]]
       };
 
+      const messageText = `📱 *Школа Иерихон3*\n\nПерейдите по ссылке, чтобы открыть учебное приложение:\n${targetAppUrl}`;
+
       const sendRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: '📱 *Школа Иерихон3*\n\nНажмите кнопку ниже, чтобы открыть учебную систему:',
-          parse_mode: 'Markdown',
+          text: messageText,
           reply_markup: replyMarkup
         })
       });
 
       const sendData = await sendRes.json();
       console.log('Telegram sendMessage result:', sendData);
-
-      // 3. Schedule auto-delete of bot response message if enabled
-      if (shouldAutoDelete && sendData.ok && sendData.result?.message_id) {
-        const sentMsgId = sendData.result.message_id;
-        setTimeout(() => {
-          fetch(`https://api.telegram.org/bot${botToken}/deleteMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: chatId,
-              message_id: sentMsgId
-            })
-          }).catch(err => console.error('Error deleting bot response message:', err));
-        }, delaySec * 1000);
-      }
     } catch (err) {
       console.error('Error handling Telegram webhook:', err);
     }
