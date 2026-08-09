@@ -105,155 +105,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     setTimeout(() => setSavedTgMsg(false), 3000);
   };
 
-  const handleSetupWebhook = async () => {
-    const token = tgToken.trim().replace(/^["']|["']$/g, '');
-    const appUrl = tgAppUrl.trim();
-    if (!token) {
-      alert(lang === 'be' ? 'Калі ласка, увядзіце Токен Бота!' : 'Пожалуйста, введите Токен Бота!');
-      return;
-    }
-
-    if (token.includes('t.me') || token.includes('http://') || token.includes('https://') || !token.includes(':')) {
-      const errMsg = 'Токен бота не должен быть ссылкой (https://t.me/...)! Введите Токен Бота из @BotFather (выглядит как 1234567890:ABCdefG...). Ссылку на WebApp вставляйте в поле "App URL".';
-      setWebhookStatus({
-        success: false,
-        msg: 'Ошибка: ' + errMsg
-      });
-      alert(errMsg);
-      return;
-    }
-    setWebhookLoading(true);
-    setWebhookStatus(null);
-
-    const clientOrigin = window.location.origin.startsWith('https://')
-      ? window.location.origin
-      : 'https://ais-dev-ht72mmxdpodvpwxsnmrk43-775979266019.europe-west2.run.app';
-
-    const calculatedWebhookUrl = `${clientOrigin}/api/telegram-webhook?token=${encodeURIComponent(token)}` +
-      `&appUrl=${encodeURIComponent(appUrl || '')}`;
-
-    try {
-      // Step 1: Try server endpoint
-      const res = await fetch('/api/telegram-setup-webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token,
-          appUrl,
-          clientOrigin
-        })
-      });
-
-      const resText = await res.text();
-      let data: any = {};
-      try {
-        data = JSON.parse(resText);
-      } catch {
-        data = { success: false, error: resText || 'Server error' };
-      }
-
-      if (data.success && data.tgResult?.ok) {
-        setWebhookStatus({
-          success: true,
-          msg: translate('tg_webhook_success', lang) + ` (URL: ${data.webhookUrl || calculatedWebhookUrl})`
-        });
-        haptic('success');
-        return;
-      }
-
-      // Step 2: Client-side direct call fallback to Telegram API
-      console.log('Server setup failed or returned error. Trying direct Telegram API call...');
-      const tgDirectRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: calculatedWebhookUrl,
-          allowed_updates: ['message', 'edited_message']
-        })
-      });
-
-      const tgDirectData = await tgDirectRes.json();
-      if (tgDirectData.ok) {
-        setWebhookStatus({
-          success: true,
-          msg: translate('tg_webhook_success', lang) + ` (URL: ${calculatedWebhookUrl})`
-        });
-        haptic('success');
-      } else {
-        const errDesc = tgDirectData.description || data.error || data.tgResult?.description || translate('tg_webhook_error', lang);
-        let friendlyErr = errDesc;
-        if (errDesc.includes('Unauthorized') || tgDirectData.error_code === 401) {
-          friendlyErr = 'Неверный или обрезанный Токен Бота (401 Unauthorized).\n• Проверьте, что токен скопирован полностью из @BotFather без пропущенных символов в конце.\n• Если токен был обновлен/отозван, скопируйте новый из @BotFather (/mybots -> API Token).';
-        }
-        setWebhookStatus({
-          success: false,
-          msg: (lang === 'be' ? 'Памылка: ' : 'Ошибка: ') + friendlyErr
-        });
-        haptic('error');
-      }
-    } catch (err: any) {
-      setWebhookStatus({
-        success: false,
-        msg: translate('tg_webhook_error', lang) + ' (' + err.message + ')'
-      });
-      haptic('error');
-    } finally {
-      setWebhookLoading(false);
-    }
-  };
-
-  const handleTestBotToken = async () => {
-    const token = tgToken.trim().replace(/^["']|["']$/g, '');
-    if (!token) {
-      alert('Укажите Токен Бота');
-      return;
-    }
-    setWebhookLoading(true);
-    try {
-      const res = await fetch(`/api/telegram-get-me?token=${encodeURIComponent(token)}`);
-      const data = await res.json();
-      if (data.success && data.bot) {
-        alert(`✓ Бот успешно найден в Telegram!\nИмя бота: @${data.bot.username}\nНазвание: ${data.bot.first_name}\nID: ${data.bot.id}\n\nТокен полностью ВЕРЕН и АКТИВЕН!`);
-      } else {
-        alert(`❌ Ошибка Telegram (Код ${data.errorCode || 401}):\n${data.error}\n\nПричина: Telegram отклонил этот токен. Зайдите в @BotFather -> /mybots -> Выберите бота -> API Token -> скопируйте новый токен.`);
-      }
-    } catch (err: any) {
-      alert('Не удалось связаться с Telegram: ' + err.message);
-    } finally {
-      setWebhookLoading(false);
-    }
-  };
-
-  const handleCheckWebhookStatus = async () => {
-    const token = tgToken.trim().replace(/^["']|["']$/g, '');
-    if (!token) {
-      alert('Укажите Токен Бота в настройках');
-      return;
-    }
-    if (token.includes('t.me') || token.includes('http://') || token.includes('https://') || !token.includes(':')) {
-      alert('Токен бота не должен быть ссылкой (https://t.me/...)! Введите Токен Бота из @BotFather (выглядит как 1234567890:ABCdefG...). Ссылку на WebApp вставляйте в поле "App URL".');
-      return;
-    }
-    setWebhookLoading(true);
-    try {
-      const res = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`);
-      const data = await res.json();
-      if (data.ok) {
-        const info = data.result;
-        const msg = info.url
-          ? `✓ Webhook подключен к:\n${info.url}\n(Ожидающих сообщений: ${info.pending_update_count}${info.last_error_message ? `, Последняя ошибка Telegram: ${info.last_error_message}` : ''})`
-          : '⚠ Webhook НЕ активирован в Telegram для этого бота.';
-        alert(msg);
-      } else {
-        alert('Ошибка Telegram API: ' + (data.description || 'Неизвестная ошибка'));
-      }
-    } catch (err: any) {
-      alert('Не удалось проверить статус: ' + err.message);
-    } finally {
-      setWebhookLoading(false);
-    }
-  };
-
   const formatScheduleForExport = (scheds: ScheduleProfiles) => {
     const dayKeys: DayKey[] = ['pn', 'vt', 'sr', 'cht', 'pt'];
     const allKeys = Object.keys(scheds || {});
@@ -615,15 +466,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               value={tgToken}
               onChange={e => setTgToken(e.target.value)}
               placeholder={translate('tg_bot_token_ph', lang)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all mb-1.5"
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
             />
-            <button
-              onClick={handleTestBotToken}
-              disabled={webhookLoading || !tgToken.trim()}
-              className="px-2.5 py-1 bg-[#1a1a1a] hover:bg-[#222] border border-[#2e2e2e] text-[10px] text-indigo-400 hover:text-indigo-300 rounded-lg transition-all disabled:opacity-40"
-            >
-              ⚡ Проверить активность токена в Telegram
-            </button>
           </div>
 
           <div>
@@ -655,49 +499,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div className="flex flex-col gap-2 pt-2">
             <button
               onClick={handleSaveTg}
-              className="w-full py-2.5 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.99] shadow-md shadow-indigo-600/20"
             >
-              <Save className="w-3.5 h-3.5 text-indigo-400" />
+              <Save className="w-3.5 h-3.5" />
               {lang === 'be' ? 'Захаваць налады' : 'Сохранить настройки'}
-            </button>
-
-            <button
-              onClick={handleSetupWebhook}
-              disabled={webhookLoading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.99] shadow-md shadow-indigo-600/20"
-            >
-              {webhookLoading ? (
-                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Bell className="w-3.5 h-3.5" />
-              )}
-              {translate('tg_setup_webhook_btn', lang)}
-            </button>
-
-            <button
-              onClick={handleCheckWebhookStatus}
-              disabled={webhookLoading}
-              className="w-full py-2 bg-[#141414] hover:bg-[#1a1a1a] border border-[#2a2a2a] text-[#aaa] hover:text-white font-medium text-[11px] rounded-xl flex items-center justify-center gap-1.5 transition-all"
-            >
-              🔍 {lang === 'be' ? 'Праверыць статус Webhook' : 'Проверить статус Webhook в Telegram'}
             </button>
           </div>
 
           {savedTgMsg && (
             <div className="text-center text-xs text-emerald-400 font-medium animate-fade-in">
               ✓ {translate('tg_bot_saved', lang)}
-            </div>
-          )}
-
-          {webhookStatus && (
-            <div
-              className={`p-3 rounded-xl text-xs font-medium border whitespace-pre-line leading-relaxed animate-fade-in ${
-                webhookStatus.success
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-              }`}
-            >
-              {webhookStatus.msg}
             </div>
           )}
         </div>
