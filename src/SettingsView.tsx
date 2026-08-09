@@ -132,7 +132,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           token,
           appUrl,
           autoDelete: tgAutoDelete,
-          deleteDelay: tgDeleteDelay
+          deleteDelay: tgDeleteDelay,
+          clientOrigin: window.location.origin
         })
       });
 
@@ -151,7 +152,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         });
         haptic('success');
       } else {
-        const desc = data.tgResult?.description || data.error || translate('tg_webhook_error', lang);
+        const desc = data.error || data.tgResult?.description || translate('tg_webhook_error', lang);
         setWebhookStatus({
           success: false,
           msg: (lang === 'be' ? 'Памылка: ' : 'Ошибка: ') + desc

@@ -11,26 +11,52 @@ async function startServer() {
   // Webhook Setup Endpoint
   app.post('/api/telegram-setup-webhook', async (req, res) => {
     try {
-      const { token, appUrl, autoDelete, deleteDelay } = req.body || {};
-      if (!token) {
-        return res.status(200).json({ success: false, error: 'Token is required' });
+      const { token, appUrl, autoDelete, deleteDelay, clientOrigin, customWebhookUrl } = req.body || {};
+      if (!token || !token.trim()) {
+        return res.status(200).json({
+          success: false,
+          error: 'Токен бота не передан. Укажите токен в поле Bot Token.'
+        });
       }
 
-      // Determine public origin
-      const host = req.get('x-forwarded-host') || req.get('host') || 'localhost:3000';
-      const protocol = req.get('x-forwarded-proto') || (req.secure ? 'https' : 'http');
-      const origin = `${protocol}://${host}`;
+      const botToken = token.trim();
 
-      const webhookUrl = `${origin}/api/telegram-webhook?token=${encodeURIComponent(token)}` +
-        `&appUrl=${encodeURIComponent(appUrl || '')}` +
-        `&autoDelete=${autoDelete !== false}` +
-        `&deleteDelay=${deleteDelay || 30}`;
+      // Determine public HTTPS origin
+      let origin = '';
+      if (clientOrigin && typeof clientOrigin === 'string' && clientOrigin.startsWith('https://')) {
+        origin = clientOrigin.replace(/\/$/, '');
+      } else {
+        let rawHost = (req.headers['x-forwarded-host'] as string) || req.get('host') || '';
+        if (rawHost.includes(',')) {
+          rawHost = rawHost.split(',')[0].trim();
+        }
+        const proto = (req.headers['x-forwarded-proto'] as string) || (req.secure ? 'https' : 'http');
+        if (rawHost && !rawHost.includes('localhost') && !rawHost.includes('127.0.0.1')) {
+          origin = `https://${rawHost}`;
+        } else if (proto === 'https' && rawHost) {
+          origin = `https://${rawHost}`;
+        }
+      }
 
-      console.log('Setting Telegram Webhook URL:', webhookUrl);
+      let webhookUrl = customWebhookUrl ? customWebhookUrl.trim() : '';
+      if (!webhookUrl) {
+        if (!origin || !origin.startsWith('https://')) {
+          return res.status(200).json({
+            success: false,
+            error: 'Telegram требует HTTPS адрес. Не удалось автоматически определить публичный URL приложения.'
+          });
+        }
+        webhookUrl = `${origin}/api/telegram-webhook?token=${encodeURIComponent(botToken)}` +
+          `&appUrl=${encodeURIComponent(appUrl || '')}` +
+          `&autoDelete=${autoDelete !== false}` +
+          `&deleteDelay=${deleteDelay || 30}`;
+      }
+
+      console.log('Registering Telegram setWebhook URL:', webhookUrl);
 
       let tgData: any = {};
       try {
-        const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+        const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -40,19 +66,37 @@ async function startServer() {
         });
 
         const text = await tgRes.text();
+        console.log('Telegram setWebhook response:', text);
         try {
           tgData = JSON.parse(text);
         } catch {
-          tgData = { ok: false, description: text || `HTTP ${tgRes.status}` };
+          tgData = { ok: false, description: text || `HTTP Status ${tgRes.status}` };
         }
       } catch (fetchErr: any) {
-        tgData = { ok: false, description: fetchErr.message || 'Failed to reach Telegram API' };
+        console.error('Fetch error calling Telegram API:', fetchErr);
+        tgData = { ok: false, description: fetchErr.message || 'Ошибка соединения с Telegram API' };
       }
 
-      res.status(200).json({ success: !!tgData.ok, tgResult: tgData, webhookUrl });
+      let errorMessage = '';
+      if (!tgData.ok) {
+        if (tgData.description?.includes('Unauthorized') || tgData.error_code === 401) {
+          errorMessage = 'Неверный Токен Бота (Unauthorized). Проверьте токен, полученный у @BotFather.';
+        } else if (tgData.description?.includes('HTTPS') || tgData.description?.includes('url')) {
+          errorMessage = `Ошибка URL для Webhook: ${tgData.description}`;
+        } else {
+          errorMessage = tgData.description || 'Telegram отклонил Webhook';
+        }
+      }
+
+      res.status(200).json({
+        success: !!tgData.ok,
+        tgResult: tgData,
+        webhookUrl,
+        error: errorMessage || undefined
+      });
     } catch (err: any) {
       console.error('Error setting Telegram webhook:', err);
-      res.status(200).json({ success: false, error: err.message || 'Webhook setup failed' });
+      res.status(200).json({ success: false, error: err.message || 'Не удалось выполнить запрос' });
     }
   });
 
