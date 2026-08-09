@@ -60,18 +60,15 @@ export function getHomeworkStorageKey(subjKey: string, activeProfile: ProfileKey
 
 export function getSubjectHwList(subjKey: string, activeProfile: ProfileKey, homeworkStore: HomeworkStore): HomeworkItem[] {
   const cleanKey = extractSubjectKey(subjKey);
-  const primaryKey = getHomeworkStorageKey(subjKey, activeProfile);
+  const primaryKey = getHomeworkStorageKey(cleanKey, activeProfile);
 
   if (homeworkStore[primaryKey] && homeworkStore[primaryKey].length > 0) {
     return homeworkStore[primaryKey];
   }
 
+  // Fallback to clean key ONLY for non-profile subjects or legacy base homework
   if (homeworkStore[cleanKey] && homeworkStore[cleanKey].length > 0) {
     return homeworkStore[cleanKey];
-  }
-
-  if (homeworkStore[subjKey] && homeworkStore[subjKey].length > 0) {
-    return homeworkStore[subjKey];
   }
 
   return [];
@@ -220,7 +217,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                 <div
                   key={idx}
                   onClick={() => {
-                    onSelectSubject(storageKey);
+                    onSelectSubject(subjKey);
                     onNavigate('hw-detail');
                   }}
                   className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group"
@@ -268,7 +265,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               <div
                 key={s.key}
                 onClick={() => {
-                  onSelectSubject(storageKey);
+                  onSelectSubject(s.key);
                   onNavigate('hw-detail');
                 }}
                 className="relative bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
@@ -289,12 +286,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
   // Detail Mode
   const baseSubjectKey = extractSubjectKey(activeSubjectKey);
-  const storageKey = getHomeworkStorageKey(activeSubjectKey, effectiveProfile);
+  const storageKey = getHomeworkStorageKey(baseSubjectKey, effectiveProfile);
 
   const dbItem = SUBJECT_DB[baseSubjectKey];
   const listFound = SUBJECT_LIST.find(s => s.key === baseSubjectKey);
 
-  const currentHwList = getSubjectHwListLocal(activeSubjectKey);
+  const currentHwList = getSubjectHwListLocal(baseSubjectKey);
   const nextLessonISO = getSubjectNextLessonDate(baseSubjectKey);
   const nextLessonFormatted = formatCustomDate(nextLessonISO, 'day_month_long', lang);
 
@@ -358,8 +355,20 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       {activeTab === 'history' && (
         <div className="space-y-3">
           {currentHwList.length === 0 ? (
-            <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
-              {translate('no_hw', lang)}
+            <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center space-y-3">
+              <div className="text-[#888] text-xs">
+                {translate('no_hw', lang)}
+              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('create');
+                  haptic('light');
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold hover:bg-indigo-600/30 transition-all cursor-pointer active:scale-95 shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{translate('hw_create', lang)}</span>
+              </button>
             </div>
           ) : (
             currentHwList.map(item => (
@@ -374,7 +383,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                     {formatCustomDate(item.due, 'day_month_short', lang)}
                   </span>
                 </div>
-                <div className="text-xs text-white leading-relaxed whitespace-pre-wrap font-medium">
+                <div className="text-xs text-white leading-relaxed whitespace-pre-wrap font-medium select-text">
                   {item.text}
                 </div>
                 <div className="flex gap-2 pt-2 border-t border-[#1f1f1f]">
@@ -417,6 +426,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
           </div>
 
           <textarea
+            autoFocus
             value={inputText}
             onChange={e => setInputText(e.target.value)}
             placeholder={
@@ -424,7 +434,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                 ? 'Напрыклад: Стр. 42, №5-8, вывучыць правіла'
                 : 'Например: Стр. 42, №5-8, выучить правило'
             }
-            className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y placeholder:text-[#666]"
+            className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y placeholder:text-[#666] select-text pointer-events-auto"
           />
 
           <button
@@ -447,9 +457,10 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               {translate('hw_edit_title', lang)}
             </h3>
             <textarea
+              autoFocus
               value={editText}
               onChange={e => setEditText(e.target.value)}
-              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y"
+              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y select-text pointer-events-auto"
             />
             <div className="flex gap-2.5">
               <button
