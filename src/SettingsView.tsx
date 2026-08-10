@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ScheduleProfiles } from './types';
-import { translate } from './i18n';
+import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles } from './types';
+import { translate, getProfileFullTitle } from './i18n';
 import { haptic } from './telegram';
-import { Download, Upload, Trash2, Check, Bell, Save } from 'lucide-react';
+import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical } from 'lucide-react';
 
 interface SettingsViewProps {
   lang: Language;
   schedules: ScheduleProfiles;
+  activeProfile: ProfileKey;
   homework: HomeworkStore;
   duties: DutiesStore;
   birthdays: BirthdayItem[];
@@ -18,6 +19,7 @@ interface SettingsViewProps {
     appUrl?: string;
   };
   onSetLang: (lang: Language) => void;
+  onSetProfile: (profile: ProfileKey) => void;
   onImportSchedules: (data: ScheduleProfiles) => void;
   onImportHomework: (data: HomeworkStore) => void;
   onImportDuties: (data: DutiesStore) => void;
@@ -35,6 +37,7 @@ interface SettingsViewProps {
 export const SettingsView: React.FC<SettingsViewProps> = ({
   lang,
   schedules,
+  activeProfile,
   homework,
   duties,
   birthdays,
@@ -42,6 +45,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   pollHistory = [],
   tgConfig,
   onSetLang,
+  onSetProfile,
   onImportSchedules,
   onImportHomework,
   onImportDuties,
@@ -209,6 +213,59 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               {lang === 'be' && <Check className="w-3 h-3 text-white" />}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Main Profile Selection */}
+      <div className="space-y-2">
+        <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
+          {translate('main_profile_title', lang)}
+        </div>
+        <div className="space-y-2">
+          {(() => {
+            const allProfileKeys = Object.keys(schedules || {});
+            const profileKeys = [
+              ...['base', 'math', 'chem'].filter(k => allProfileKeys.includes(k)),
+              ...allProfileKeys.filter(k => !['base', 'math', 'chem'].includes(k))
+            ] as ProfileKey[];
+
+            return profileKeys.map(pKey => {
+              const isSelected = activeProfile === pKey;
+              const title = getProfileFullTitle(pKey, schedules, lang);
+              const getIcon = () => {
+                if (pKey === 'math') return <Ruler className="w-4 h-4 text-indigo-400" />;
+                if (pKey === 'chem') return <FlaskConical className="w-4 h-4 text-purple-400" />;
+                return <BookOpen className="w-4 h-4 text-emerald-400" />;
+              };
+
+              return (
+                <div
+                  key={pKey}
+                  onClick={() => {
+                    onSetProfile(pKey);
+                    haptic('light');
+                  }}
+                  className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+                    isSelected ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center shrink-0">
+                      {getIcon()}
+                    </div>
+                    <span className="text-xs font-bold text-white">{title}</span>
+                  </div>
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                      isSelected ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                    }`}
+                  >
+                    {isSelected && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                </div>
+              );
+            });
+          })()}
         </div>
       </div>
 

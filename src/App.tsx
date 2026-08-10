@@ -1277,6 +1277,8 @@ export default function App() {
           <SettingsView
             lang={lang}
             schedules={schedules}
+            activeProfile={activeProfile}
+            onSetProfile={setActiveProfile}
             homework={homework}
             duties={duties}
             birthdays={birthdays}
