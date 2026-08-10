@@ -237,7 +237,7 @@ export const I18N = {
     select_all: "Абраць усіх",
     deselect_all: "Зняць выбар",
 
-    cancel: "Адмена",
+    cancel: "Скасаваць",
     t_schedule: "Расклад",
     t_hw: "Дамашняе заданне",
     t_food: "Сталовая",
@@ -270,4 +270,57 @@ export const I18N = {
 export function translate(key: string, lang: Language): string {
   const dict = I18N[lang] || I18N.ru;
   return (dict as any)[key] || (I18N.ru as any)[key] || key;
+}
+
+export function getProfileTitle(pKey: string, schedules?: any, lang: Language = 'ru'): string {
+  const customTitle = schedules?.[pKey]?.title;
+  if (lang === 'be') {
+    if (pKey === 'base' || customTitle === 'База' || customTitle === 'Базовый' || customTitle === 'Базавы') return 'База';
+    if (pKey === 'math' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны' || customTitle === 'Матем' || customTitle === 'Матэм') return 'Матэматыка';
+    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны') return 'Хімія';
+    if (customTitle === 'Базовый') return 'Базавы';
+    if (customTitle === 'Математический') return 'Матэматычны';
+    if (customTitle === 'Химико-биологический') return 'Хіміка-біялагічны';
+    return customTitle || pKey;
+  } else {
+    if (pKey === 'base' || customTitle === 'Базавы' || customTitle === 'База') return 'База';
+    if (pKey === 'math' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэм' || customTitle === 'Матем') return 'Математика';
+    if (pKey === 'chem' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Химия' || customTitle === 'Химико-биологический') return 'Химия';
+    if (customTitle === 'Базавы') return 'Базовый';
+    if (customTitle === 'Матэматычны') return 'Математический';
+    if (customTitle === 'Хіміка-біялагічны') return 'Химико-биологический';
+    return customTitle || pKey;
+  }
+}
+
+export function getProfileFullTitle(pKey: string, schedules?: any, lang: Language = 'ru'): string {
+  const customTitle = schedules?.[pKey]?.title;
+  if (lang === 'be') {
+    if (pKey === 'base' || customTitle === 'База' || customTitle === 'Базовый' || customTitle === 'Базавы') return 'Базавы';
+    if (pKey === 'math' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны') return 'Матэматычны';
+    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны') return 'Хіміка-біялагічны';
+    return customTitle || pKey;
+  } else {
+    if (pKey === 'base' || customTitle === 'Базавы' || customTitle === 'База' || customTitle === 'Базовый') return 'Базовый';
+    if (pKey === 'math' || customTitle === 'Матэматычны' || customTitle === 'Матэматыка' || customTitle === 'Математический' || customTitle === 'Математика') return 'Математический';
+    if (pKey === 'chem' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Хімія' || customTitle === 'Химико-биологический' || customTitle === 'Химия') return 'Химико-биологический';
+    return customTitle || pKey;
+  }
+}
+
+export function translateZoneName(name: string, lang: Language = 'ru'): string {
+  if (!name) return name;
+  const lower = name.trim().toLowerCase();
+  if (lang === 'be') {
+    if (lower === 'столовая' || lower === 'сталовая') return 'Сталовая';
+    if (lower === '1 этаж' || lower === '1 паверх') return '1 паверх';
+    if (lower === '2 этаж' || lower === '2 паверх') return '2 паверх';
+    if (lower === '3 этаж' || lower === '3 паверх') return '3 паверх';
+  } else {
+    if (lower === 'сталовая' || lower === 'столовая') return 'Столовая';
+    if (lower === '1 паверх' || lower === '1 этаж') return '1 этаж';
+    if (lower === '2 паверх' || lower === '2 этаж') return '2 этаж';
+    if (lower === '3 паверх' || lower === '3 этаж') return '3 этаж';
+  }
+  return name;
 }

@@ -30,7 +30,7 @@ import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
 import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate } from './dateFormatter';
-import { translate } from './i18n';
+import { translate, getProfileFullTitle } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { subscribeToDoc, updateDocData } from './firebase';
 
@@ -1301,8 +1301,7 @@ export default function App() {
   };
 
   const getProfileName = (): string => {
-    const profilesDict = translate('profiles', lang) as any;
-    return profilesDict?.[activeProfile] || activeProfile;
+    return getProfileFullTitle(activeProfile, schedules, lang);
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DayKey, HomeworkItem, HomeworkStore, Language, ProfileKey, ScheduleProfiles, ScreenType } from './types';
-import { translate } from './i18n';
+import { translate, getProfileTitle } from './i18n';
 import { LESSON_TIMES, SUBJECT_LIST, SUBJECT_DB } from './defaultData';
 import { formatCustomDate, getNextLessonDate, parseLessonName, extractSubjectKey } from './dateFormatter';
 import { Search, ChevronRight, Edit2, Trash2, Calendar, Plus } from 'lucide-react';
@@ -128,7 +128,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
           </div>
           <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
             {availableProfileKeys.map(pKey => {
-              const profTitle = schedules[pKey]?.title || (pKey === 'base' ? 'База' : pKey === 'math' ? 'Матем' : pKey === 'chem' ? 'Химия' : pKey);
+              const profTitle = getProfileTitle(pKey, schedules, lang);
               const isActive = effectiveProfile === pKey;
               return (
                 <button

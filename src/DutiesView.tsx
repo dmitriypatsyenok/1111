@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, DutyZone, Language } from './types';
-import { translate } from './i18n';
+import { translate, translateZoneName } from './i18n';
 import { STANDARD_DUTY_ZONES } from './defaultData';
 import { Plus, Search, Trash2, UserPlus, MapPin, User, Edit2, Check } from 'lucide-react';
 import { haptic } from './telegram';
@@ -60,7 +60,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
   // Open Multi-Assign & Edit Modal
   const openEditModal = (zone: DutyZone) => {
     setEditingZone(zone);
-    setEditedZoneName(zone.name);
+    setEditedZoneName(translateZoneName(zone.name, lang));
     setSelectedStudents([...zone.students]);
     setRosterFilter('');
     setManualStudentInput('');
@@ -200,7 +200,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                     <div className="text-[11px] text-indigo-400 mt-0.5">
                       {translate('duty_on_days', lang)}{' '}
                       <span className="font-semibold text-white">
-                        {res.dayTitle} — {res.zoneName}
+                        {res.dayTitle} — {translateZoneName(res.zoneName, lang)}
                       </span>
                     </div>
                   </div>
@@ -258,7 +258,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   <div className="flex items-center justify-between border-b border-[#1f1f1f] pb-2.5">
                     <div className="flex items-center gap-2 text-xs font-bold text-indigo-400">
                       <MapPin className="w-4 h-4 text-indigo-400" />
-                      <span>{zone.name}</span>
+                      <span>{translateZoneName(zone.name, lang)}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -344,10 +344,10 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
               {STANDARD_DUTY_ZONES.map(preset => (
                 <button
                   key={preset}
-                  onClick={() => handleCreateZoneSubmit(preset)}
+                  onClick={() => handleCreateZoneSubmit(translateZoneName(preset, lang))}
                   className="py-2.5 px-3 rounded-2xl bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1f1f1f] text-xs text-white font-bold text-left transition-all flex items-center justify-between"
                 >
-                  <span>{preset}</span>
+                  <span>{translateZoneName(preset, lang)}</span>
                   <Plus className="w-3.5 h-3.5 text-indigo-400" />
                 </button>
               ))}

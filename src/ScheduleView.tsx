@@ -1,6 +1,6 @@
 import React from 'react';
 import { DayKey, Language, ProfileKey, ScheduleProfiles, ScreenType } from './types';
-import { translate } from './i18n';
+import { translate, getProfileFullTitle } from './i18n';
 import { LESSON_TIMES, SUBJECT_DB } from './defaultData';
 import { parseLessonName } from './dateFormatter';
 import { ChevronRight, Ruler, BookOpen, FlaskConical } from 'lucide-react';
@@ -46,8 +46,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
               return <BookOpen className="w-5 h-5 text-emerald-400" />;
             };
 
-            const profilesDict = translate('profiles', lang) as any;
-            const name = schedules[pKey]?.title || profilesDict?.[pKey] || pKey;
+            const name = getProfileFullTitle(pKey, schedules, lang);
 
             return (
               <div
