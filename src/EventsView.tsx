@@ -116,6 +116,12 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   type="text"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSave();
+                    }
+                  }}
                   placeholder={
                     lang === 'be'
                       ? 'Напрыклад: Кантрольная праца па фізіцы'

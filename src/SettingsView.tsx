@@ -614,6 +614,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               type="text"
               value={tgToken}
               onChange={e => setTgToken(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSaveTg();
+                }
+              }}
               placeholder={translate('tg_bot_token_ph', lang)}
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
             />
@@ -627,6 +633,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               type="text"
               value={tgChatId}
               onChange={e => setTgChatId(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSaveTg();
+                }
+              }}
               placeholder={translate('tg_chat_id_ph', lang)}
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
             />

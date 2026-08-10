@@ -95,6 +95,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const [customDueDate, setCustomDueDate] = useState('');
   const [editModalItem, setEditModalItem] = useState<HomeworkItem | null>(null);
   const [editText, setEditText] = useState('');
+  const [subjectSearch, setSubjectSearch] = useState('');
 
   const dayKeys: DayKey[] = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const daysDict = translate('t_days_s', lang) as any;
@@ -251,14 +252,34 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   }
 
   if (viewMode === 'subjects') {
+    const filteredSubjects = SUBJECT_LIST.filter(s =>
+      s[lang].toLowerCase().includes(subjectSearch.trim().toLowerCase()) ||
+      s.ru.toLowerCase().includes(subjectSearch.trim().toLowerCase()) ||
+      s.be.toLowerCase().includes(subjectSearch.trim().toLowerCase())
+    );
+
     return (
       <div className="space-y-3.5 animate-fade-in">
-        <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
-          {translate('choose_subject', lang)}
+        <div className="flex items-center justify-between px-1">
+          <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest">
+            {translate('choose_subject', lang)}
+          </div>
         </div>
+
+        {/* Search Subject Input Bar */}
+        <div className="relative">
+          <input
+            type="text"
+            value={subjectSearch}
+            onChange={e => setSubjectSearch(e.target.value)}
+            placeholder={lang === 'be' ? 'Пошук прадмета па назве...' : 'Поиск предмета по названию...'}
+            className="w-full bg-[#161616] border border-[#2a2a2a] rounded-full text-xs text-white pl-10 pr-4 py-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+          />
+          <Search className="w-4 h-4 text-[#888] absolute left-3.5 top-3.5" />
+        </div>
+
         <div className="grid grid-cols-2 gap-2.5">
-          {SUBJECT_LIST.map(s => {
-            const storageKey = getHomeworkStorageKey(s.key, effectiveProfile);
+          {filteredSubjects.map(s => {
             const list = getSubjectHwListLocal(s.key);
             const hasHw = list.length > 0;
 
@@ -446,6 +467,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             autoFocus
             value={inputText}
             onChange={e => setInputText(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                handleCreateSubmit();
+              }
+            }}
             placeholder={
               lang === 'be'
                 ? 'Напрыклад: Стр. 42, №5-8, вывучыць правіла'
@@ -477,6 +504,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               autoFocus
               value={editText}
               onChange={e => setEditText(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                  e.preventDefault();
+                  handleEditSubmit();
+                }
+              }}
               className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y select-text pointer-events-auto"
             />
             <div className="flex gap-2.5">

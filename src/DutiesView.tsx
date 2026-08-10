@@ -407,6 +407,12 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                 type="text"
                 value={editedZoneName}
                 onChange={e => setEditedZoneName(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSaveEditedZone();
+                  }
+                }}
                 placeholder={translate('zone_name_placeholder', lang)}
                 className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
               />
@@ -491,6 +497,12 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                 type="text"
                 value={manualStudentInput}
                 onChange={e => setManualStudentInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSaveEditedZone();
+                  }
+                }}
                 placeholder={translate('custom_student_ph', lang)}
                 className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
               />
