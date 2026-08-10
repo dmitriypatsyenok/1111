@@ -137,16 +137,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="space-y-3.5 animate-fade-in">
       {/* Hero Header */}
-      <div className="flex items-baseline justify-between px-1 py-0.5">
+      <div className="flex items-center justify-between px-1 py-0.5">
         <div>
+          <div className="flex items-center gap-1.5 mb-1">
+            <span className="text-[11px] font-extrabold tracking-widest text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20 uppercase">
+              Ierihon
+            </span>
+          </div>
           <h2 className="text-xl font-bold text-white tracking-tight">
-            {translate('hi', lang)} <span className="text-indigo-400">👋</span>
+            {translate('hi', lang)}
           </h2>
-          <p className="text-[10px] text-[#888] uppercase tracking-widest font-semibold mt-0.5">
-            {lang === 'be' ? 'Панэль кіравання класам' : 'Панель управления классом'}
-          </p>
         </div>
-        <div className="text-xs text-[#888] capitalize font-medium">
+        <div className="text-xs text-[#888] capitalize font-medium text-right">
           {formatCustomDate(new Date(), 'weekday_day_month', lang)}
         </div>
       </div>

@@ -98,19 +98,32 @@ export function getNextLessonDate(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const excludeSet = new Set(existingDueDates);
+  // Determine starting point: after the latest existing due date if in future, else after today
+  let startFromDate = new Date(today);
+  const validDueDates = existingDueDates
+    .map(d => {
+      const dt = new Date(d);
+      dt.setHours(0, 0, 0, 0);
+      return dt;
+    })
+    .filter(dt => !isNaN(dt.getTime()));
+
+  const futureDueDates = validDueDates.filter(dt => dt >= today);
+  if (futureDueDates.length > 0) {
+    startFromDate = new Date(Math.max(...futureDueDates.map(dt => dt.getTime())));
+  }
+
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const primarySched = (schedules && schedules[activeProfile]) || (schedules && schedules.base) || (schedules ? Object.values(schedules)[0] : {}) || {};
 
-  for (let i = 1; i <= 60; i++) {
-    const candidate = new Date(today);
+  // Search up to 90 days ahead starting from startFromDate + 1 day
+  for (let i = 1; i <= 90; i++) {
+    const candidate = new Date(startFromDate);
     candidate.setDate(candidate.getDate() + i);
     const dayOfWeek = candidate.getDay();
 
+    // Skip weekends
     if (dayOfWeek === 0 || dayOfWeek === 6) continue;
-
-    const candidateISO = candidate.toISOString().slice(0, 10);
-    if (excludeSet.has(candidateISO)) continue;
 
     const dayKey = dayKeysMap[dayOfWeek - 1];
     let dayLessons: string[] = (primarySched as any)[dayKey] || [];
@@ -134,14 +147,11 @@ export function getNextLessonDate(
     }
 
     if (hasSubject) {
-      return candidateISO;
+      return candidate.toISOString().slice(0, 10);
     }
   }
 
-  let fallback = getNextSchoolDay(today);
-  while (excludeSet.has(fallback.toISOString().slice(0, 10))) {
-    fallback = getNextSchoolDay(fallback);
-  }
+  let fallback = getNextSchoolDay(startFromDate);
   return fallback.toISOString().slice(0, 10);
 }
 

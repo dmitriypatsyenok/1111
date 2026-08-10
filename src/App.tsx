@@ -528,12 +528,12 @@ export default function App() {
   };
 
   // HOMEWORK HANDLERS
-  const handleSaveHomework = (subjectKey: string, text: string) => {
+  const handleSaveHomework = (subjectKey: string, text: string, customDueDate?: string) => {
     setHomework(prev => {
       const currentList = prev[subjectKey] || [];
       const baseKey = extractSubjectKey(subjectKey);
       const existingDueDates = currentList.map(item => item.due).filter(Boolean);
-      const dueISO = getNextLessonDate(baseKey, schedules, activeProfile, existingDueDates);
+      const dueISO = customDueDate || getNextLessonDate(baseKey, schedules, activeProfile, existingDueDates);
       const newItem = {
         id: Date.now().toString(),
         text,
@@ -711,23 +711,32 @@ export default function App() {
   };
 
   // CANTEEN POLL HANDLERS
-  const handleCreatePoll = () => {
+  const handleCreatePoll = (customDate?: string) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    // Collect all existing poll target dates
-    const existingPollDates = new Set<string>();
-    if (currentPoll && currentPoll.date) {
-      existingPollDates.add(currentPoll.date);
-    }
-    pollHistory.forEach(p => {
-      if (p.date) existingPollDates.add(p.date);
-    });
+    let targetDate = customDate;
+    if (!targetDate) {
+      const existingPollDates: Date[] = [];
+      if (currentPoll && currentPoll.date) {
+        const d = new Date(currentPoll.date);
+        if (!isNaN(d.getTime())) existingPollDates.push(d);
+      }
+      pollHistory.forEach(p => {
+        if (p.date) {
+          const d = new Date(p.date);
+          if (!isNaN(d.getTime())) existingPollDates.push(d);
+        }
+      });
 
-    let candidate = getNextSchoolDay(today);
-    while (existingPollDates.has(candidate.toISOString().slice(0, 10))) {
-      candidate = getNextSchoolDay(candidate);
+      const validFutureDates = existingPollDates.filter(d => d >= today);
+      let baseDate = today;
+      if (validFutureDates.length > 0) {
+        baseDate = new Date(Math.max(...validFutureDates.map(d => d.getTime())));
+      }
+      const candidate = getNextSchoolDay(baseDate);
+      targetDate = candidate.toISOString().slice(0, 10);
     }
-    const targetDate = candidate.toISOString().slice(0, 10);
 
     let updatedHistory = pollHistory;
     if (currentPoll && currentPoll.voters && currentPoll.voters.length > 0 && currentPoll.id !== '1') {

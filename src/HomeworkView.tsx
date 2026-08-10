@@ -18,7 +18,7 @@ interface HomeworkViewProps {
   onSelectSubject: (key: string) => void;
   onSelectHwDay: (day: DayKey) => void;
   onNavigate: (s: ScreenType) => void;
-  onSaveHomework: (subjectKey: string, text: string) => void;
+  onSaveHomework: (subjectKey: string, text: string, customDueDate?: string) => void;
   onEditHomework: (subjectKey: string, id: string, newText: string) => void;
   onDeleteHomework: (subjectKey: string, id: string) => void;
 }
@@ -92,6 +92,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'history' | 'create'>('history');
   const [inputText, setInputText] = useState('');
+  const [customDueDate, setCustomDueDate] = useState('');
   const [editModalItem, setEditModalItem] = useState<HomeworkItem | null>(null);
   const [editText, setEditText] = useState('');
 
@@ -293,12 +294,14 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
   const currentHwList = getSubjectHwListLocal(baseSubjectKey);
   const nextLessonISO = getSubjectNextLessonDate(baseSubjectKey);
-  const nextLessonFormatted = formatCustomDate(nextLessonISO, 'day_month_long', lang);
+  const effectiveDueDate = customDueDate || nextLessonISO;
+  const effectiveDueDateFormatted = formatCustomDate(effectiveDueDate, 'day_month_long', lang);
 
   const handleCreateSubmit = () => {
     if (!inputText.trim()) return;
-    onSaveHomework(storageKey, inputText.trim());
+    onSaveHomework(storageKey, inputText.trim(), effectiveDueDate);
     setInputText('');
+    setCustomDueDate('');
     setActiveTab('history');
     haptic('success');
   };
@@ -418,11 +421,25 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
       {activeTab === 'create' && (
         <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3.5">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 rounded-full">
-            <Calendar className="w-3.5 h-3.5" />
-            <span>
-              {lang === 'be' ? 'На ўрок' : 'На урок'}: {nextLessonFormatted}
-            </span>
+          <div className="flex flex-col gap-2 bg-[#161616] p-3 rounded-2xl border border-[#2a2a2a]">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider">
+                {lang === 'be' ? 'Дата здачы' : 'Дата сдачи'}:
+              </span>
+              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-lg">
+                {effectiveDueDateFormatted}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 pt-1 border-t border-[#222]">
+              <Calendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <input
+                type="date"
+                value={effectiveDueDate}
+                onChange={e => setCustomDueDate(e.target.value)}
+                className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white px-2.5 py-1.5 focus:outline-none focus:border-indigo-500 w-full cursor-pointer"
+              />
+            </div>
           </div>
 
           <textarea

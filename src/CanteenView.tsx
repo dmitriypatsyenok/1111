@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Language, PollData, PollStatus, ScreenType } from './types';
 import { translate } from './i18n';
 import { formatCustomDate, getNextSchoolDay } from './dateFormatter';
-import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight } from 'lucide-react';
+import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight, Calendar } from 'lucide-react';
 import { haptic, getTelegramUserName } from './telegram';
 
 interface CanteenViewProps {
@@ -15,7 +15,7 @@ interface CanteenViewProps {
   isEditingPast: boolean;
   lang: Language;
   onNavigate: (s: ScreenType) => void;
-  onCreatePoll: () => void;
+  onCreatePoll: (customDate?: string) => void;
   onVote: (status: PollStatus) => void;
   onSelectPollDetail: (poll: PollData, dateStr: string) => void;
   onToggleEditPast: () => void;
@@ -39,6 +39,38 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
   onVotePastPoll
 }) => {
   const userName = getTelegramUserName(lang);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [customPollDate, setCustomPollDate] = useState('');
+
+  const calcDefaultPollDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const existingPollDates: Date[] = [];
+    if (currentPoll && currentPoll.date) {
+      const d = new Date(currentPoll.date);
+      if (!isNaN(d.getTime())) existingPollDates.push(d);
+    }
+    pollHistory.forEach(p => {
+      if (p.date) {
+        const d = new Date(p.date);
+        if (!isNaN(d.getTime())) existingPollDates.push(d);
+      }
+    });
+
+    const validFutureDates = existingPollDates.filter(d => d >= today);
+    let baseDate = today;
+    if (validFutureDates.length > 0) {
+      baseDate = new Date(Math.max(...validFutureDates.map(d => d.getTime())));
+    }
+    return getNextSchoolDay(baseDate).toISOString().slice(0, 10);
+  };
+
+  const handleOpenCreateModal = () => {
+    const def = calcDefaultPollDate();
+    setCustomPollDate(def);
+    setShowCreateModal(true);
+    haptic('light');
+  };
 
   if (viewMode === 'menu') {
     return (
@@ -46,7 +78,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
         <div className="space-y-2.5">
           {/* Create Poll Card */}
           <div
-            onClick={onCreatePoll}
+            onClick={handleOpenCreateModal}
             className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.99] group shadow-sm"
           >
             <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
@@ -118,6 +150,57 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
           </div>
         </div>
+
+        {/* Create Poll Date Selection Modal */}
+        {showCreateModal && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Vote className="w-4 h-4 text-amber-400" />
+                <span>{lang === 'be' ? 'Стварыць апытанне ў сталовай' : 'Создать опрос в столовой'}</span>
+              </h3>
+
+              <div className="space-y-2 bg-[#161616] p-3.5 rounded-2xl border border-[#2a2a2a]">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider">
+                    {lang === 'be' ? 'Дата апытання' : 'Дата опроса'}:
+                  </span>
+                  <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-lg">
+                    {formatCustomDate(customPollDate || calcDefaultPollDate(), 'weekday_day_month', lang)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 pt-1 border-t border-[#222]">
+                  <Calendar className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <input
+                    type="date"
+                    value={customPollDate || calcDefaultPollDate()}
+                    onChange={e => setCustomPollDate(e.target.value)}
+                    className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white p-2 focus:outline-none focus:border-amber-500 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2.5">
+                <button
+                  onClick={() => setShowCreateModal(false)}
+                  className="flex-1 py-3 rounded-2xl bg-[#1a1a1a] hover:bg-[#222] text-xs font-bold text-[#aaa] border border-[#2a2a2a] cursor-pointer"
+                >
+                  {translate('cancel', lang)}
+                </button>
+                <button
+                  onClick={() => {
+                    onCreatePoll(customPollDate || calcDefaultPollDate());
+                    setShowCreateModal(false);
+                    haptic('success');
+                  }}
+                  className="flex-1 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white shadow-lg shadow-amber-500/20 cursor-pointer"
+                >
+                  {lang === 'be' ? 'Запусціць' : 'Запустить'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
