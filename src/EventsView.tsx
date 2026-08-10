@@ -124,8 +124,8 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   }}
                   placeholder={
                     lang === 'be'
-                      ? 'Напрыклад: Кантрольная праца па фізіцы'
-                      : 'Например: Контрольная по физике'
+                      ? 'Напрыклад: тэст па фізіцы'
+                      : 'Например: тест по физике'
                   }
                   className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
                 />

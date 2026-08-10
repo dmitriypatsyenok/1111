@@ -641,11 +641,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_eat', lang)}
                     </span>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                      analyticsCategory === 'eat' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-[#222] text-[#777]'
-                    }`}>
-                      {totalEatVotes}
-                    </span>
                   </button>
 
                   <button
@@ -661,11 +656,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_no', lang)}
                     </span>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                      analyticsCategory === 'no' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-[#222] text-[#777]'
-                    }`}>
-                      {totalNoVotes}
-                    </span>
                   </button>
 
                   <button
@@ -680,11 +670,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     <span className="text-xl">🏠</span>
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_abs', lang)}
-                    </span>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                      analyticsCategory === 'abs' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-[#222] text-[#777]'
-                    }`}>
-                      {totalAbsVotes}
                     </span>
                   </button>
                 </div>
@@ -749,7 +734,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                                   </div>
 
                                   <span className={`text-xs font-black px-2.5 py-1 rounded-lg border ${themeBadgeClass}`}>
-                                    {count} {lang === 'be' ? 'дзён' : 'дней'}
+                                    {count} д.
                                   </span>
                                 </div>
 

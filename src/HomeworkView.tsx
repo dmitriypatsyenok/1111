@@ -475,8 +475,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             }}
             placeholder={
               lang === 'be'
-                ? 'Напрыклад: Стр. 42, №5-8, вывучыць правіла'
-                : 'Например: Стр. 42, №5-8, выучить правило'
+                ? 'Напрыклад: с. 42, №5'
+                : 'Например: с. 42, №5'
             }
             className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y placeholder:text-[#666] select-text pointer-events-auto"
           />

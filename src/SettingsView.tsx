@@ -627,7 +627,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <div>
             <label className="text-[11px] font-semibold text-[#888] block mb-1">
-              Chat / Channel ID (для уведомлений):
+              Chat / Channel ID {lang === 'be' ? '(для апавяшчэнняў)' : '(для уведомлений)'}:
             </label>
             <input
               type="text"
