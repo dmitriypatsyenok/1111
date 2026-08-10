@@ -560,7 +560,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                             ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-500/20'
                             : 'bg-[#161616] border-[#2a2a2a] text-[#aaa] hover:text-white hover:border-[#444]'
                         }`}
-                        title={lang === 'be' ? 'Спіс прагаласаваўшых' : 'Список проголосовавших'}
+                        title={lang === 'be' ? 'Спіс тых, хто прагаласаваў' : 'Список проголосовавших'}
                       >
                         <Users className="w-3.5 h-3.5" />
                         <span className="text-[10px]">{allVoterStatsForPeriod.length}</span>
@@ -572,7 +572,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                       <div className="absolute left-0 right-0 top-full mt-1.5 z-30 bg-[#161616] border border-[#2a2a2a] rounded-2xl p-3 shadow-2xl space-y-2 animate-fade-in">
                         <div className="flex items-center justify-between px-1">
                           <span className="text-[10px] font-bold text-[#888] uppercase tracking-wider">
-                            {lang === 'be' ? 'Прагаласаваўшыя вучні і тэгі:' : 'Проголосовавшие ученики и теги:'}
+                            {lang === 'be' ? 'Вучні, якія прагаласавалі, і тэгі:' : 'Проголосовавшие ученики и теги:'}
                           </span>
                           <button
                             type="button"
@@ -585,7 +585,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
                         {allVoterStatsForPeriod.length === 0 ? (
                           <div className="text-[10px] text-[#777] p-2 text-center">
-                            {lang === 'be' ? 'Няма прагаласаваўшых' : 'Нет проголосовавших'}
+                            {lang === 'be' ? 'Няма тых, хто прагаласаваў' : 'Нет проголосовавших'}
                           </div>
                         ) : (
                           <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar p-1">
@@ -1108,7 +1108,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                               <div className="min-w-0">
                                 <div className="text-xs font-bold text-white truncate">{st.name}</div>
                                 <div className="text-[10px] text-[#888]">
-                                  {lang === 'be' ? 'Опросов' : 'Опросов'}: {st.totalVotes}
+                                  {lang === 'be' ? 'Апытанняў' : 'Опросов'}: {st.totalVotes}
                                 </div>
                               </div>
                             </div>

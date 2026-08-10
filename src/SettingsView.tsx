@@ -245,7 +245,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
               <div>
                 <div className="text-xs font-bold text-white">{translate('theme_dark', lang)}</div>
-                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Камфортная цёмная гама' : 'Комфортная тёмная гамма'}</div>
+                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Зручная цёмная палітра' : 'Комфортная тёмная гамма'}</div>
               </div>
             </div>
             <div
@@ -273,7 +273,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
               <div>
                 <div className="text-xs font-bold text-white">{translate('theme_light', lang)}</div>
-                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Чыстая светлая гама' : 'Чистая светлая гамма'}</div>
+                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Лаканічная светлая палітра' : 'Чистая светлая гамма'}</div>
               </div>
             </div>
             <div

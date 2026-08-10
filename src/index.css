@@ -40,11 +40,12 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* =================================================== */
-/* LIGHT THEME STYLES                                 */
+/* LUXURY PREMIUM LIGHT THEME                           */
 /* =================================================== */
+
 html.light body,
 body.light {
-  background-color: #f8fafc !important;
+  background-color: #f1f4f9 !important;
   color: #0f172a !important;
 }
 
@@ -53,16 +54,26 @@ body.light .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #cbd5e1;
 }
 
-/* Background overrides for Light Mode */
+/* Page canvas background overrides */
 html.light .bg-\[\#0a0a0a\],
 html.light .bg-black {
-  background-color: #f8fafc !important;
+  background-color: #f1f4f9 !important;
 }
 
+/* Frosted glass top header & navigation bar */
 html.light header,
 html.light nav,
-html.light .bg-\[\#0f0f0f\],
 html.light .bg-\[\#0f0f0f\]\/95,
+html.light .bg-\[\#0f0f0f\]\/90,
+html.light .bg-\[\#0f0f0f\]\/80 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* Card & container aesthetics in Light Mode */
+html.light .bg-\[\#0f0f0f\],
 html.light .bg-\[\#121212\],
 html.light .bg-\[\#141414\],
 html.light .bg-\[\#161616\],
@@ -71,40 +82,67 @@ html.light .bg-\[\#1a1a1a\],
 html.light .bg-\[\#1c1c1c\],
 html.light .bg-\[\#202020\],
 html.light .bg-\[\#222\],
-html.light .bg-\[\#252525\] {
+html.light .bg-\[\#252525\],
+html.light .bg-\[\#12141a\],
+html.light .bg-\[\#14161d\] {
   background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
 }
 
-html.light .bg-\[\#0f0f0f\]\/60 {
-  background-color: rgba(255, 255, 255, 0.85) !important;
-}
-
-html.light .bg-\[\#1f1f1f\] {
-  background-color: #f1f5f9 !important;
-}
-
+/* Secondary nested blocks, pills & inputs */
+html.light .bg-\[\#1f1f1f\],
 html.light .bg-\[\#2a2a2a\],
 html.light .bg-\[\#333\] {
-  background-color: #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
 }
 
-/* Translucent accent backgrounds in Light Mode */
+/* Semi-transparent dark overlay for modals in Light Mode */
+html.light .bg-black\/80,
+html.light .bg-black\/70,
+html.light .bg-black\/60,
+html.light .bg-black\/50,
+html.light .bg-black\/40 {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(6px);
+}
+
+/* Modals & Bottom sheets in Light Mode */
+html.light .bg-\[\#121212\].fixed,
+html.light .bg-\[\#0f0f0f\].fixed,
+html.light .bg-\[\#181818\].fixed,
+html.light .bg-[#161616].fixed {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.2) !important;
+}
+
+/* Translucent status pills & badges in Light Mode */
 html.light .bg-indigo-600\/15,
 html.light .bg-indigo-600\/20,
 html.light .bg-indigo-600\/25,
 html.light .bg-indigo-600\/30,
 html.light .bg-indigo-500\/10 {
-  background-color: #e0e7ff !important;
+  background-color: #eef2ff !important;
+  color: #4338ca !important;
+  border-color: #c7d2fe !important;
 }
 
 html.light .bg-amber-500\/10,
-html.light .bg-amber-500\/15 {
-  background-color: #fef3c7 !important;
+html.light .bg-amber-500\/15,
+html.light .bg-amber-500\/20 {
+  background-color: #fffbeb !important;
+  color: #b45309 !important;
+  border-color: #fde68a !important;
 }
 
 html.light .bg-emerald-500\/10,
-html.light .bg-emerald-500\/15 {
-  background-color: #d1fae5 !important;
+html.light .bg-emerald-500\/15,
+html.light .bg-emerald-500\/20 {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
 }
 
 html.light .bg-rose-500\/10,
@@ -112,14 +150,19 @@ html.light .bg-rose-500\/15,
 html.light .bg-rose-500\/25,
 html.light .bg-rose-600\/20,
 html.light .bg-rose-600\/30 {
-  background-color: #ffe4e6 !important;
+  background-color: #fff1f2 !important;
+  color: #be123c !important;
+  border-color: #fecdd3 !important;
 }
 
-html.light .bg-purple-500\/15 {
+html.light .bg-purple-500\/15,
+html.light .bg-purple-500\/20 {
   background-color: #f3e8ff !important;
+  color: #6b21a8 !important;
+  border-color: #e9d5ff !important;
 }
 
-/* Border overrides for Light Mode */
+/* Border overrides in Light Mode */
 html.light .border-\[\#1f1f1f\],
 html.light .border-\[\#1a1a1a\],
 html.light .border-\[\#222\],
@@ -133,29 +176,33 @@ html.light .border-\[\#444\] {
 html.light .border-indigo-500\/20,
 html.light .border-indigo-500\/30,
 html.light .border-indigo-500\/40,
-html.light .border-indigo-500\/50 {
+html.light .border-indigo-500\/50,
+html.light .border-indigo-500\/60 {
   border-color: #818cf8 !important;
 }
 
 html.light .border-amber-500\/20,
 html.light .border-amber-500\/30,
-html.light .border-amber-500\/50 {
+html.light .border-amber-500\/50,
+html.light .border-amber-500\/60 {
   border-color: #fcd34d !important;
 }
 
 html.light .border-emerald-500\/20,
 html.light .border-emerald-500\/30,
-html.light .border-emerald-500\/50 {
+html.light .border-emerald-500\/50,
+html.light .border-emerald-500\/60 {
   border-color: #6ee7b7 !important;
 }
 
 html.light .border-rose-500\/20,
 html.light .border-rose-500\/30,
-html.light .border-rose-500\/50 {
+html.light .border-rose-500\/50,
+html.light .border-rose-500\/60 {
   border-color: #fca5a5 !important;
 }
 
-/* Text overrides for Light Mode */
+/* High contrast typography for Light Mode */
 html.light .text-white,
 html.light .text-\[\#ededed\],
 html.light .text-slate-100 {
@@ -165,24 +212,26 @@ html.light .text-slate-100 {
 html.light .text-\[\#aaa\],
 html.light .text-\[\#999\],
 html.light .text-\[\#888\],
-html.light .text-\[\#777\],
 html.light .text-gray-300,
 html.light .text-gray-400 {
-  color: #64748b !important;
-}
-
-html.light .text-\[\#666\],
-html.light .text-\[\#555\],
-html.light .text-\[\#444\] {
   color: #475569 !important;
 }
 
+html.light .text-\[\#777\],
+html.light .text-\[\#666\],
+html.light .text-\[\#555\],
+html.light .text-\[\#444\] {
+  color: #64748b !important;
+}
+
+/* Colored accent texts in Light Mode */
 html.light .text-indigo-400,
 html.light .text-indigo-300 {
   color: #4f46e5 !important;
 }
 
-html.light .text-emerald-400 {
+html.light .text-emerald-400,
+html.light .text-emerald-300 {
   color: #059669 !important;
 }
 
@@ -191,7 +240,8 @@ html.light .text-amber-300 {
   color: #d97706 !important;
 }
 
-html.light .text-purple-400 {
+html.light .text-purple-400,
+html.light .text-purple-300 {
   color: #7c3aed !important;
 }
 
@@ -201,13 +251,22 @@ html.light .text-rose-300\/70 {
   color: #e11d48 !important;
 }
 
-/* Form inputs & placeholders in Light Mode */
+/* Form inputs & textareas in Light Mode */
 html.light input,
 html.light textarea,
 html.light select {
   color: #0f172a !important;
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
   border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  background-color: #ffffff !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
 }
 
 html.light input::placeholder,
@@ -215,32 +274,56 @@ html.light textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-/* Solid colored action buttons/pills keep white text in Light Mode */
+/* Action buttons with solid background colors retain crisp white text & gradients */
 html.light .bg-indigo-600,
 html.light .bg-indigo-500,
-html.light .bg-amber-500,
-html.light .bg-amber-600,
-html.light .bg-emerald-500,
-html.light .bg-emerald-600,
-html.light .bg-rose-500,
-html.light .bg-rose-600,
-html.light .bg-purple-500,
 html.light button.bg-indigo-600,
-html.light button.bg-amber-500,
-html.light button.bg-emerald-500,
+html.light button.bg-indigo-500 {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25) !important;
+}
+
+html.light .bg-emerald-600,
+html.light .bg-emerald-500,
+html.light button.bg-emerald-600,
+html.light button.bg-emerald-500 {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25) !important;
+}
+
+html.light .bg-rose-600,
+html.light .bg-rose-500,
+html.light button.bg-rose-600,
 html.light button.bg-rose-500 {
+  background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.25) !important;
+}
+
+html.light .bg-amber-600,
+html.light .bg-amber-500,
+html.light button.bg-amber-600,
+html.light button.bg-amber-500 {
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Ensure text inside primary solid buttons stays white */
+html.light .bg-indigo-600 *,
+html.light .bg-indigo-500 *,
+html.light .bg-emerald-600 *,
+html.light .bg-emerald-500 *,
+html.light .bg-rose-600 *,
+html.light .bg-rose-500 *,
+html.light .bg-amber-600 *,
+html.light .bg-amber-500 * {
   color: #ffffff !important;
 }
 
-html.light .bg-indigo-600 .text-white,
-html.light .bg-indigo-500 .text-white,
-html.light .bg-amber-500 .text-white,
-html.light .bg-emerald-500 .text-white,
-html.light .bg-rose-500 .text-white {
-  color: #ffffff !important;
-}
-
-/* Hover effects in Light Mode */
+/* Interactive Hover States in Light Mode */
 html.light .hover\:border-\[\#333\]:hover {
   border-color: #cbd5e1 !important;
 }
