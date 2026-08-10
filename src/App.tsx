@@ -64,9 +64,25 @@ export default function App() {
     if (theme === 'light') {
       document.documentElement.classList.add('light');
       document.documentElement.classList.remove('dark');
+      try {
+        if (tg) {
+          if (tg.setHeaderColor) tg.setHeaderColor('#ffffff');
+          if (tg.setBackgroundColor) tg.setBackgroundColor('#f3f4f6');
+        }
+      } catch (e) {
+        // ignore
+      }
     } else {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
+      try {
+        if (tg) {
+          if (tg.setHeaderColor) tg.setHeaderColor('#0f0f0f');
+          if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0a0a');
+        }
+      } catch (e) {
+        // ignore
+      }
     }
   }, [theme]);
 
