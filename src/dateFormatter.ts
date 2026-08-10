@@ -67,7 +67,7 @@ export function extractSubjectKey(subjKey: string, subjectDb: Record<string, any
 }
 
 export function parseLessonName(rawName: string, subjectDb: Record<string, any> = SUBJECT_DB) {
-  if (!rawName) return { key: 'math', ru: '', be: '', ic: '📘' };
+  if (!rawName || !rawName.trim()) return { key: 'window', ru: 'Окно', be: 'Аконька', ic: '☕' };
   const n = rawName.toLowerCase();
   for (let key in subjectDb) {
     const item = subjectDb[key];
@@ -76,7 +76,7 @@ export function parseLessonName(rawName: string, subjectDb: Record<string, any> 
       return item;
     }
   }
-  return { key: 'math', ru: rawName, be: rawName, ic: "📘" };
+  return { key: 'custom', ru: rawName, be: rawName, ic: "📘" };
 }
 
 export function getNextSchoolDay(startDateObj: Date = new Date()): Date {
