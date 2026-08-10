@@ -719,6 +719,15 @@ export default function App() {
     }
   };
 
+  const handleResetSchedule = () => {
+    if (confirm(lang === 'be' ? 'Скінуць расклад да пачатковага (стокавага)?' : 'Сбросить расписание до начального (стокового)?')) {
+      setSchedules(DEFAULT_SCHEDULES);
+      updateDocData('schedules', DEFAULT_SCHEDULES);
+      haptic('success');
+      showToast(lang === 'be' ? 'Расклад скінуты да пачатковага!' : 'Расписание сброшено до стокового!', 'success');
+    }
+  };
+
   const handleClearAllData = () => {
     if (confirm(translate('confirm_clear_all_data', lang))) {
       const emptyHw = {};
@@ -1326,6 +1335,7 @@ export default function App() {
             pollHistory={pollHistory}
             tgConfig={tgConfig}
             onSetLang={handleSetLang}
+            onResetSchedule={handleResetSchedule}
             onImportSchedules={handleImportSchedules}
             onImportHomework={handleImportHomework}
             onImportDuties={handleImportDuties}

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles, Theme } from './types';
 import { translate, getProfileFullTitle } from './i18n';
 import { haptic } from './telegram';
-import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun } from 'lucide-react';
+import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun, RotateCcw } from 'lucide-react';
 
 interface SettingsViewProps {
   lang: Language;
@@ -22,6 +22,7 @@ interface SettingsViewProps {
   onSetLang: (lang: Language) => void;
   onSetTheme: (theme: Theme) => void;
   onSetProfile: (profile: ProfileKey) => void;
+  onResetSchedule: () => void;
   onImportSchedules: (data: ScheduleProfiles) => void;
   onImportHomework: (data: HomeworkStore) => void;
   onImportDuties: (data: DutiesStore) => void;
@@ -50,6 +51,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onSetLang,
   onSetTheme,
   onSetProfile,
+  onResetSchedule,
   onImportSchedules,
   onImportHomework,
   onImportDuties,
@@ -339,6 +341,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         <div className="space-y-2.5">
+          {/* Reset Schedule to Default */}
+          <div
+            onClick={() => {
+              onResetSchedule();
+              haptic('medium');
+            }}
+            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-amber-500/30 rounded-2xl p-3.5 cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
+          >
+            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-4 h-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-amber-400">
+                {translate('reset_schedule', lang)}
+              </div>
+              <div className="text-[11px] text-[#888]">
+                {translate('reset_schedule_d', lang)}
+              </div>
+            </div>
+          </div>
+
           {/* Export Schedule */}
           <div
             onClick={() => downloadJSON(formatScheduleForExport(schedules), 'data_schedules.json')}
