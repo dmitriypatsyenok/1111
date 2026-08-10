@@ -10,7 +10,8 @@ import {
   PollStatus,
   ProfileKey,
   ScheduleProfiles,
-  ScreenType
+  ScreenType,
+  Theme
 } from './types';
 import {
   DEFAULT_SCHEDULES,
@@ -47,6 +48,27 @@ export default function App() {
     if (tg?.initDataUnsafe?.user?.language_code === 'be') return 'be';
     return 'ru';
   });
+
+  const [theme, setThemeState] = useState<Theme>(() => {
+    const saved = localStorage.getItem('ierihon_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return 'dark';
+  });
+
+  const handleSetTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+    localStorage.setItem('ierihon_theme', newTheme);
+  };
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  }, [theme]);
 
   const [activeProfile, setActiveProfile] = useState<ProfileKey>(() => {
     const saved = localStorage.getItem('ierihon_profile');
@@ -1276,8 +1298,10 @@ export default function App() {
         return (
           <SettingsView
             lang={lang}
+            theme={theme}
             schedules={schedules}
             activeProfile={activeProfile}
+            onSetTheme={handleSetTheme}
             onSetProfile={setActiveProfile}
             homework={homework}
             duties={duties}

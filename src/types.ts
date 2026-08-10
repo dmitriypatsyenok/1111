@@ -1,4 +1,5 @@
 export type Language = 'ru' | 'be';
+export type Theme = 'dark' | 'light';
 
 export type ProfileKey = string;
 export type DayKey = 'pn' | 'vt' | 'sr' | 'cht' | 'pt';

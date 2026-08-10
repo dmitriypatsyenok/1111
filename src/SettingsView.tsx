@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles } from './types';
+import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles, Theme } from './types';
 import { translate, getProfileFullTitle } from './i18n';
 import { haptic } from './telegram';
-import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical } from 'lucide-react';
+import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun } from 'lucide-react';
 
 interface SettingsViewProps {
   lang: Language;
+  theme: Theme;
   schedules: ScheduleProfiles;
   activeProfile: ProfileKey;
   homework: HomeworkStore;
@@ -19,6 +20,7 @@ interface SettingsViewProps {
     appUrl?: string;
   };
   onSetLang: (lang: Language) => void;
+  onSetTheme: (theme: Theme) => void;
   onSetProfile: (profile: ProfileKey) => void;
   onImportSchedules: (data: ScheduleProfiles) => void;
   onImportHomework: (data: HomeworkStore) => void;
@@ -36,6 +38,7 @@ interface SettingsViewProps {
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
   lang,
+  theme,
   schedules,
   activeProfile,
   homework,
@@ -45,6 +48,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   pollHistory = [],
   tgConfig,
   onSetLang,
+  onSetTheme,
   onSetProfile,
   onImportSchedules,
   onImportHomework,
@@ -211,6 +215,65 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               }`}
             >
               {lang === 'be' && <Check className="w-3 h-3 text-white" />}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Theme Section */}
+      <div className="space-y-2">
+        <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
+          {translate('theme_title', lang)}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Dark Theme */}
+          <div
+            onClick={() => {
+              onSetTheme('dark');
+              haptic('light');
+            }}
+            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              theme === 'dark' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-[#1a1a1a] flex items-center justify-center shrink-0">
+                <Moon className="w-4 h-4 text-indigo-400" />
+              </div>
+              <span className="text-xs font-bold text-white">{translate('theme_dark', lang)}</span>
+            </div>
+            <div
+              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                theme === 'dark' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+              }`}
+            >
+              {theme === 'dark' && <Check className="w-3 h-3 text-white" />}
+            </div>
+          </div>
+
+          {/* Light Theme */}
+          <div
+            onClick={() => {
+              onSetTheme('light');
+              haptic('light');
+            }}
+            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              theme === 'light' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-[#1a1a1a] flex items-center justify-center shrink-0">
+                <Sun className="w-4 h-4 text-amber-400" />
+              </div>
+              <span className="text-xs font-bold text-white">{translate('theme_light', lang)}</span>
+            </div>
+            <div
+              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                theme === 'light' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+              }`}
+            >
+              {theme === 'light' && <Check className="w-3 h-3 text-white" />}
             </div>
           </div>
         </div>
