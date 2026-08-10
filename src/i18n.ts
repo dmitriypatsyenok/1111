@@ -116,7 +116,7 @@ export const I18N = {
     t_duties: "Дежурства",
     t_birthdays: "Дни рождения",
     t_settings: "Настройки",
-    profiles: { base: "Базовый", math: "Математический", chem: "Химико-биологический" },
+    profiles: { base: "Базовый", math: "Математический", chem: "Химический" },
     t_days_s: { pn: "Пн", vt: "Вт", sr: "Ср", cht: "Чт", pt: "Пт" },
     t_days: { pn: "Понедельник", vt: "Вторник", sr: "Среда", cht: "Четверг", pt: "Пятница" },
     no_lessons: "Уроков нет",
@@ -250,7 +250,7 @@ export const I18N = {
     t_duties: "Дзяжурства",
     t_birthdays: "Дні нараджэння",
     t_settings: "Налады",
-    profiles: { base: "Базавы", math: "Матэматычны", chem: "Хіміка-біялагічны" },
+    profiles: { base: "Базавы", math: "Матэматычны", chem: "Хімічны" },
     t_days_s: { pn: "Пн", vt: "Аў", sr: "Ср", cht: "Чц", pt: "Пт" },
     t_days: { pn: "Панядзелак", vt: "Аўторак", sr: "Серада", cht: "Чацвер", pt: "Пятніца" },
     no_lessons: "Урокаў няма",
@@ -281,18 +281,18 @@ export function getProfileTitle(pKey: string, schedules?: any, lang: Language = 
   if (lang === 'be') {
     if (pKey === 'base' || customTitle === 'База' || customTitle === 'Базовый' || customTitle === 'Базавы') return 'База';
     if (pKey === 'math' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны' || customTitle === 'Матем' || customTitle === 'Матэм') return 'Матэматыка';
-    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны') return 'Хімія';
+    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химический' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хімічны' || customTitle === 'Хіміка-біялагічны') return 'Хімія';
     if (customTitle === 'Базовый') return 'Базавы';
     if (customTitle === 'Математический') return 'Матэматычны';
-    if (customTitle === 'Химико-биологический') return 'Хіміка-біялагічны';
+    if (customTitle === 'Химический' || customTitle === 'Химико-биологический') return 'Хімічны';
     return customTitle || pKey;
   } else {
     if (pKey === 'base' || customTitle === 'Базавы' || customTitle === 'База') return 'База';
     if (pKey === 'math' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэм' || customTitle === 'Матем') return 'Математика';
-    if (pKey === 'chem' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Химия' || customTitle === 'Химико-биологический') return 'Химия';
+    if (pKey === 'chem' || customTitle === 'Хімія' || customTitle === 'Хімічны' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Химия' || customTitle === 'Химический' || customTitle === 'Химико-биологический') return 'Химия';
     if (customTitle === 'Базавы') return 'Базовый';
     if (customTitle === 'Матэматычны') return 'Математический';
-    if (customTitle === 'Хіміка-біялагічны') return 'Химико-биологический';
+    if (customTitle === 'Хімічны' || customTitle === 'Хіміка-біялагічны') return 'Химический';
     return customTitle || pKey;
   }
 }
@@ -302,12 +302,12 @@ export function getProfileFullTitle(pKey: string, schedules?: any, lang: Languag
   if (lang === 'be') {
     if (pKey === 'base' || customTitle === 'База' || customTitle === 'Базовый' || customTitle === 'Базавы') return 'Базавы';
     if (pKey === 'math' || customTitle === 'Математика' || customTitle === 'Математический' || customTitle === 'Матэматыка' || customTitle === 'Матэматычны') return 'Матэматычны';
-    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хіміка-біялагічны') return 'Хіміка-біялагічны';
+    if (pKey === 'chem' || customTitle === 'Химия' || customTitle === 'Химический' || customTitle === 'Химико-биологический' || customTitle === 'Хімія' || customTitle === 'Хімічны' || customTitle === 'Хіміка-біялагічны') return 'Хімічны';
     return customTitle || pKey;
   } else {
     if (pKey === 'base' || customTitle === 'Базавы' || customTitle === 'База' || customTitle === 'Базовый') return 'Базовый';
     if (pKey === 'math' || customTitle === 'Матэматычны' || customTitle === 'Матэматыка' || customTitle === 'Математический' || customTitle === 'Математика') return 'Математический';
-    if (pKey === 'chem' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Хімія' || customTitle === 'Химико-биологический' || customTitle === 'Химия') return 'Химико-биологический';
+    if (pKey === 'chem' || customTitle === 'Хімічны' || customTitle === 'Хіміка-біялагічны' || customTitle === 'Хімія' || customTitle === 'Химический' || customTitle === 'Химико-биологический' || customTitle === 'Химия') return 'Химический';
     return customTitle || pKey;
   }
 }
