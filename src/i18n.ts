@@ -138,7 +138,25 @@ export const I18N = {
     today_birthdays: "Сегодня празднуют День Рождения!",
     ph_hw_create: "Например: Стр. 42, №5-8, выучить правило",
     ph_hw_edit: "Например: Параграф 12, вопросы 1-4",
-    ph_event_title: "Название (например: Контрольная по физике)"
+    ph_event_title: "Название (например: Контрольная по физике)",
+    canteen_analytics_title: "📊 Визуальная аналитика столовой",
+    canteen_analytics_desc: "Статистика обедов, посещаемости и тренды класса",
+    total_polls: "Опросов проведено",
+    avg_eating_rate: "Средний % обедающих",
+    total_meals: "Всего заказов",
+    eating_trend: "Динамика обедающих (последние дни)",
+    top_eating_day: "Пиковый день",
+    voter_activity: "Активность опросов",
+    filter_all: "Все",
+    canteen_analytics_btn: "📊 Аналитика по месяцам",
+    canteen_analytics_modal_title: "📊 Аналитика посещаемости столовой",
+    all_time: "За всё время",
+    search_student: "Поиск ученика...",
+    stat_eat: "Буду есть",
+    stat_no: "Не буду есть",
+    stat_abs: "Отсутствую",
+    month_period: "Месяц / Период",
+    student_stats_title: "Индивидуальная статистика учеников"
   },
   be: {
     app_title: "Ierihon3 Mini App",
@@ -277,7 +295,25 @@ export const I18N = {
     today_birthdays: "Сёння святкуюць Дзень нараджэння!",
     ph_hw_create: "Напрыклад: Стр. 42, №5-8, вывучыць правіла",
     ph_hw_edit: "Напрыклад: Параграф 12, пытанні 1-4",
-    ph_event_title: "Назва (напрыклад: Кантрольная праца па фізіцы)"
+    ph_event_title: "Назва (напрыклад: Кантрольная праца па фізіцы)",
+    canteen_analytics_title: "📊 Візуальная аналітыка сталовай",
+    canteen_analytics_desc: "Статыстыка абедаў, наведвальнасці і трэнды класа",
+    total_polls: "Апытанняў праведзена",
+    avg_eating_rate: "Сярэдні % тых, хто абедае",
+    total_meals: "Усяго заказаў",
+    eating_trend: "Дынаміка абедаў (апошнія дні)",
+    top_eating_day: "Пікавы дзень",
+    voter_activity: "Актыўнасць апытанняў",
+    filter_all: "Усе",
+    canteen_analytics_btn: "📊 Аналітыка па месяцах",
+    canteen_analytics_modal_title: "📊 Аналітыка наведвальнасці сталовай",
+    all_time: "За ўвесь час",
+    search_student: "Пошук вучня...",
+    stat_eat: "Буду есці",
+    stat_no: "Не буду есці",
+    stat_abs: "Адсутнічаю",
+    month_period: "Месяц / Перыяд",
+    student_stats_title: "Індывідуальная статыстыка вучняў"
   }
 };
 
