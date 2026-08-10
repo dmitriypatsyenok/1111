@@ -629,13 +629,22 @@ export default function App() {
     });
   };
 
+  const [toast, setToast] = useState<{ msg: string; type?: 'success' | 'error' | 'info' } | null>(null);
+
+  const showToast = (msg: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({ msg, type });
+    setTimeout(() => {
+      setToast(prev => (prev?.msg === msg ? null : prev));
+    }, 3000);
+  };
+
   const handleClearAllHomework = () => {
     if (confirm(translate('confirm_clear_hw_all', lang))) {
       const emptyHw = {};
       setHomework(emptyHw);
       updateDocData('homework', emptyHw);
       haptic('success');
-      alert(lang === 'be' ? 'Усе заданні ачышчаны.' : 'Все домашние задания очищены.');
+      showToast(lang === 'be' ? 'Усе заданні ачышчаны.' : 'Все домашние задания очищены.', 'success');
     }
   };
 
@@ -668,7 +677,7 @@ export default function App() {
       }
 
       haptic('success');
-      alert(lang === 'be' ? 'Апытанне выдалена!' : 'Опрос удален!');
+      showToast(lang === 'be' ? 'Апытанне выдалена!' : 'Опрос удален!', 'success');
     }
   };
 
@@ -706,7 +715,7 @@ export default function App() {
       updateDocData('isPollActive', false);
 
       haptic('success');
-      alert(lang === 'be' ? 'Усе даныя праграмы ануляваны!' : 'Все данные приложения успешно обнулены!');
+      showToast(lang === 'be' ? 'Усе даныя праграмы ануляваны!' : 'Все данные приложения успешно обнулены!', 'success');
     }
   };
 
@@ -930,9 +939,9 @@ export default function App() {
       }
 
       haptic('success');
-      alert(lang === 'be' ? 'Расклад паспяхова загружаны!' : 'Расписание успешно загружено!');
+      showToast(lang === 'be' ? 'Расклад паспяхова загружаны!' : 'Расписание успешно загружено!', 'success');
     } catch (err: any) {
-      alert(err?.message || (lang === 'be' ? 'Памылка загрузкі распісання' : 'Ошибка при загрузке расписания'));
+      showToast(err?.message || (lang === 'be' ? 'Памылка загрузкі распісання' : 'Ошибка при загрузке расписания'), 'error');
       haptic('error');
     }
   };
@@ -959,9 +968,9 @@ export default function App() {
       setHomework(parsed);
       updateDocData('homework', parsed);
       haptic('success');
-      alert(lang === 'be' ? 'Заданні загружаны!' : 'Домашние задания восстановлены!');
+      showToast(lang === 'be' ? 'Заданні загружаны!' : 'Домашние задания восстановлены!', 'success');
     } catch (err: any) {
-      alert(err?.message || 'Ошибка при импорте домашних заданий');
+      showToast(err?.message || 'Ошибка при импорте домашних заданий', 'error');
       haptic('error');
     }
   };
@@ -973,9 +982,9 @@ export default function App() {
       setDuties(parsed);
       updateDocData('duties', parsed);
       haptic('success');
-      alert(lang === 'be' ? 'Дзяжурствы загружаны!' : 'График дежурств обновлен!');
+      showToast(lang === 'be' ? 'Дзяжурствы загружаны!' : 'График дежурств обновлен!', 'success');
     } catch (err: any) {
-      alert(err?.message || 'Ошибка при импорте графика дежурств');
+      showToast(err?.message || 'Ошибка при импорте графика дежурств', 'error');
       haptic('error');
     }
   };
@@ -987,9 +996,9 @@ export default function App() {
       setBirthdays(parsed);
       updateDocData('birthdays', parsed);
       haptic('success');
-      alert(lang === 'be' ? 'Дні нараджэння загружаны!' : 'Список дней рождения обновлен!');
+      showToast(lang === 'be' ? 'Дні нараджэння загружаны!' : 'Список дней рождения обновлен!', 'success');
     } catch (err: any) {
-      alert(err?.message || 'Ошибка при импорте дней рождения');
+      showToast(err?.message || 'Ошибка при импорте дней рождения', 'error');
       haptic('error');
     }
   };
@@ -1309,6 +1318,14 @@ export default function App() {
       />
 
       <main className="flex-1 p-3 pb-6">{renderScreen()}</main>
+
+      {/* Floating Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#181818] border border-[#333] px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white flex items-center gap-2.5 animate-slide-up max-w-[90vw] pointer-events-none">
+          <span className="text-base">{toast.type === 'error' ? '❌' : toast.type === 'success' ? '✅' : 'ℹ️'}</span>
+          <span>{toast.msg}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -40,6 +40,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 }) => {
   const userName = getTelegramUserName(lang);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [canteenMsg, setCanteenMsg] = useState<string | null>(null);
   const [customPollDate, setCustomPollDate] = useState('');
 
   const calcDefaultPollDate = () => {
@@ -95,11 +96,18 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-amber-400 transition-colors" />
           </div>
 
+          {canteenMsg && (
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-300 font-medium animate-fade-in flex items-center justify-between">
+              <span>⚠️ {canteenMsg}</span>
+              <button onClick={() => setCanteenMsg(null)} className="text-amber-400 font-bold px-1.5 cursor-pointer">✕</button>
+            </div>
+          )}
+
           {/* Vote Button */}
           <div
             onClick={() => {
               if (!isPollActive) {
-                alert(translate('poll_not_created_msg', lang));
+                setCanteenMsg(translate('poll_not_created_msg', lang));
                 haptic('error');
                 return;
               }

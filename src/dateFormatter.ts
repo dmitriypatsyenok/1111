@@ -79,10 +79,15 @@ export function parseLessonName(rawName: string, subjectDb: Record<string, any> 
   return { key: 'math', ru: rawName, be: rawName, ic: "📘" };
 }
 
-export function getNextSchoolDay(startDateObj: Date): Date {
+export function getNextSchoolDay(startDateObj: Date = new Date()): Date {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   let d = new Date(startDateObj);
+  d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() + 1);
-  while (d.getDay() === 0 || d.getDay() === 6) {
+
+  while (d <= today || d.getDay() === 0 || d.getDay() === 6) {
     d.setDate(d.getDate() + 1);
   }
   return d;
@@ -110,7 +115,10 @@ export function getNextLessonDate(
 
   const futureDueDates = validDueDates.filter(dt => dt >= today);
   if (futureDueDates.length > 0) {
-    startFromDate = new Date(Math.max(...futureDueDates.map(dt => dt.getTime())));
+    const maxDue = new Date(Math.max(...futureDueDates.map(dt => dt.getTime())));
+    if (maxDue >= today) {
+      startFromDate = maxDue;
+    }
   }
 
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
@@ -120,6 +128,11 @@ export function getNextLessonDate(
   for (let i = 1; i <= 90; i++) {
     const candidate = new Date(startFromDate);
     candidate.setDate(candidate.getDate() + i);
+    candidate.setHours(0, 0, 0, 0);
+
+    // Strictly skip today or past dates
+    if (candidate <= today) continue;
+
     const dayOfWeek = candidate.getDay();
 
     // Skip weekends
@@ -152,6 +165,9 @@ export function getNextLessonDate(
   }
 
   let fallback = getNextSchoolDay(startFromDate);
+  if (fallback <= today) {
+    fallback = getNextSchoolDay(today);
+  }
   return fallback.toISOString().slice(0, 10);
 }
 

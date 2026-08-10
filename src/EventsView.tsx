@@ -23,13 +23,16 @@ export const EventsView: React.FC<EventsViewProps> = ({
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [time, setTime] = useState('12:00');
 
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handleSave = () => {
     if (!title.trim() || !date) {
-      alert(lang === 'be' ? 'Калі ласка, запоўніце назву і дату!' : 'Пожалуйста, заполните название и дату!');
+      setFormError(lang === 'be' ? 'Калі ласка, запоўніце назву і дату!' : 'Пожалуйста, заполните название и дату!');
       return;
     }
     onAddEvent(title.trim(), date, time);
     setTitle('');
+    setFormError(null);
     setIsModalOpen(false);
     haptic('success');
   };
@@ -148,6 +151,12 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 </div>
               </div>
             </div>
+
+            {formError && (
+              <div className="text-xs text-rose-400 font-medium px-1 animate-fade-in">
+                ⚠️ {formError}
+              </div>
+            )}
 
             <div className="flex gap-2.5 pt-1">
               <button

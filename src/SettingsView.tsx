@@ -138,19 +138,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     haptic('success');
   };
 
+  const [fileErrorMsg, setFileErrorMsg] = useState<string | null>(null);
+
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     onSuccess: (content: any) => void
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setFileErrorMsg(null);
     const reader = new FileReader();
     reader.onload = event => {
       try {
         const text = event.target?.result as string;
         onSuccess(text);
       } catch (err: any) {
-        alert(err?.message || (lang === 'be' ? 'Памылка пры чытанні файла' : 'Ошибка при чтении файла'));
+        setFileErrorMsg(err?.message || (lang === 'be' ? 'Памылка пры чытанні файла' : 'Ошибка при чтении файла'));
         haptic('error');
       }
     };
