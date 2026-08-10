@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Language, PollData, PollStatus, ScreenType } from './types';
 import { translate } from './i18n';
-import { formatCustomDate, getNextSchoolDay } from './dateFormatter';
+import { formatCustomDate, getNextSchoolDay, formatMonthYear, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
 import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight, Calendar, TrendingUp, PieChart, Users, Award, Filter, Sparkles } from 'lucide-react';
 import { haptic, getTelegramUserName } from './telegram';
 
@@ -153,12 +153,12 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
     today.setHours(0, 0, 0, 0);
     const existingPollDates: Date[] = [];
     if (currentPoll && currentPoll.date) {
-      const d = new Date(currentPoll.date);
+      const d = parseLocalDate(currentPoll.date);
       if (!isNaN(d.getTime())) existingPollDates.push(d);
     }
     pollHistory.forEach(p => {
       if (p.date) {
-        const d = new Date(p.date);
+        const d = parseLocalDate(p.date);
         if (!isNaN(d.getTime())) existingPollDates.push(d);
       }
     });
@@ -168,7 +168,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
     if (validFutureDates.length > 0) {
       baseDate = new Date(Math.max(...validFutureDates.map(d => d.getTime())));
     }
-    return getNextSchoolDay(baseDate).toISOString().slice(0, 10);
+    return formatLocalDateToYYYYMMDD(getNextSchoolDay(baseDate));
   };
 
   const handleOpenCreateModal = () => {
@@ -514,10 +514,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                       {availableMonths.map(m => {
                         const [yyyy, mm] = m.split('-');
                         const monthDate = new Date(parseInt(yyyy), parseInt(mm) - 1, 1);
-                        const monthName = monthDate.toLocaleString(lang === 'be' ? 'be-BY' : 'ru-RU', { month: 'long', year: 'numeric' });
+                        const label = formatMonthYear(monthDate, lang);
                         return (
                           <option key={m} value={m}>
-                            {monthName.charAt(0).toUpperCase() + monthName.slice(1)}
+                            {label}
                           </option>
                         );
                       })}
@@ -1027,10 +1027,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     {availableMonths.map(m => {
                       const [yyyy, mm] = m.split('-');
                       const monthDate = new Date(parseInt(yyyy), parseInt(mm) - 1, 1);
-                      const monthName = monthDate.toLocaleString(lang === 'be' ? 'be-BY' : 'ru-RU', { month: 'long', year: 'numeric' });
+                      const label = formatMonthYear(monthDate, lang);
                       return (
                         <option key={m} value={m}>
-                          {monthName.charAt(0).toUpperCase() + monthName.slice(1)}
+                          {label}
                         </option>
                       );
                     })}

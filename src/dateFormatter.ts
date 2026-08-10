@@ -1,19 +1,42 @@
-import { Language } from './types';
+import { Language, DayKey, ScheduleProfiles } from './types';
+import { SUBJECT_DB } from './defaultData';
 
 const MONTHS_RU_NOM = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
 const MONTHS_RU_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 const WEEKDAYS_RU = ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
 
-const MONTHS_BE_NOM = ["студзень","люты","сакавік","красавік","травень","чэрвень","ліпень","жніўень","верасень","кастрычнік","лістапад","снежань"];
+const MONTHS_BE_NOM = ["студзень","люты","сакавік","красавік","травень","чэрвень","ліпень","жнівень","верасень","кастрычнік","лістапад","снежань"];
 const MONTHS_BE_GEN = ["студзеня","лютага","сакавіка","красавіка","траўня","чэрвеня","ліпеня","жніўня","верасня","кастрычніка","лістапада","снежня"];
 const WEEKDAYS_BE = ["нядзеля","панядзелак","аўторак","серада","чацвер","пятніца","субота"];
+
+export function parseLocalDate(dateInput: string | Date): Date {
+  if (dateInput instanceof Date) {
+    const d = new Date(dateInput);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput.slice(0, 10))) {
+    const [y, m, d] = dateInput.slice(0, 10).split('-').map(Number);
+    return new Date(y, m - 1, d, 0, 0, 0, 0);
+  }
+  const d = new Date(dateInput);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+export function formatLocalDateToYYYYMMDD(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
 export function formatCustomDate(
   dateObjOrString: Date | string,
   formatType: 'weekday_day_month' | 'day_month_long' | 'day_month_short' | 'full',
   lang: Language = 'ru'
 ): string {
-  const d = new Date(dateObjOrString);
+  const d = parseLocalDate(dateObjOrString);
   if (isNaN(d.getTime())) return String(dateObjOrString);
 
   const dayNum = d.getDate();
@@ -48,8 +71,12 @@ export function getMonthNominal(monthNumber: number, lang: Language): string {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-import { DayKey, ScheduleProfiles } from './types';
-import { SUBJECT_DB } from './defaultData';
+export function formatMonthYear(dateObjOrString: Date | string, lang: Language = 'ru'): string {
+  const d = parseLocalDate(dateObjOrString);
+  if (isNaN(d.getTime())) return String(dateObjOrString);
+  const monthName = getMonthNominal(d.getMonth() + 1, lang);
+  return `${monthName} ${d.getFullYear()}`;
+}
 
 export function extractSubjectKey(subjKey: string, subjectDb: Record<string, any> = SUBJECT_DB): string {
   if (!subjKey) return 'math';
@@ -79,12 +106,11 @@ export function parseLessonName(rawName: string, subjectDb: Record<string, any> 
   return { key: 'custom', ru: rawName, be: rawName, ic: "📘" };
 }
 
-export function getNextSchoolDay(startDateObj: Date = new Date()): Date {
+export function getNextSchoolDay(startDateObj: Date | string = new Date()): Date {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let d = new Date(startDateObj);
-  d.setHours(0, 0, 0, 0);
+  let d = parseLocalDate(startDateObj);
   d.setDate(d.getDate() + 1);
 
   while (d <= today || d.getDay() === 0 || d.getDay() === 6) {
@@ -103,14 +129,9 @@ export function getNextLessonDate(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Determine starting point: after the latest existing due date if in future, else after today
   let startFromDate = new Date(today);
   const validDueDates = existingDueDates
-    .map(d => {
-      const dt = new Date(d);
-      dt.setHours(0, 0, 0, 0);
-      return dt;
-    })
+    .map(d => parseLocalDate(d))
     .filter(dt => !isNaN(dt.getTime()));
 
   const futureDueDates = validDueDates.filter(dt => dt >= today);
@@ -124,18 +145,14 @@ export function getNextLessonDate(
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const primarySched = (schedules && schedules[activeProfile]) || (schedules && schedules.base) || (schedules ? Object.values(schedules)[0] : {}) || {};
 
-  // Search up to 90 days ahead starting from startFromDate + 1 day
   for (let i = 1; i <= 90; i++) {
     const candidate = new Date(startFromDate);
     candidate.setDate(candidate.getDate() + i);
     candidate.setHours(0, 0, 0, 0);
 
-    // Strictly skip today or past dates
     if (candidate <= today) continue;
 
     const dayOfWeek = candidate.getDay();
-
-    // Skip weekends
     if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
     const dayKey = dayKeysMap[dayOfWeek - 1];
@@ -160,7 +177,7 @@ export function getNextLessonDate(
     }
 
     if (hasSubject) {
-      return candidate.toISOString().slice(0, 10);
+      return formatLocalDateToYYYYMMDD(candidate);
     }
   }
 
@@ -168,7 +185,7 @@ export function getNextLessonDate(
   if (fallback <= today) {
     fallback = getNextSchoolDay(today);
   }
-  return fallback.toISOString().slice(0, 10);
+  return formatLocalDateToYYYYMMDD(fallback);
 }
 
 export function parseAndNormalizeSchedule(rawInput: any): ScheduleProfiles {
@@ -179,9 +196,7 @@ export function parseAndNormalizeSchedule(rawInput: any): ScheduleProfiles {
     if (cleaned.charCodeAt(0) === 0xFEFF) {
       cleaned = cleaned.slice(1);
     }
-    // Remove JS comments if present
     cleaned = cleaned.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-    // Remove trailing commas before closing braces/brackets
     cleaned = cleaned.replace(/,\s*([}\]])/g, '$1');
 
     try {
@@ -200,7 +215,6 @@ export function parseAndNormalizeSchedule(rawInput: any): ScheduleProfiles {
     throw new Error('Файл расписания должен быть JSON объектом.');
   }
 
-  // Unwrap common wrapper keys if user exported or formatted inside a parent field
   if (parsed.schedules && typeof parsed.schedules === 'object' && !Array.isArray(parsed.schedules)) {
     parsed = parsed.schedules;
   } else if (parsed.profiles && typeof parsed.profiles === 'object' && !Array.isArray(parsed.profiles)) {

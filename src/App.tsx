@@ -30,7 +30,7 @@ import { EventsView } from './EventsView';
 import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
-import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate } from './dateFormatter';
+import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
 import { translate, getProfileFullTitle } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { subscribeToDoc, updateDocData } from './firebase';
@@ -162,7 +162,7 @@ export default function App() {
       {
         id: '1',
         title: 'Классный час',
-        date: new Date().toISOString().slice(0, 10),
+        date: formatLocalDateToYYYYMMDD(new Date()),
         time: '14:40'
       }
     ];
@@ -186,10 +186,11 @@ export default function App() {
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { /* ignore */ }
     }
+    const today = new Date();
     return {
       id: 'poll_init',
-      created: new Date().toISOString().slice(0, 10),
-      date: new Date().toISOString().slice(0, 10),
+      created: formatLocalDateToYYYYMMDD(today),
+      date: formatLocalDateToYYYYMMDD(getNextSchoolDay(today)),
       eat: 0,
       no: 0,
       abs: 0,
@@ -361,7 +362,7 @@ export default function App() {
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const todayDDMM = `${day}.${month}`;
-      const todayYMD = now.toISOString().slice(0, 10);
+      const todayYMD = formatLocalDateToYYYYMMDD(now);
 
       const lastNotified = localStorage.getItem('ierihon_last_bday_notified');
       if (lastNotified !== todayYMD) {
@@ -572,7 +573,7 @@ export default function App() {
         id: Date.now().toString(),
         text,
         due: dueISO,
-        created: new Date().toISOString().slice(0, 10)
+        created: formatLocalDateToYYYYMMDD(new Date())
       };
       const nextHw = {
         ...prev,
@@ -771,12 +772,12 @@ export default function App() {
     if (!targetDate) {
       const existingPollDates: Date[] = [];
       if (currentPoll && currentPoll.date) {
-        const d = new Date(currentPoll.date);
+        const d = parseLocalDate(currentPoll.date);
         if (!isNaN(d.getTime())) existingPollDates.push(d);
       }
       pollHistory.forEach(p => {
         if (p.date) {
-          const d = new Date(p.date);
+          const d = parseLocalDate(p.date);
           if (!isNaN(d.getTime())) existingPollDates.push(d);
         }
       });
@@ -787,7 +788,7 @@ export default function App() {
         baseDate = new Date(Math.max(...validFutureDates.map(d => d.getTime())));
       }
       const candidate = getNextSchoolDay(baseDate);
-      targetDate = candidate.toISOString().slice(0, 10);
+      targetDate = formatLocalDateToYYYYMMDD(candidate);
     }
 
     let updatedHistory = pollHistory;
@@ -805,7 +806,7 @@ export default function App() {
 
     const newPoll: PollData = {
       id: 'poll_' + Date.now(),
-      created: today.toISOString().slice(0, 10),
+      created: formatLocalDateToYYYYMMDD(today),
       date: targetDate,
       eat: 0,
       no: 0,

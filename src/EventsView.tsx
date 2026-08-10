@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ClassEvent, Language } from './types';
 import { translate } from './i18n';
-import { formatCustomDate } from './dateFormatter';
+import { formatCustomDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
 import { Plus, Trash2, Calendar, Clock } from 'lucide-react';
 import { haptic } from './telegram';
 
@@ -20,7 +20,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => formatLocalDateToYYYYMMDD(new Date()));
   const [time, setTime] = useState('12:00');
 
   const [formError, setFormError] = useState<string | null>(null);
