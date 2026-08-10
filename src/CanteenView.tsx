@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Language, PollData, PollStatus, ScreenType } from './types';
 import { translate } from './i18n';
 import { formatCustomDate, getNextSchoolDay } from './dateFormatter';
@@ -49,6 +49,14 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [analyticsCategory, setAnalyticsCategory] = useState<'eat' | 'no' | 'abs'>('eat');
   const [showVoterMenu, setShowVoterMenu] = useState(false);
+
+  // Automatically reset modal / dropdown / filter states when navigating between view modes or poll details
+  useEffect(() => {
+    setShowAnalyticsModal(false);
+    setExpandedStudent(null);
+    setShowVoterMenu(false);
+    setVoterFilter('all');
+  }, [viewMode, selectedPollDetail]);
 
   // Compute aggregated stats for analytics
   const allPollsMap = new Map<string, PollData>();
@@ -809,34 +817,67 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
         </div>
       </div>
 
-      {/* Summary stats */}
+      {/* Interactive Category Filter Cards */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3 text-center">
+        <button
+          type="button"
+          onClick={() => {
+            setVoterFilter(voterFilter === 'eat' ? 'all' : 'eat');
+            haptic('light');
+          }}
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+            voterFilter === 'eat'
+              ? 'bg-emerald-500/15 border-emerald-500/60 text-emerald-300 shadow-md shadow-emerald-500/10 scale-[1.02]'
+              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+          }`}
+        >
           <div className="text-xl font-black text-emerald-400">
             {activePoll.eat || 0}
           </div>
-          <div className="text-[10px] text-[#888] font-bold uppercase tracking-wider mt-0.5">
+          <div className="text-[10px] font-bold uppercase tracking-wider">
             {translate('v_eat_s', lang)}
           </div>
-        </div>
+        </button>
 
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3 text-center">
+        <button
+          type="button"
+          onClick={() => {
+            setVoterFilter(voterFilter === 'no' ? 'all' : 'no');
+            haptic('light');
+          }}
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+            voterFilter === 'no'
+              ? 'bg-rose-500/15 border-rose-500/60 text-rose-300 shadow-md shadow-rose-500/10 scale-[1.02]'
+              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+          }`}
+        >
           <div className="text-xl font-black text-rose-400">
             {activePoll.no || 0}
           </div>
-          <div className="text-[10px] text-[#888] font-bold uppercase tracking-wider mt-0.5">
+          <div className="text-[10px] font-bold uppercase tracking-wider">
             {translate('v_no_s', lang)}
           </div>
-        </div>
+        </button>
 
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3 text-center">
+        <button
+          type="button"
+          onClick={() => {
+            setVoterFilter(voterFilter === 'abs' ? 'all' : 'abs');
+            haptic('light');
+          }}
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+            voterFilter === 'abs'
+              ? 'bg-amber-500/15 border-amber-500/60 text-amber-300 shadow-md shadow-amber-500/10 scale-[1.02]'
+              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+          }`}
+        >
           <div className="text-xl font-black text-[#aaa]">
             {activePoll.abs || 0}
           </div>
-          <div className="text-[10px] text-[#888] font-bold uppercase tracking-wider mt-0.5">
+          <div className="text-[10px] font-bold uppercase tracking-wider">
             {translate('v_abs_s', lang)}
           </div>
-        </div>
+        </button>
       </div>
 
       <button
@@ -888,56 +929,24 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
         </div>
       )}
 
-      {/* Voters list with filter tabs */}
+      {/* Voters list without redundant bottom filter pills */}
       <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest">
             {lang === 'be' ? 'Вучні, якія прагаласавалі' : 'Проголосовавшие ученики'} ({filteredVoters.length})
           </div>
-        </div>
-
-        {/* Filter Pills */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
-          <button
-            onClick={() => setVoterFilter('all')}
-            className={`px-3 py-1 rounded-xl text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-              voterFilter === 'all'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-[#1a1a1a] text-[#888] hover:text-white'
-            }`}
-          >
-            {translate('filter_all', lang)} ({activePoll.voters?.length || 0})
-          </button>
-          <button
-            onClick={() => setVoterFilter('eat')}
-            className={`px-3 py-1 rounded-xl text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-              voterFilter === 'eat'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-[#1a1a1a] text-[#888] hover:text-white'
-            }`}
-          >
-            🍽️ ({activePoll.eat || 0})
-          </button>
-          <button
-            onClick={() => setVoterFilter('no')}
-            className={`px-3 py-1 rounded-xl text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-              voterFilter === 'no'
-                ? 'bg-rose-600 text-white shadow-sm'
-                : 'bg-[#1a1a1a] text-[#888] hover:text-white'
-            }`}
-          >
-            🚫 ({activePoll.no || 0})
-          </button>
-          <button
-            onClick={() => setVoterFilter('abs')}
-            className={`px-3 py-1 rounded-xl text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-              voterFilter === 'abs'
-                ? 'bg-slate-600 text-white shadow-sm'
-                : 'bg-[#1a1a1a] text-[#888] hover:text-white'
-            }`}
-          >
-            🏠 ({activePoll.abs || 0})
-          </button>
+          {voterFilter !== 'all' && (
+            <button
+              type="button"
+              onClick={() => {
+                setVoterFilter('all');
+                haptic('light');
+              }}
+              className="text-[10px] font-bold text-indigo-400 hover:underline cursor-pointer"
+            >
+              {lang === 'be' ? 'Паказаць усіх' : 'Показать всех'} ({activePoll.voters?.length || 0})
+            </button>
+          )}
         </div>
 
         {filteredVoters.length === 0 ? (

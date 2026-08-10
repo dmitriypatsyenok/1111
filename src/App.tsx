@@ -50,8 +50,8 @@ export default function App() {
   });
 
   const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem('ierihon_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
+    const saved = localStorage.getItem('ierihon_theme') as Theme;
+    if (saved === 'light') return 'light';
     return 'dark';
   });
 
@@ -61,28 +61,24 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-      try {
-        if (tg) {
-          if (tg.setHeaderColor) tg.setHeaderColor('#ffffff');
-          if (tg.setBackgroundColor) tg.setBackgroundColor('#f3f4f6');
-        }
-      } catch (e) {
-        // ignore
+    const root = document.documentElement;
+    root.classList.remove('dark', 'light');
+    root.classList.add(theme);
+
+    const themeColors: Record<Theme, { header: string; bg: string }> = {
+      dark: { header: '#0f0f0f', bg: '#0a0a0a' },
+      light: { header: '#ffffff', bg: '#f3f4f6' }
+    };
+
+    const cfg = themeColors[theme] || themeColors.dark;
+
+    try {
+      if (tg) {
+        if (tg.setHeaderColor) tg.setHeaderColor(cfg.header);
+        if (tg.setBackgroundColor) tg.setBackgroundColor(cfg.bg);
       }
-    } else {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-      try {
-        if (tg) {
-          if (tg.setHeaderColor) tg.setHeaderColor('#0f0f0f');
-          if (tg.setBackgroundColor) tg.setBackgroundColor('#0a0a0a');
-        }
-      } catch (e) {
-        // ignore
-      }
+    } catch (e) {
+      // ignore
     }
   }, [theme]);
 

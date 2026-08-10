@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles, Theme } from './types';
 import { translate, getProfileFullTitle } from './i18n';
 import { haptic } from './telegram';
-import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun, RotateCcw } from 'lucide-react';
+import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun, RotateCcw, Sparkles, Palette, Zap } from 'lucide-react';
 
 interface SettingsViewProps {
   lang: Language;
@@ -228,22 +228,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           {translate('theme_title', lang)}
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {/* Dark Theme */}
           <div
             onClick={() => {
               onSetTheme('dark');
               haptic('light');
             }}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
               theme === 'dark' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
             }`}
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-[#1a1a1a] flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#14161d] border border-[#262a38] flex items-center justify-center shrink-0 shadow-inner">
                 <Moon className="w-4 h-4 text-indigo-400" />
               </div>
-              <span className="text-xs font-bold text-white">{translate('theme_dark', lang)}</span>
+              <div>
+                <div className="text-xs font-bold text-white">{translate('theme_dark', lang)}</div>
+                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Камфортная цёмная гама' : 'Комфортная тёмная гамма'}</div>
+              </div>
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
@@ -260,15 +263,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onSetTheme('light');
               haptic('light');
             }}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
               theme === 'light' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
             }`}
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-[#1a1a1a] flex items-center justify-center shrink-0">
-                <Sun className="w-4 h-4 text-amber-400" />
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#ffffff] border border-[#e2e8f0] flex items-center justify-center shrink-0 shadow-inner">
+                <Sun className="w-4 h-4 text-amber-500" />
               </div>
-              <span className="text-xs font-bold text-white">{translate('theme_light', lang)}</span>
+              <div>
+                <div className="text-xs font-bold text-white">{translate('theme_light', lang)}</div>
+                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Чыстая светлая гама' : 'Чистая светлая гамма'}</div>
+              </div>
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
