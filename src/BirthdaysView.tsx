@@ -24,11 +24,12 @@ const MONTH_EMOJIS: Record<number, string> = {
 };
 
 export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang }) => {
+  const cleanBirthdays = (birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова'));
   const now = new Date();
   const d = now.getDate();
   const m = now.getMonth() + 1;
 
-  const todayBdays = birthdays.filter(b => {
+  const todayBdays = cleanBirthdays.filter(b => {
     if (!b?.date) return false;
     const parts = b.date.trim().split('.');
     if (parts.length < 2) return false;
@@ -40,7 +41,7 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
     1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: []
   };
 
-  birthdays.forEach(b => {
+  cleanBirthdays.forEach(b => {
     if (!b?.date) return;
     const parts = b.date.trim().split('.');
     if (parts.length === 2) {

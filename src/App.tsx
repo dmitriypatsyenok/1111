@@ -146,10 +146,12 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter(b => b && b.name && !b.name.includes('Иванова'));
+        }
       } catch (e) { /* ignore */ }
     }
-    return INITIAL_BIRTHDAYS;
+    return INITIAL_BIRTHDAYS.filter(b => b && b.name && !b.name.includes('Иванова'));
   });
 
   // Events
@@ -231,7 +233,15 @@ export default function App() {
     );
     const unsubBirthdays = subscribeToDoc<BirthdayItem[]>(
       'birthdays',
-      data => { if (Array.isArray(data)) setBirthdays(data); },
+      data => {
+        if (Array.isArray(data)) {
+          const cleaned = data.filter(b => b && b.name && !b.name.includes('Иванова'));
+          setBirthdays(cleaned);
+          if (cleaned.length !== data.length) {
+            updateDocData('birthdays', cleaned);
+          }
+        }
+      },
       () => updateDocData('birthdays', birthdays)
     );
     const unsubEvents = subscribeToDoc<ClassEvent[]>(

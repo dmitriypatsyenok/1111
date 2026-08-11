@@ -32,8 +32,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
     const now = new Date();
     const d = now.getDate();
     const m = now.getMonth() + 1;
-    const matches = birthdays.filter(b => {
-      if (!b?.date) return false;
+    const matches = (birthdays || []).filter(b => {
+      if (!b?.date || (b.name && b.name.includes('Иванова'))) return false;
       const parts = b.date.trim().split('.');
       if (parts.length < 2) return false;
       return parseInt(parts[0], 10) === d && parseInt(parts[1], 10) === m;

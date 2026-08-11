@@ -457,7 +457,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           {/* Export Birthdays */}
           <div
-            onClick={() => downloadJSON(birthdays, 'data_birthdays.json')}
+            onClick={() => downloadJSON((birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова')), 'data_birthdays.json')}
             className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
           >
             <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">

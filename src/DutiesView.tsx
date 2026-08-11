@@ -79,8 +79,10 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
     haptic('selection');
   };
 
+  const cleanBirthdays = (birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова'));
+
   const handleSelectAllRoster = () => {
-    const allNames = birthdays.map(b => b.name);
+    const allNames = cleanBirthdays.map(b => b.name);
     const merged = Array.from(new Set([...selectedStudents, ...allNames]));
     setSelectedStudents(merged);
     haptic('medium');
@@ -146,7 +148,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
   const currentDayZones = duties[activeDay] || [];
 
   // Prepare roster list for edit modal including existing students
-  const combinedRoster: BirthdayItem[] = [...birthdays];
+  const combinedRoster: BirthdayItem[] = [...cleanBirthdays];
   if (editingZone) {
     selectedStudents.forEach(st => {
       if (!combinedRoster.some(b => b.name === st)) {
