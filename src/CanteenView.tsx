@@ -484,9 +484,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     <h3 className="text-sm font-bold text-white">
                       {translate('canteen_analytics_modal_title', lang)}
                     </h3>
-                    <p className="text-[10px] text-[#888]">
-                      {translate('canteen_analytics_desc', lang)}
-                    </p>
                   </div>
                 </div>
                 <button
@@ -788,20 +785,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
   return (
     <div className="space-y-3.5 animate-fade-in">
-      {/* Visual Breakdown Bar */}
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 space-y-2 shadow-sm">
-        <div className="flex items-center justify-between text-xs font-bold">
-          <span className="text-emerald-400">🍽️ {activePoll.eat || 0} ({pEatPct}%)</span>
-          <span className="text-rose-400">🚫 {activePoll.no || 0} ({pNoPct}%)</span>
-          <span className="text-[#aaa]">🏠 {activePoll.abs || 0} ({pAbsPct}%)</span>
-        </div>
-        <div className="w-full h-2.5 bg-[#222] rounded-full overflow-hidden flex">
-          <div style={{ width: `${pEatPct}%` }} className="bg-emerald-500 h-full transition-all duration-300" />
-          <div style={{ width: `${pNoPct}%` }} className="bg-rose-500 h-full transition-all duration-300" />
-          <div style={{ width: `${pAbsPct}%` }} className="bg-slate-500 h-full transition-all duration-300" />
-        </div>
-      </div>
-
       {/* Interactive Category Filter Cards */}
       <div className="grid grid-cols-3 gap-2.5">
         <button
@@ -982,9 +965,6 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   <h3 className="text-sm font-bold text-white">
                     {translate('canteen_analytics_modal_title', lang)}
                   </h3>
-                  <p className="text-[10px] text-[#888]">
-                    {translate('canteen_analytics_desc', lang)}
-                  </p>
                 </div>
               </div>
               <button

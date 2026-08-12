@@ -96,6 +96,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const [editModalItem, setEditModalItem] = useState<HomeworkItem | null>(null);
   const [editText, setEditText] = useState('');
   const [subjectSearch, setSubjectSearch] = useState('');
+  const [showForeignModal, setShowForeignModal] = useState(false);
 
   const dayKeys: DayKey[] = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const daysDict = translate('t_days_s', lang) as any;
@@ -108,12 +109,123 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
     return getSubjectHwList(subjKey, effectiveProfile, homeworkStore);
   };
 
+  const handleSubjectSelect = (subjKey: string) => {
+    const cleanKey = extractSubjectKey(subjKey);
+    if (['foreign_lang', 'eng_lang', 'ger_lang'].includes(cleanKey)) {
+      setShowForeignModal(true);
+      haptic('light');
+      return;
+    }
+    onSelectSubject(cleanKey);
+    onNavigate('hw-detail');
+    haptic('light');
+  };
+
   // Calculate next lesson date excluding existing homework dates
   const getSubjectNextLessonDate = (subjKey: string) => {
     const cleanKey = extractSubjectKey(subjKey);
     const currentList = getSubjectHwListLocal(subjKey);
     const existingDueDates = currentList.map(item => item.due).filter(Boolean);
     return getNextLessonDate(cleanKey, schedules, effectiveProfile, existingDueDates);
+  };
+
+  const renderForeignModal = () => {
+    if (!showForeignModal) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl shrink-0">
+              🌍
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white">
+                {lang === 'be' ? 'Замежная мова' : 'Иностранный язык'}
+              </h3>
+              <p className="text-[11px] text-[#888] mt-0.5">
+                {lang === 'be' ? 'Абярыце мову для дамашняга задання:' : 'Выберите язык для домашнего задания:'}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2.5 pt-1">
+            {/* English */}
+            {(() => {
+              const engCount = getSubjectHwListLocal('eng_lang').length;
+              return (
+                <button
+                  onClick={() => {
+                    setShowForeignModal(false);
+                    onSelectSubject('eng_lang');
+                    onNavigate('hw-detail');
+                    haptic('selection');
+                  }}
+                  className="w-full bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1c1c1c] rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🇬🇧</span>
+                    <div>
+                      <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                        {lang === 'be' ? 'Англійская мова' : 'Английский язык'}
+                      </div>
+                      <div className="text-[10px] text-[#777] mt-0.5">
+                        {engCount > 0
+                          ? (lang === 'be' ? `Заданняў: ${engCount}` : `Заданий: ${engCount}`)
+                          : (lang === 'be' ? 'Немае заданняў' : 'Нет заданий')}
+                      </div>
+                    </div>
+                  </div>
+                  {engCount > 0 && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                  )}
+                </button>
+              );
+            })()}
+
+            {/* German */}
+            {(() => {
+              const gerCount = getSubjectHwListLocal('ger_lang').length;
+              return (
+                <button
+                  onClick={() => {
+                    setShowForeignModal(false);
+                    onSelectSubject('ger_lang');
+                    onNavigate('hw-detail');
+                    haptic('selection');
+                  }}
+                  className="w-full bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1c1c1c] rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🇩🇪</span>
+                    <div>
+                      <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                        {lang === 'be' ? 'Нямецкая мова' : 'Немецкий язык'}
+                      </div>
+                      <div className="text-[10px] text-[#777] mt-0.5">
+                        {gerCount > 0
+                          ? (lang === 'be' ? `Заданняў: ${gerCount}` : `Заданий: ${gerCount}`)
+                          : (lang === 'be' ? 'Немае заданняў' : 'Нет заданий')}
+                      </div>
+                    </div>
+                  </div>
+                  {gerCount > 0 && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                  )}
+                </button>
+              );
+            })()}
+          </div>
+
+          <button
+            onClick={() => setShowForeignModal(false)}
+            className="w-full py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-[#aaa] hover:text-white font-bold hover:bg-[#222] transition-all cursor-pointer"
+          >
+            {translate('cancel', lang)}
+          </button>
+        </div>
+      </div>
+    );
   };
 
   if (viewMode === 'main') {
@@ -211,17 +323,16 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               const displayName = meta[lang] || nameStr;
               const timeStr = LESSON_TIMES[num - 1] || '';
               const subjKey = meta.key || 'math';
-              const storageKey = getHomeworkStorageKey(subjKey, effectiveProfile);
+              const isForeign = ['foreign_lang', 'eng_lang', 'ger_lang'].includes(subjKey);
               const hwList = getSubjectHwListLocal(subjKey);
-              const hasHw = hwList.length > 0;
+              const hasHw = isForeign
+                ? getSubjectHwListLocal('eng_lang').length > 0 || getSubjectHwListLocal('ger_lang').length > 0 || hwList.length > 0
+                : hwList.length > 0;
 
               return (
                 <div
                   key={idx}
-                  onClick={() => {
-                    onSelectSubject(subjKey);
-                    onNavigate('hw-detail');
-                  }}
+                  onClick={() => handleSubjectSelect(subjKey)}
                   className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group"
                 >
                   <div className="w-7 h-7 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-xs font-bold flex items-center justify-center shrink-0">
@@ -247,6 +358,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             })}
           </div>
         )}
+        {renderForeignModal()}
       </div>
     );
   }
@@ -281,15 +393,15 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
         <div className="grid grid-cols-2 gap-2.5">
           {filteredSubjects.map(s => {
             const list = getSubjectHwListLocal(s.key);
-            const hasHw = list.length > 0;
+            const isForeign = ['foreign_lang', 'eng_lang', 'ger_lang'].includes(s.key);
+            const hasHw = isForeign
+              ? getSubjectHwListLocal('eng_lang').length > 0 || getSubjectHwListLocal('ger_lang').length > 0 || list.length > 0
+              : list.length > 0;
 
             return (
               <div
                 key={s.key}
-                onClick={() => {
-                  onSelectSubject(s.key);
-                  onNavigate('hw-detail');
-                }}
+                onClick={() => handleSubjectSelect(s.key)}
                 className="relative bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
               >
                 {hasHw && (
@@ -302,6 +414,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             );
           })}
         </div>
+        {renderForeignModal()}
       </div>
     );
   }
@@ -529,6 +642,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
           </div>
         </div>
       )}
+      {renderForeignModal()}
     </div>
   );
 };

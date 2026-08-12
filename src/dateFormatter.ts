@@ -96,6 +96,14 @@ export function extractSubjectKey(subjKey: string, subjectDb: Record<string, any
 export function parseLessonName(rawName: string, subjectDb: Record<string, any> = SUBJECT_DB) {
   if (!rawName || !rawName.trim()) return { key: 'window', ru: 'Окно', be: 'Аконька', ic: '☕' };
   const n = rawName.toLowerCase();
+  if (
+    n.includes('иностранн') || n.includes('замежн') ||
+    n.includes('английск') || n.includes('англійск') ||
+    n.includes('немецк') || n.includes('нямецк') ||
+    n === 'eng_lang' || n === 'ger_lang' || n === 'foreign_lang'
+  ) {
+    return subjectDb.foreign_lang || { key: "foreign_lang", ru: "Иностранный язык", be: "Замежная мова", ic: "🌍" };
+  }
   for (let key in subjectDb) {
     const item = subjectDb[key];
     if (!item) continue;
@@ -158,9 +166,10 @@ export function getNextLessonDate(
     const dayKey = dayKeysMap[dayOfWeek - 1];
     let dayLessons: string[] = (primarySched as any)[dayKey] || [];
 
+    const foreignKeys = ['foreign_lang', 'eng_lang', 'ger_lang'];
     let hasSubject = dayLessons.some(item => {
       const meta = parseLessonName(item, SUBJECT_DB);
-      return meta.key === cleanKey;
+      return meta.key === cleanKey || (foreignKeys.includes(cleanKey) && foreignKeys.includes(meta.key));
     });
 
     if (!hasSubject && schedules && typeof schedules === 'object') {
@@ -168,7 +177,10 @@ export function getNextLessonDate(
         const profSched = schedules[pKey];
         if (profSched && profSched[dayKey]) {
           const profLessons: string[] = profSched[dayKey] || [];
-          if (profLessons.some(item => parseLessonName(item, SUBJECT_DB).key === cleanKey)) {
+          if (profLessons.some(item => {
+            const meta = parseLessonName(item, SUBJECT_DB);
+            return meta.key === cleanKey || (foreignKeys.includes(cleanKey) && foreignKeys.includes(meta.key));
+          })) {
             hasSubject = true;
             break;
           }
