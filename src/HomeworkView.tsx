@@ -581,9 +581,11 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             value={inputText}
             onChange={e => setInputText(e.target.value)}
             onKeyDown={e => {
-              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+              if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleCreateSubmit();
+                if (inputText.trim()) {
+                  handleCreateSubmit();
+                }
               }
             }}
             placeholder={
@@ -618,9 +620,11 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               value={editText}
               onChange={e => setEditText(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  handleEditSubmit();
+                  if (editText.trim()) {
+                    handleEditSubmit();
+                  }
                 }
               }}
               className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y select-text pointer-events-auto"

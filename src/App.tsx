@@ -729,9 +729,21 @@ export default function App() {
   const handleResetSchedule = () => {
     if (confirm(lang === 'be' ? 'Скінуць расклад да пачатковага (стокавага)?' : 'Сбросить расписание до начального (стокового)?')) {
       setSchedules(DEFAULT_SCHEDULES);
+      localStorage.setItem('ierihon_schedules', JSON.stringify(DEFAULT_SCHEDULES));
       updateDocData('schedules', DEFAULT_SCHEDULES);
       haptic('success');
       showToast(lang === 'be' ? 'Расклад скінуты да пачатковага!' : 'Расписание сброшено до стокового!', 'success');
+    }
+  };
+
+  const handleResetBirthdays = () => {
+    if (confirm(lang === 'be' ? 'Скінуць спіс дзён нараджэння да пачатковага (стокавага)?' : 'Сбросить список дней рождения до начального (стокового)?')) {
+      const stockBirthdays = INITIAL_BIRTHDAYS.filter(b => b && b.name && !b.name.includes('Иванова'));
+      setBirthdays(stockBirthdays);
+      localStorage.setItem('ierihon_birthdays', JSON.stringify(stockBirthdays));
+      updateDocData('birthdays', stockBirthdays);
+      haptic('success');
+      showToast(lang === 'be' ? 'Спіс дзён нараджэння скінуты!' : 'Список дней рождения сброшен до начального!', 'success');
     }
   };
 
@@ -740,6 +752,7 @@ export default function App() {
       const emptyHw = {};
       const emptyDuties = { zones: [] };
       const emptyEvents: ClassEvent[] = [];
+      const stockBirthdays = INITIAL_BIRTHDAYS.filter(b => b && b.name && !b.name.includes('Иванова'));
       const emptyPoll: PollData = {
         id: '1',
         created: '',
@@ -756,14 +769,26 @@ export default function App() {
       setHomework(emptyHw);
       setDuties(emptyDuties);
       setEvents(emptyEvents);
+      setBirthdays(stockBirthdays);
       setCurrentPoll(emptyPoll);
       setPollHistory(emptyPollHistory);
       setIsPollActive(false);
+
+      localStorage.setItem('ierihon_schedules', JSON.stringify(DEFAULT_SCHEDULES));
+      localStorage.setItem('ierihon_active_profile', 'base');
+      localStorage.setItem('ierihon_homework', JSON.stringify(emptyHw));
+      localStorage.setItem('ierihon_duties', JSON.stringify(emptyDuties));
+      localStorage.setItem('ierihon_events', JSON.stringify(emptyEvents));
+      localStorage.setItem('ierihon_birthdays', JSON.stringify(stockBirthdays));
+      localStorage.setItem('ierihon_current_poll', JSON.stringify(emptyPoll));
+      localStorage.setItem('ierihon_poll_history', JSON.stringify(emptyPollHistory));
+      localStorage.setItem('ierihon_poll_active', 'false');
 
       updateDocData('schedules', DEFAULT_SCHEDULES);
       updateDocData('homework', emptyHw);
       updateDocData('duties', emptyDuties);
       updateDocData('events', emptyEvents);
+      updateDocData('birthdays', stockBirthdays);
       updateDocData('currentPoll', emptyPoll);
       updateDocData('pollHistory', emptyPollHistory);
       updateDocData('isPollActive', false);
@@ -1343,6 +1368,7 @@ export default function App() {
             tgConfig={tgConfig}
             onSetLang={handleSetLang}
             onResetSchedule={handleResetSchedule}
+            onResetBirthdays={handleResetBirthdays}
             onImportSchedules={handleImportSchedules}
             onImportHomework={handleImportHomework}
             onImportDuties={handleImportDuties}

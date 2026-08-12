@@ -363,6 +363,12 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
               type="text"
               value={customZoneName}
               onChange={e => setCustomZoneName(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && customZoneName.trim()) {
+                  e.preventDefault();
+                  handleCreateZoneSubmit(customZoneName);
+                }
+              }}
               placeholder={translate('zone_name_placeholder', lang)}
               className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
             />
