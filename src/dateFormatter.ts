@@ -95,23 +95,80 @@ export function extractSubjectKey(subjKey: string, subjectDb: Record<string, any
 
 export function parseLessonName(rawName: string, subjectDb: Record<string, any> = SUBJECT_DB) {
   if (!rawName || !rawName.trim()) return { key: 'window', ru: 'Окно', be: 'Аконька', ic: '☕' };
-  const n = rawName.toLowerCase();
+  
+  const cleanName = rawName.replace(/^[\d\.\)\s]+/, '').trim();
+  const n = (cleanName || rawName).toLowerCase();
+
+  // 1. Foreign Language (Иностранный язык)
   if (
     n.includes('иностранн') || n.includes('замежн') ||
     n.includes('английск') || n.includes('англійск') ||
     n.includes('немецк') || n.includes('нямецк') ||
+    n.includes('англ') || n.includes('нем') ||
     n === 'eng_lang' || n === 'ger_lang' || n === 'foreign_lang'
   ) {
     return subjectDb.foreign_lang || { key: "foreign_lang", ru: "Иностранный язык", be: "Замежная мова", ic: "🌍" };
   }
+
+  // 2. Belarusian Literature (Белорусская литература)
+  if (
+    n === 'bel_lit' ||
+    ((n.includes('белорус') || n.includes('беларус') || n.includes('бел.')) &&
+     (n.includes('лит') || n.includes('літ') || n.includes('літар') || n.includes('литер')))
+  ) {
+    return subjectDb.bel_lit || { key: "bel_lit", ru: "Белорусская литература", be: "Беларуская літаратура", ic: "📚" };
+  }
+
+  // 3. Belarusian Language (Белорусский язык)
+  if (
+    n === 'bel_lang' ||
+    n.includes('белорусск') || n.includes('беларуск') ||
+    n.includes('бел. язык') || n.includes('бел. яз') || n.includes('бел яз') ||
+    n.includes('бел. мова') || n.includes('бел мова') ||
+    (n.includes('бел') && !n.includes('бел. лит') && !n.includes('бел. літ') && !n.includes('лит') && !n.includes('літ'))
+  ) {
+    return subjectDb.bel_lang || { key: "bel_lang", ru: "Белорусский язык", be: "Беларуская мова", ic: "🇧🇾" };
+  }
+
+  // 4. Russian Literature (Русская литература)
+  if (
+    n === 'rus_lit' ||
+    ((n.includes('русск') || n.includes('руск') || n.includes('рус.')) &&
+     (n.includes('лит') || n.includes('літ') || n.includes('літар') || n.includes('литер')) &&
+     !n.includes('белорус') && !n.includes('беларус'))
+  ) {
+    return subjectDb.rus_lit || { key: "rus_lit", ru: "Русская литература", be: "Руская літаратура", ic: "📚" };
+  }
+
+  // 5. Russian Language (Русский язык)
+  if (
+    n === 'rus_lang' ||
+    ((n.includes('русск') || n.includes('рус.') || n.includes('рус яз') || n.includes('руская мова')) &&
+     !n.includes('белорус') && !n.includes('беларус') && !n.includes('лит') && !n.includes('літ'))
+  ) {
+    return subjectDb.rus_lang || { key: "rus_lang", ru: "Русский язык", be: "Руская мова", ic: "🇷🇺" };
+  }
+
+  // 6. History of Belarus (История Беларуси)
+  if (n.includes('история беларуси') || n.includes('гісторыя беларусі') || n.includes('ист. беларус') || n.includes('гіст. беларус')) {
+    return { key: "history", ru: "История Беларуси", be: "Гісторыя Беларуси", ic: "🏛" };
+  }
+
   for (let key in subjectDb) {
     const item = subjectDb[key];
     if (!item) continue;
-    if (n.includes(item.ru.toLowerCase()) || n.includes(item.be.toLowerCase()) || n.includes(key)) {
+    const ruLower = item.ru.toLowerCase();
+    const beLower = item.be.toLowerCase();
+    if (
+      n === key || n === ruLower || n === beLower ||
+      (ruLower.length > 3 && n.includes(ruLower)) ||
+      (beLower.length > 3 && n.includes(beLower))
+    ) {
       return item;
     }
   }
-  return { key: 'custom', ru: rawName, be: rawName, ic: "📘" };
+
+  return { key: 'custom', ru: cleanName || rawName, be: cleanName || rawName, ic: "📘" };
 }
 
 export function getNextSchoolDay(startDateObj: Date | string = new Date()): Date {

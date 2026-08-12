@@ -24,11 +24,19 @@ interface HomeworkViewProps {
 }
 
 export const PROFILE_SUBJECT_KEYS = new Set([
-  'math', 'algebra', 'geometry', 'chem', 'rus_lang', 'rus_lit', 'physics'
+  'math', 'algebra', 'geometry', 'chem', 'rus_lang', 'rus_lit', 'bel_lang', 'bel_lit', 'physics'
 ]);
 
 export function getHomeworkStorageKey(subjKey: string, activeProfile: ProfileKey): string {
   const cleanKey = extractSubjectKey(subjKey);
+
+  // Belarusian language: profile subject for math & chem profiles
+  if (cleanKey === 'bel_lang') {
+    if (activeProfile === 'math' || activeProfile === 'chem') {
+      return 'prof_bel_lang';
+    }
+    return 'base_bel_lang';
+  }
 
   // Russian language: profile subject for math & chem profiles (shared prof_rus_lang)
   if (cleanKey === 'rus_lang') {

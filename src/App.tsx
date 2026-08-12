@@ -604,7 +604,7 @@ export default function App() {
     } else if (subjectKey.startsWith('base_')) {
       isProf = false;
     } else {
-      if (baseKey === 'rus_lang') {
+      if (baseKey === 'rus_lang' || baseKey === 'bel_lang') {
         isProf = activeProfile === 'math' || activeProfile === 'chem';
       } else if (['math', 'algebra', 'geometry'].includes(baseKey)) {
         isProf = activeProfile === 'math';
