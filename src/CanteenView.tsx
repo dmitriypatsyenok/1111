@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Language, PollData, PollStatus, ScreenType } from './types';
 import { translate } from './i18n';
 import { formatCustomDate, getNextSchoolDay, formatMonthYear, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
-import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight, Calendar, TrendingUp, PieChart, Users, Award, Filter, Sparkles } from 'lucide-react';
+import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight, Calendar, TrendingUp, PieChart, Users, Award, Filter, Sparkles, Utensils, UserX, AlertTriangle } from 'lucide-react';
 import { haptic, getTelegramUserName } from './telegram';
 
 interface CanteenViewProps {
@@ -203,7 +203,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
           {canteenMsg && (
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-300 font-medium animate-fade-in flex items-center justify-between">
-              <span>⚠️ {canteenMsg}</span>
+              <span className="flex items-center gap-1.5"><AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" /> {canteenMsg}</span>
               <button onClick={() => setCanteenMsg(null)} className="text-amber-400 font-bold px-1.5 cursor-pointer">✕</button>
             </div>
           )}
@@ -306,7 +306,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     setShowCreateModal(false);
                     haptic('success');
                   }}
-                  className="flex-1 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-xs font-bold text-black cursor-pointer transition-all shadow-sm"
+                  className="flex-1 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-white border border-zinc-600 cursor-pointer transition-all"
                 >
                   {lang === 'be' ? 'Запусціць' : 'Запустить'}
                 </button>
@@ -335,15 +335,15 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             onClick={() => onVote('eat')}
             className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'eat'
-                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                ? 'border-emerald-500/50 bg-emerald-500/10 text-white shadow-sm'
                 : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
-              <span className="text-xl">🍽</span>
+              <Utensils className="w-5 h-5 text-emerald-400 shrink-0" />
               <span>{translate('v_eat', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'eat' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'eat' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.eat || 0}
             </div>
           </div>
@@ -353,15 +353,15 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             onClick={() => onVote('no')}
             className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'no'
-                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                ? 'border-rose-500/50 bg-rose-500/10 text-white shadow-sm'
                 : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
-              <span className="text-xl">🚫</span>
+              <XCircle className="w-5 h-5 text-rose-400 shrink-0" />
               <span>{translate('v_no', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'no' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'no' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.no || 0}
             </div>
           </div>
@@ -371,15 +371,15 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             onClick={() => onVote('abs')}
             className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'abs'
-                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                ? 'border-amber-500/50 bg-amber-500/10 text-white shadow-sm'
                 : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
-              <span className="text-xl">🏠</span>
+              <UserX className="w-5 h-5 text-amber-400 shrink-0" />
               <span>{translate('v_abs', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'abs' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'abs' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.abs || 0}
             </div>
           </div>
@@ -473,11 +473,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
         {/* Detailed Analytics Modal */}
         {showAnalyticsModal && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-fade-in">
-            <div className="bg-[#0f0f0f] border border-[#222] rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="bg-[#121215] border border-[#27272A] rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
               {/* Modal Header */}
-              <div className="p-4 border-b border-[#1f1f1f] flex items-center justify-between shrink-0 bg-[#121212]">
+              <div className="p-4 border-b border-[#27272A] flex items-center justify-between shrink-0 bg-[#121215]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center font-bold">
                     <TrendingUp className="w-4 h-4" />
                   </div>
                   <div>
@@ -488,7 +488,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 </div>
                 <button
                   onClick={() => setShowAnalyticsModal(false)}
-                  className="w-8 h-8 rounded-xl bg-[#1f1f1f] hover:bg-[#2a2a2a] text-[#aaa] hover:text-white flex items-center justify-center text-sm font-bold transition-all cursor-pointer"
+                  className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-[#aaa] hover:text-white flex items-center justify-center text-sm font-bold transition-all cursor-pointer"
                 >
                   ✕
                 </button>
@@ -630,11 +630,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     onClick={() => { setAnalyticsCategory('eat'); haptic('light'); }}
                     className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'eat'
-                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold shadow-sm'
                         : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
-                    <span className="text-xl">🍽️</span>
+                    <Utensils className="w-5 h-5 text-emerald-400" />
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_eat', lang)}
                     </span>
@@ -645,11 +645,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     onClick={() => { setAnalyticsCategory('no'); haptic('light'); }}
                     className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'no'
-                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        ? 'bg-rose-500/20 border-rose-500/50 text-rose-300 font-bold shadow-sm'
                         : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
-                    <span className="text-xl">🚫</span>
+                    <XCircle className="w-5 h-5 text-rose-400" />
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_no', lang)}
                     </span>
@@ -660,11 +660,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     onClick={() => { setAnalyticsCategory('abs'); haptic('light'); }}
                     className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'abs'
-                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 font-bold shadow-sm'
                         : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
-                    <span className="text-xl">🏠</span>
+                    <UserX className="w-5 h-5 text-amber-400" />
                     <span className="text-xs font-bold leading-tight">
                       {translate('stat_abs', lang)}
                     </span>
@@ -795,11 +795,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           }}
           className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'eat'
-              ? 'bg-white text-black font-bold border-white shadow-sm'
-              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
+              ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold shadow-sm'
+              : 'bg-[#121215] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className={`text-xl font-black ${voterFilter === 'eat' ? 'text-black' : 'text-emerald-400'}`}>
+          <div className="text-xl font-black text-emerald-400">
             {activePoll.eat || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -815,11 +815,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           }}
           className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'no'
-              ? 'bg-white text-black font-bold border-white shadow-sm'
-              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
+              ? 'bg-rose-500/20 border-rose-500/50 text-rose-300 font-bold shadow-sm'
+              : 'bg-[#121215] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className={`text-xl font-black ${voterFilter === 'no' ? 'text-black' : 'text-rose-400'}`}>
+          <div className="text-xl font-black text-rose-400">
             {activePoll.no || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -835,11 +835,11 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           }}
           className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'abs'
-              ? 'bg-white text-black font-bold border-white shadow-sm'
-              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
+              ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 font-bold shadow-sm'
+              : 'bg-[#121215] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className={`text-xl font-black ${voterFilter === 'abs' ? 'text-black' : 'text-zinc-300'}`}>
+          <div className="text-xl font-black text-amber-400">
             {activePoll.abs || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -850,11 +850,14 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
       <button
         onClick={onToggleEditPast}
-        className="w-full py-3 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs shadow-sm transition-all cursor-pointer active:scale-[0.96]"
+        className="w-full py-3.5 px-4 rounded-2xl bg-[#121215] border border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500 text-xs font-bold text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-[0.99]"
       >
-        {isEditingPast
-          ? translate('btn_lock_past', lang)
-          : translate('btn_edit_past', lang)}
+        <Edit3 className="w-4 h-4 text-zinc-300" />
+        <span>
+          {isEditingPast
+            ? translate('btn_lock_past', lang)
+            : translate('btn_edit_past', lang)}
+        </span>
       </button>
 
       {isEditingPast && (
@@ -865,40 +868,43 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           <div className="space-y-2">
             <div
               onClick={() => onVotePastPoll('eat')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2.5 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'eat'
-                  ? 'border-white bg-white text-black shadow-sm'
+                  ? 'border-emerald-500/50 bg-emerald-500/15 text-emerald-300 shadow-sm'
                   : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
-              🍽 {translate('v_eat', lang)}
+              <Utensils className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>{translate('v_eat', lang)}</span>
             </div>
             <div
               onClick={() => onVotePastPoll('no')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2.5 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'no'
-                  ? 'border-white bg-white text-black shadow-sm'
+                  ? 'border-rose-500/50 bg-rose-500/15 text-rose-300 shadow-sm'
                   : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
-              🚫 {translate('v_no', lang)}
+              <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <span>{translate('v_no', lang)}</span>
             </div>
             <div
               onClick={() => onVotePastPoll('abs')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2.5 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'abs'
-                  ? 'border-white bg-white text-black shadow-sm'
+                  ? 'border-amber-500/50 bg-amber-500/15 text-amber-300 shadow-sm'
                   : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
-              🏠 {translate('v_abs', lang)}
+              <UserX className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>{translate('v_abs', lang)}</span>
             </div>
           </div>
         </div>
       )}
 
       {/* Voters list without redundant bottom filter pills */}
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3">
+      <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest">
             {lang === 'be' ? 'Вучні, якія прагаласавалі' : 'Проголосовавшие ученики'} ({filteredVoters.length})
@@ -936,7 +942,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                   : v.status === 'no'
                   ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
-                  : 'bg-[#222] text-[#aaa] border border-[#333]';
+                  : 'bg-amber-500/15 text-amber-300 border border-amber-500/30';
 
               return (
                 <div key={i} className="py-2.5 flex items-center justify-between text-xs text-white">

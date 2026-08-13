@@ -192,7 +192,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🇷🇺</span>
+              <span className="w-6 h-6 rounded-lg bg-zinc-800 border border-zinc-700 text-[10px] font-bold text-zinc-300 flex items-center justify-center shrink-0">
+                RU
+              </span>
               <span className="text-xs font-bold text-white">Русский</span>
             </div>
             <div
@@ -212,7 +214,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🇧🇾</span>
+              <span className="w-6 h-6 rounded-lg bg-zinc-800 border border-zinc-700 text-[10px] font-bold text-zinc-300 flex items-center justify-center shrink-0">
+                BE
+              </span>
               <span className="text-xs font-bold text-white">Беларуская</span>
             </div>
             <div
@@ -407,11 +411,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             }}
             className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
           >
-            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <RotateCcw className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-amber-400">{translate('reset_schedule', lang)}</div>
+              <div className="text-xs font-bold text-white">{translate('reset_schedule', lang)}</div>
               <div className="text-[10px] text-[#888]">{translate('reset_schedule_d', lang)}</div>
             </div>
           </div>
@@ -455,11 +459,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onClick={onClearAllHomework}
             className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
           >
-            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <Trash2 className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-rose-400">{translate('clear_hw_all', lang)}</div>
+              <div className="text-xs font-bold text-white">{translate('clear_hw_all', lang)}</div>
               <div className="text-[10px] text-[#888]">{translate('clear_hw_all_d', lang)}</div>
             </div>
           </div>
@@ -507,11 +511,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               }}
               className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-amber-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <RotateCcw className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-amber-400">{translate('reset_bdays', lang)}</div>
+                <div className="text-xs font-bold text-white">{translate('reset_bdays', lang)}</div>
                 <div className="text-[10px] text-[#888]">{translate('reset_bdays_d', lang)}</div>
               </div>
             </div>
@@ -558,11 +562,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onClick={onClearAllDuties}
               className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Trash2 className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-rose-400">{translate('clear_duties_all', lang)}</div>
+                <div className="text-xs font-bold text-white">{translate('clear_duties_all', lang)}</div>
                 <div className="text-[10px] text-[#888]">{translate('clear_duties_all_d', lang)}</div>
               </div>
             </div>
@@ -577,7 +581,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </div>
           <div className="bg-[#121215] border border-[#27272A] rounded-xl p-2.5 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Trash2 className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -591,15 +595,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 {lang === 'be' ? 'Няма даступных апытанняў' : 'Нет доступных опросов'}
               </div>
             ) : (
-              <div className="flex gap-2 pt-1">
+              <div className="flex gap-2 pt-1 min-w-0 items-center">
                 <select
                   value={selectedDeletePollId}
                   onChange={e => setSelectedDeletePollId(e.target.value)}
-                  className="flex-1 bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-400"
+                  className="flex-1 min-w-0 bg-[#18181C] border border-[#27272A] rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-400 truncate"
                 >
                   {allPolls.map(p => (
                     <option key={p.id} value={p.id}>
-                      {p.date ? `${lang === 'be' ? 'Апытанне' : 'Опрос'} (${p.date})` : `ID: ${p.id}`}
+                      {p.date ? p.date : `ID: ${p.id}`}
                       {p.id === currentPoll?.id ? ` [${lang === 'be' ? 'Бягучае' : 'Текущий'}]` : ''}
                     </option>
                   ))}
@@ -610,7 +614,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       onDeletePoll(selectedDeletePollId);
                     }
                   }}
-                  className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all active:scale-95 shrink-0 cursor-pointer"
+                  className="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all active:scale-95 shrink-0 cursor-pointer"
                 >
                   {lang === 'be' ? 'Выдаліць' : 'Удалить'}
                 </button>
@@ -621,8 +625,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         {/* 6. Опасная зона (Обнулить все данные приложения) */}
         <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-rose-400 border-b border-[#27272A] pb-2">
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <AlertTriangle className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Скід усіх даных' : 'Сброс всех данных'}</span>
           </div>
 
@@ -630,11 +634,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onClick={onClearAllData}
             className="flex items-center gap-3 bg-[#121215] border border-[#27272A] rounded-xl p-3 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.99]"
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <Trash2 className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-rose-400">
+              <div className="text-xs font-bold text-white">
                 {translate('clear_all_data', lang)}
               </div>
               <div className="text-[10px] text-[#888]">

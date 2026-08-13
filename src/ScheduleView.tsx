@@ -41,9 +41,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
         <div className="space-y-2.5">
           {profileKeys.map(pKey => {
             const getIcon = () => {
-              if (pKey === 'math') return <Ruler className="w-5 h-5 text-zinc-300" />;
-              if (pKey === 'chem') return <FlaskConical className="w-5 h-5 text-zinc-300" />;
-              return <BookOpen className="w-5 h-5 text-zinc-300" />;
+              if (pKey === 'math') return <Ruler className="w-5 h-5 text-zinc-200 group-hover:text-white transition-colors" />;
+              if (pKey === 'chem') return <FlaskConical className="w-5 h-5 text-zinc-200 group-hover:text-white transition-colors" />;
+              return <BookOpen className="w-5 h-5 text-zinc-200 group-hover:text-white transition-colors" />;
             };
 
             const name = getProfileFullTitle(pKey, schedules, lang);
@@ -54,7 +54,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                 onClick={() => onSelectProfile(pKey)}
                 className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group shadow-sm"
               >
-                <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-black transition-all">
+                <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 group-hover:bg-zinc-700 group-hover:border-zinc-500 text-zinc-200 group-hover:text-white transition-all">
                   {getIcon()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -130,7 +130,6 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-bold text-white flex items-center gap-1.5">
                     <span className="truncate">{displayName}</span>
-                    <span className="text-sm shrink-0">{meta.ic}</span>
                   </div>
                   {timeStr && (
                     <div className="text-[11px] text-[#888] mt-0.5 font-medium">

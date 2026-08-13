@@ -3,7 +3,7 @@ import { BirthdayItem, Language, ProfileKey, ScheduleProfiles, ScreenType } from
 import { translate } from './i18n';
 import { formatCustomDate, parseLessonName } from './dateFormatter';
 import { SUBJECT_DB } from './defaultData';
-import { BookOpen, Calendar, Settings, Users, Utensils, Ruler } from 'lucide-react';
+import { BookOpen, Calendar, Settings, Users, Utensils, Ruler, Cake, Bell, Sun, Coffee, Sparkles } from 'lucide-react';
 
 interface HomeViewProps {
   birthdays: BirthdayItem[];
@@ -21,8 +21,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onNavigate
 }) => {
   const [todayBdays, setTodayBdays] = useState<BirthdayItem[]>([]);
-  const [widgetData, setWidgetData] = useState<{ icon: string; title: string; sub: string }>({
-    icon: '🔔',
+  const [widgetData, setWidgetData] = useState<{ iconType: 'bell' | 'sun' | 'coffee' | 'sparkles'; title: string; sub: string }>({
+    iconType: 'bell',
     title: 'Загрузка...',
     sub: ''
   });
@@ -49,7 +49,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       if (dayOfWeek === 0 || dayOfWeek === 6) {
         setWidgetData({
-          icon: '🏖️',
+          iconType: 'sun',
           title: lang === 'be' ? 'Выхадны дзень' : 'Выходной день',
           sub: lang === 'be' ? 'Заняткаў няма, адпачывайце!' : 'Занятий нет, отдыхайте!'
         });
@@ -70,7 +70,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       if (lastLessonIdx === -1) {
         setWidgetData({
-          icon: '💤',
+          iconType: 'coffee',
           title: translate('no_lessons', lang),
           sub: lang === 'be' ? 'На сёння ўрокаў няма' : 'На сегодня уроков нет'
         });
@@ -97,7 +97,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         const meta = parseLessonName(firstLessonStr, SUBJECT_DB);
         const nameText = meta[lang] || firstLessonStr;
         setWidgetData({
-          icon: '🌅',
+          iconType: 'sun',
           title: lang === 'be' ? 'Урокі яшчэ не пачаліся' : 'Уроки еще не начались',
           sub: `${lang === 'be' ? 'Першы ўрок у 08:00: ' : 'Первый урок в 08:00: '}${nameText}`
         });
@@ -106,7 +106,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       if (currentMinutes > lastSlotEnd) {
         setWidgetData({
-          icon: '🎉',
+          iconType: 'sparkles',
           title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
           sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
         });
@@ -120,7 +120,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           const lessonStr = sched[i] || '';
           if (!lessonStr.trim()) {
             setWidgetData({
-              icon: '☕',
+              iconType: 'coffee',
               title: `${lang === 'be' ? 'Аконька (урок' : 'Окно (урок'} ${slot.num})`,
               sub: `${lang === 'be' ? 'Да канца' : 'До конца'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
             });
@@ -128,7 +128,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             const meta = parseLessonName(lessonStr, SUBJECT_DB);
             const nameText = meta[lang] || lessonStr;
             setWidgetData({
-              icon: '🔔',
+              iconType: 'bell',
               title: `${lang === 'be' ? 'Зараз урок' : 'Сейчас урок'} ${slot.num}: ${nameText}`,
               sub: `${lang === 'be' ? 'Да канца ўрока' : 'До конца урока'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
             });
@@ -144,7 +144,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             const meta = parseLessonName(nextLessonStr, SUBJECT_DB);
             const nameText = meta[lang] || nextLessonStr || (lang === 'be' ? 'Аконька' : 'Окно');
             setWidgetData({
-              icon: '☕',
+              iconType: 'coffee',
               title: `${lang === 'be' ? 'Перапынак! Наступны' : 'Перемена! Следующий'} №${nextSlot.num}: ${nameText}`,
               sub: `${lang === 'be' ? 'Да ўрока засталося' : 'До урока осталось'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
             });
@@ -154,7 +154,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       }
 
       setWidgetData({
-        icon: '🎉',
+        iconType: 'sparkles',
         title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
         sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
       });
@@ -191,15 +191,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('birthdays')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 flex items-center gap-3 cursor-pointer hover:bg-[#18181C] transition-all shadow-sm"
         >
-          <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center text-xl shrink-0">
-            🎂
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
+            <Cake className="w-5 h-5 text-amber-300" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-zinc-300 uppercase tracking-wide">
+            <div className="text-xs font-bold text-amber-300 uppercase tracking-wide">
               {translate('today_birthdays', lang)}
             </div>
             <div className="text-xs text-white mt-0.5 font-medium truncate">
-              {todayBdays.map(b => b.name).join(', ')} 🎉
+              {todayBdays.map(b => b.name).join(', ')}
             </div>
           </div>
         </div>
@@ -210,8 +210,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
         id="lesson-widget"
         className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 flex items-center gap-3.5 shadow-sm select-none"
       >
-        <div className="w-11 h-11 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl shrink-0 text-zinc-100">
-          {widgetData.icon}
+        <div className="w-11 h-11 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 text-zinc-100">
+          {widgetData.iconType === 'sun' && <Sun className="w-5 h-5 text-amber-400" />}
+          {widgetData.iconType === 'coffee' && <Coffee className="w-5 h-5 text-zinc-300" />}
+          {widgetData.iconType === 'sparkles' && <Sparkles className="w-5 h-5 text-emerald-400" />}
+          {widgetData.iconType === 'bell' && <Bell className="w-5 h-5 text-zinc-200" />}
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-xs font-bold text-white truncate tracking-wide">
@@ -231,7 +234,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('schedule')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <Ruler className="w-5 h-5" />
           </div>
           <div>
@@ -250,7 +253,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('canteen')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <Utensils className="w-5 h-5" />
           </div>
           <div>
@@ -269,7 +272,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('hw')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -288,7 +291,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('events')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
@@ -307,7 +310,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('class')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -326,7 +329,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => onNavigate('settings')}
           className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-white group-hover:text-black transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 group-hover:bg-zinc-700 group-hover:border-zinc-500 group-hover:text-white transition-all">
             <Settings className="w-5 h-5" />
           </div>
           <div>

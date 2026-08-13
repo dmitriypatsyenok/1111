@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ClassEvent, Language } from './types';
 import { translate } from './i18n';
 import { formatCustomDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
-import { Plus, Trash2, Calendar, Clock } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, AlertTriangle } from 'lucide-react';
 import { haptic } from './telegram';
 
 interface EventsViewProps {
@@ -88,7 +88,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                     onDeleteEvent(ev.id);
                     haptic('success');
                   }}
-                  className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center hover:bg-rose-500/20 transition-all shrink-0"
+                  className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center hover:bg-zinc-700 transition-all shrink-0 cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -159,8 +159,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
             </div>
 
             {formError && (
-              <div className="text-xs text-rose-400 font-medium px-1 animate-fade-in">
-                ⚠️ {formError}
+              <div className="text-xs text-rose-400 font-medium px-1 animate-fade-in flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{formError}</span>
               </div>
             )}
 

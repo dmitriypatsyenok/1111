@@ -3,7 +3,7 @@ import { DayKey, HomeworkItem, HomeworkStore, Language, ProfileKey, ScheduleProf
 import { translate, getProfileTitle } from './i18n';
 import { LESSON_TIMES, SUBJECT_LIST, SUBJECT_DB } from './defaultData';
 import { formatCustomDate, getNextLessonDate, parseLessonName, extractSubjectKey } from './dateFormatter';
-import { Search, ChevronRight, Edit2, Trash2, Calendar, Plus } from 'lucide-react';
+import { Search, ChevronRight, Edit2, Trash2, Calendar, Plus, Globe, BookOpen } from 'lucide-react';
 import { haptic } from './telegram';
 
 interface HomeworkViewProps {
@@ -136,8 +136,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center text-xl shrink-0">
-              🌍
+            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
+              <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">
@@ -164,7 +164,6 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   className="w-full bg-[#18181C] border border-[#27272A] hover:border-zinc-500 rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🇬🇧</span>
                     <div>
                       <div className="text-xs font-bold text-white group-hover:text-zinc-200 transition-colors">
                         {lang === 'be' ? 'Англійская мова' : 'Английский язык'}
@@ -197,7 +196,6 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   className="w-full bg-[#18181C] border border-[#27272A] hover:border-zinc-500 rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🇩🇪</span>
                     <div>
                       <div className="text-xs font-bold text-white group-hover:text-zinc-200 transition-colors">
                         {lang === 'be' ? 'Нямецкая мова' : 'Немецкий язык'}
@@ -341,7 +339,6 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-white flex items-center gap-1.5">
                       <span className="truncate">{displayName}</span>
-                      <span className="text-sm shrink-0">{meta.ic}</span>
                       {hasHw && (
                         <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] shrink-0 ml-1" />
                       )}
@@ -452,8 +449,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
     <div className="space-y-3.5 animate-fade-in">
       {/* Subject Banner */}
       <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0 text-xl">
-          {dbItem?.ic || '📚'}
+        <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
+          <BookOpen className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-bold text-white truncate">

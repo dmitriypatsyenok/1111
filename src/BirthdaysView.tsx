@@ -2,26 +2,12 @@ import React from 'react';
 import { BirthdayItem, Language } from './types';
 import { translate } from './i18n';
 import { getMonthNominal } from './dateFormatter';
+import { Cake, Calendar, Gift, Sparkles } from 'lucide-react';
 
 interface BirthdaysViewProps {
   birthdays: BirthdayItem[];
   lang: Language;
 }
-
-const MONTH_EMOJIS: Record<number, string> = {
-  1: "❄️",
-  2: "💕",
-  3: "🌸",
-  4: "🐰",
-  5: "🌷",
-  6: "☀️",
-  7: "🏖️",
-  8: "🌻",
-  9: "🍁",
-  10: "🎃",
-  11: "🍂",
-  12: "🎄"
-};
 
 export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang }) => {
   const cleanBirthdays = (birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова'));
@@ -57,13 +43,16 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
       {/* Today Banner */}
       {todayBdays.length > 0 && (
         <div className="bg-amber-500/10 border border-amber-500/30 rounded-3xl p-4 flex items-center gap-3.5 shadow-sm">
-          <div className="text-3xl">🎂</div>
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-300 flex items-center justify-center shrink-0">
+            <Cake className="w-5 h-5 text-amber-300" />
+          </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-              {translate('today_birthdays', lang)}
+            <div className="text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>{translate('today_birthdays', lang)}</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             </div>
             <div className="text-xs text-white mt-0.5 font-bold">
-              {todayBdays.map(b => b.name).join(', ')} 🎉
+              {todayBdays.map(b => b.name).join(', ')}
             </div>
           </div>
         </div>
@@ -76,12 +65,12 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
           if (list.length === 0) return null;
 
           const mName = getMonthNominal(monthIdx, lang);
-          const emoji = MONTH_EMOJIS[monthIdx] || '🎂';
 
           return (
             <div key={monthIdx} className="space-y-2">
-              <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
-                {emoji} {mName}
+              <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+                <span>{mName}</span>
               </div>
 
               <div className="space-y-2">
@@ -90,8 +79,8 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
                     key={idx}
                     className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 shadow-sm"
                   >
-                    <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0 text-sm">
-                      🎂
+                    <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center shrink-0">
+                      <Cake className="w-4 h-4 text-zinc-300" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold text-white truncate">
