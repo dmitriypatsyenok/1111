@@ -185,9 +185,9 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           {/* Create Poll Card */}
           <div
             onClick={handleOpenCreateModal}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.99] group shadow-sm"
+            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group shadow-sm"
           >
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
               <Vote className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -198,7 +198,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 {translate('poll_create_d', lang)}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-amber-400 transition-colors" />
+            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
           </div>
 
           {canteenMsg && (
@@ -220,14 +220,14 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             }}
             className={`flex items-center gap-3.5 border rounded-3xl p-4 cursor-pointer transition-all active:scale-[0.99] group ${
               isPollActive
-                ? 'bg-[#0f0f0f] border-[#1f1f1f] hover:border-emerald-500/50 hover:bg-[#141414]'
+                ? 'bg-[#0f0f0f] border-[#1f1f1f] hover:border-indigo-500/50 hover:bg-[#141414]'
                 : 'bg-[#0f0f0f]/60 border-[#1f1f1f] opacity-75'
             }`}
           >
             <div
               className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
                 isPollActive
-                  ? 'bg-emerald-500/15 border-emerald-500/20 text-emerald-400'
+                  ? 'bg-indigo-600/15 border-indigo-500/20 text-indigo-400'
                   : 'bg-rose-500/15 border-rose-500/20 text-rose-400'
               }`}
             >
@@ -241,7 +241,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 {translate('poll_vote_d', lang)}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-emerald-400 transition-colors" />
+            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
           </div>
 
           {/* Results Archive Button */}
@@ -269,7 +269,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
             <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Vote className="w-4 h-4 text-amber-400" />
+                <Vote className="w-4 h-4 text-indigo-400" />
                 <span>{lang === 'be' ? 'Стварыць апытанне ў сталовай' : 'Создать опрос в столовой'}</span>
               </h3>
 
@@ -278,17 +278,17 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider">
                     {lang === 'be' ? 'Дата апытання' : 'Дата опроса'}:
                   </span>
-                  <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-lg">
+                  <span className="text-xs font-bold text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 px-2 py-0.5 rounded-lg">
                     {formatCustomDate(customPollDate || calcDefaultPollDate(), 'weekday_day_month', lang)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 pt-1 border-t border-[#222]">
-                  <Calendar className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <Calendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                   <input
                     type="date"
                     value={customPollDate || calcDefaultPollDate()}
                     onChange={e => setCustomPollDate(e.target.value)}
-                    className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white p-2 focus:outline-none focus:border-amber-500 cursor-pointer"
+                    className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white p-2 focus:outline-none focus:border-indigo-500 cursor-pointer"
                   />
                 </div>
               </div>
@@ -306,7 +306,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     setShowCreateModal(false);
                     haptic('success');
                   }}
-                  className="flex-1 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 text-xs font-bold text-white shadow-lg shadow-amber-500/20 cursor-pointer"
+                  className="flex-1 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 cursor-pointer"
                 >
                   {lang === 'be' ? 'Запусціць' : 'Запустить'}
                 </button>

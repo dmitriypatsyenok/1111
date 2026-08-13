@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, HomeworkStore, Language, PollData, ProfileKey, ScheduleProfiles, Theme } from './types';
 import { translate, getProfileFullTitle } from './i18n';
 import { haptic } from './telegram';
-import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun, RotateCcw, Sparkles, Palette, Zap } from 'lucide-react';
+import { Download, Upload, Trash2, Check, Bell, Save, BookOpen, Ruler, FlaskConical, Moon, Sun, RotateCcw, Sparkles, Palette, Zap, Calendar, Gift, ClipboardList, Utensils, AlertTriangle, Shield } from 'lucide-react';
 
 interface SettingsViewProps {
   lang: Language;
@@ -29,6 +29,7 @@ interface SettingsViewProps {
   onImportDuties: (data: DutiesStore) => void;
   onImportBirthdays: (data: BirthdayItem[]) => void;
   onClearAllHomework: () => void;
+  onClearAllDuties?: () => void;
   onDeletePoll?: (pollId: string) => void;
   onClearAllData: () => void;
   onSaveTgConfig?: (
@@ -59,6 +60,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onImportDuties,
   onImportBirthdays,
   onClearAllHomework,
+  onClearAllDuties,
   onDeletePoll,
   onClearAllData,
   onSaveTgConfig
@@ -307,8 +309,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               const title = getProfileFullTitle(pKey, schedules, lang);
               const getIcon = () => {
                 if (pKey === 'math') return <Ruler className="w-4 h-4 text-indigo-400" />;
-                if (pKey === 'chem') return <FlaskConical className="w-4 h-4 text-purple-400" />;
-                return <BookOpen className="w-4 h-4 text-emerald-400" />;
+                if (pKey === 'chem') return <FlaskConical className="w-4 h-4 text-indigo-400" />;
+                return <BookOpen className="w-4 h-4 text-indigo-400" />;
               };
 
               return (
@@ -342,188 +344,248 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
       </div>
 
-      {/* Admin Panel Section */}
-      <div className="space-y-2">
-        <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
-          {translate('admin_title', lang)}
+      {/* Admin Panel Section - Highlighted Container */}
+      <div className="relative bg-[#0b0c10] border-2 border-indigo-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl shadow-indigo-950/50 space-y-4 pt-4 overflow-hidden">
+        {/* Glowing top backdrop highlight */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500" />
+
+        {/* Section Header */}
+        <div className="flex items-center justify-between border-b border-[#1f2130] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center shrink-0">
+              <Shield className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
+                <span>{translate('admin_title', lang)}</span>
+              </div>
+              <div className="text-[10px] text-[#888]">
+                {lang === 'be' ? 'Экпарт, імпарт і кіраванне данымі' : 'Экспорт, импорт и управление данными'}
+              </div>
+            </div>
+          </div>
+          <span className="text-[10px] text-indigo-300 font-bold bg-indigo-500/20 border border-indigo-500/40 px-2.5 py-1 rounded-full uppercase tracking-wider">
+            Admin
+          </span>
         </div>
 
-        <div className="space-y-2.5">
-          {/* Export Schedule */}
-          <div
-            onClick={() => downloadJSON(formatScheduleForExport(schedules), 'data_schedules.json')}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
-              <Download className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('export_schedule', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('export_schedule_d', lang)}
-              </div>
-            </div>
+        {/* 1. Расписание */}
+        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
+            <Calendar className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Расклад урокаў' : 'Расписание уроков'}</span>
           </div>
-
-          {/* Import Schedule */}
-          <div
-            onClick={() => schedFileRef.current?.click()}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
-              <Upload className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('upload_schedule', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('upload_schedule_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Export Homework */}
-          <div
-            onClick={() => downloadJSON(homework, 'data_homework.json')}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-emerald-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-              <Download className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('export_hw', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('export_hw_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Import Homework */}
-          <div
-            onClick={() => hwFileRef.current?.click()}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-emerald-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-              <Upload className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('import_hw', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('import_hw_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Export Duties */}
-          <div
-            onClick={() => downloadJSON(duties, 'data_duties.json')}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-rose-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
-              <Download className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('export_duties', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('export_duties_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Import Duties */}
-          <div
-            onClick={() => dutyFileRef.current?.click()}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-rose-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
-              <Upload className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('import_duties', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('import_duties_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Export Birthdays */}
-          <div
-            onClick={() => downloadJSON((birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова')), 'data_birthdays.json')}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-              <Download className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('export_bdays', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('export_bdays_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Import Birthdays */}
-          <div
-            onClick={() => bdayFileRef.current?.click()}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-              <Upload className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white">
-                {translate('import_bdays', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('import_bdays_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Clear all HW */}
-          <div
-            onClick={onClearAllHomework}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-rose-500/20 rounded-2xl p-3.5 cursor-pointer hover:bg-rose-500/10 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
-              <Trash2 className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-rose-400">
-                {translate('clear_hw_all', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('clear_hw_all_d', lang)}
-              </div>
-            </div>
-          </div>
-
-          {/* Delete Canteen Poll */}
-          <div className="bg-[#0f0f0f] border border-rose-500/30 rounded-2xl p-3.5 space-y-2.5">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
-                <Trash2 className="w-4 h-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              onClick={() => downloadJSON(formatScheduleForExport(schedules), 'data_schedules.json')}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Download className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-rose-400">
-                  {translate('delete_poll', lang)}
-                </div>
-                <div className="text-[11px] text-[#888]">
-                  {translate('delete_poll_d', lang)}
-                </div>
+                <div className="text-xs font-bold text-white">{translate('export_schedule', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('export_schedule_d', lang)}</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => schedFileRef.current?.click()}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Upload className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('upload_schedule', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('upload_schedule_d', lang)}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            onClick={() => {
+              onResetSchedule();
+              haptic('medium');
+            }}
+            className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-amber-500/15 hover:border-amber-500/40 transition-all active:scale-[0.98]"
+          >
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-3.5 h-3.5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-amber-400">{translate('reset_schedule', lang)}</div>
+              <div className="text-[10px] text-[#888]">{translate('reset_schedule_d', lang)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Домашние задания */}
+        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
+            <BookOpen className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Дамашнія заданні' : 'Домашние задания'}</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              onClick={() => downloadJSON(homework, 'data_homework.json')}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Download className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('export_hw', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('export_hw_d', lang)}</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => hwFileRef.current?.click()}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Upload className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('import_hw', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('import_hw_d', lang)}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            onClick={onClearAllHomework}
+            className="flex items-center gap-2.5 bg-rose-500/10 border border-rose-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-rose-500/15 hover:border-rose-500/40 transition-all active:scale-[0.98]"
+          >
+            <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+              <Trash2 className="w-3.5 h-3.5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-rose-400">{translate('clear_hw_all', lang)}</div>
+              <div className="text-[10px] text-[#888]">{translate('clear_hw_all_d', lang)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Дни рождения */}
+        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
+            <Gift className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Дні нараджэння' : 'Дни рождения'}</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              onClick={() => downloadJSON((birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова')), 'data_birthdays.json')}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Download className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('export_bdays', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('export_bdays_d', lang)}</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => bdayFileRef.current?.click()}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Upload className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('import_bdays', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('import_bdays_d', lang)}</div>
+              </div>
+            </div>
+          </div>
+
+          {onResetBirthdays && (
+            <div
+              onClick={() => {
+                onResetBirthdays();
+                haptic('medium');
+              }}
+              className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-amber-500/15 hover:border-amber-500/40 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <RotateCcw className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-amber-400">{translate('reset_bdays', lang)}</div>
+                <div className="text-[10px] text-[#888]">{translate('reset_bdays_d', lang)}</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 4. Дежурства */}
+        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
+            <ClipboardList className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Дзяжурствы' : 'Дежурства класса'}</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              onClick={() => downloadJSON(duties, 'data_duties.json')}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Download className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('export_duties', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('export_duties_d', lang)}</div>
+              </div>
+            </div>
+
+            <div
+              onClick={() => dutyFileRef.current?.click()}
+              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                <Upload className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('import_duties', lang)}</div>
+                <div className="text-[10px] text-[#888] truncate">{translate('import_duties_d', lang)}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* New: Clear All Duties Button */}
+          {onClearAllDuties && (
+            <div
+              onClick={onClearAllDuties}
+              className="flex items-center gap-2.5 bg-rose-500/10 border border-rose-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-rose-500/15 hover:border-rose-500/40 transition-all active:scale-[0.98]"
+            >
+              <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                <Trash2 className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-rose-400">{translate('clear_duties_all', lang)}</div>
+                <div className="text-[10px] text-[#888]">{translate('clear_duties_all_d', lang)}</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 5. Столовая и Опросы */}
+        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
+            <Utensils className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Сталавая і Апытанні' : 'Столовая и Опросы'}</span>
+          </div>
+          <div className="bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
+                <Trash2 className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white">{translate('delete_poll', lang)}</div>
+                <div className="text-[10px] text-[#888]">{translate('delete_poll_d', lang)}</div>
               </div>
             </div>
 
@@ -532,11 +594,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 {lang === 'be' ? 'Няма даступных апытанняў' : 'Нет доступных опросов'}
               </div>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-1">
                 <select
                   value={selectedDeletePollId}
                   onChange={e => setSelectedDeletePollId(e.target.value)}
-                  className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                  className="flex-1 bg-[#12131a] border border-[#282b3c] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
                 >
                   {allPolls.map(p => (
                     <option key={p.id} value={p.id}>
@@ -551,71 +613,34 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       onDeletePoll(selectedDeletePollId);
                     }
                   }}
-                  className="px-3.5 py-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 rounded-xl font-bold text-xs transition-all active:scale-95 shrink-0"
+                  className="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 rounded-xl font-bold text-xs transition-all active:scale-95 shrink-0"
                 >
                   {lang === 'be' ? 'Выдаліць' : 'Удалить'}
                 </button>
               </div>
             )}
           </div>
+        </div>
 
-          {/* Reset Schedule to Default */}
-          <div
-            onClick={() => {
-              onResetSchedule();
-              haptic('medium');
-            }}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-amber-500/30 rounded-2xl p-3.5 cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
-          >
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-4 h-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-amber-400">
-                {translate('reset_schedule', lang)}
-              </div>
-              <div className="text-[11px] text-[#888]">
-                {translate('reset_schedule_d', lang)}
-              </div>
-            </div>
+        {/* 6. Опасная зона (Обнулить все данные приложения) */}
+        <div className="bg-[#181216] border border-rose-500/40 rounded-2xl p-3.5 space-y-2.5 shadow-md shadow-rose-950/20">
+          <div className="flex items-center gap-2 text-xs font-bold text-rose-400 border-b border-rose-500/20 pb-2">
+            <AlertTriangle className="w-4 h-4" />
+            <span>{lang === 'be' ? 'Скід усіх даных' : 'Сброс всех данных'}</span>
           </div>
 
-          {/* Reset Birthdays to Default */}
-          {onResetBirthdays && (
-            <div
-              onClick={() => {
-                onResetBirthdays();
-                haptic('medium');
-              }}
-              className="flex items-center gap-3.5 bg-[#0f0f0f] border border-amber-500/30 rounded-2xl p-3.5 cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/50 transition-all active:scale-[0.99] shadow-sm"
-            >
-              <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-4 h-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-amber-400">
-                  {translate('reset_bdays', lang)}
-                </div>
-                <div className="text-[11px] text-[#888]">
-                  {translate('reset_bdays_d', lang)}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Clear ALL App Data */}
           <div
             onClick={onClearAllData}
-            className="flex items-center gap-3.5 bg-gradient-to-r from-rose-950/40 to-red-950/40 border border-rose-500/50 rounded-2xl p-3.5 cursor-pointer hover:border-rose-500 transition-all active:scale-[0.99] shadow-md shadow-rose-900/10"
+            className="flex items-center gap-3 bg-gradient-to-r from-rose-950/60 to-red-950/60 border border-rose-500/50 rounded-xl p-3 cursor-pointer hover:border-rose-500 transition-all active:scale-[0.99]"
           >
-            <div className="w-9 h-9 rounded-xl bg-rose-500/25 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-rose-500/25 text-rose-400 flex items-center justify-center shrink-0">
               <Trash2 className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-rose-400">
+              <div className="text-xs font-bold text-rose-200">
                 {translate('clear_all_data', lang)}
               </div>
-              <div className="text-[11px] text-rose-300/70">
+              <div className="text-[10px] text-rose-300/70">
                 {translate('clear_all_data_d', lang)}
               </div>
             </div>

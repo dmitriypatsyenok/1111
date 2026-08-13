@@ -747,6 +747,17 @@ export default function App() {
     }
   };
 
+  const handleClearAllDuties = () => {
+    if (confirm(lang === 'be' ? 'Вы ўпэўненыя, што хочаце ачысціць усе дзяжурства?' : 'Вы уверены, что хотите очистить все дежурства?')) {
+      const emptyDuties = { zones: [] };
+      setDuties(emptyDuties);
+      localStorage.setItem('ierihon_duties', JSON.stringify(emptyDuties));
+      updateDocData('duties', emptyDuties);
+      haptic('success');
+      showToast(lang === 'be' ? 'Усе дзяжурствы ачышчаны.' : 'Все дежурства очищены.', 'success');
+    }
+  };
+
   const handleClearAllData = () => {
     if (confirm(translate('confirm_clear_all_data', lang))) {
       const emptyHw = {};
@@ -1374,6 +1385,7 @@ export default function App() {
             onImportDuties={handleImportDuties}
             onImportBirthdays={handleImportBirthdays}
             onClearAllHomework={handleClearAllHomework}
+            onClearAllDuties={handleClearAllDuties}
             onDeletePoll={handleDeletePoll}
             onClearAllData={handleClearAllData}
             onSaveTgConfig={handleSaveTgConfig}

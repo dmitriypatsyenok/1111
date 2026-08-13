@@ -248,9 +248,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div
           id="nav-card-canteen"
           onClick={() => onNavigate('canteen')}
-          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-amber-500/50 transition-all active:scale-[0.98] group"
+          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-amber-500/15 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
             <Utensils className="w-5 h-5" />
           </div>
           <div>
@@ -267,9 +267,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div
           id="nav-card-hw"
           onClick={() => onNavigate('hw')}
-          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-emerald-500/50 transition-all active:scale-[0.98] group"
+          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -286,9 +286,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div
           id="nav-card-events"
           onClick={() => onNavigate('events')}
-          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-purple-500/50 transition-all active:scale-[0.98] group"
+          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-purple-500/15 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
@@ -305,9 +305,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div
           id="nav-card-class"
           onClick={() => onNavigate('class')}
-          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-rose-500/50 transition-all active:scale-[0.98] group"
+          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-rose-500/15 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -324,9 +324,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div
           id="nav-card-settings"
           onClick={() => onNavigate('settings')}
-          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-[#333] transition-all active:scale-[0.98] group"
+          className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 min-h-[105px] flex flex-col justify-between cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
         >
-          <div className="w-9 h-9 rounded-2xl bg-[#222] border border-[#2a2a2a] flex items-center justify-center text-[#aaa] group-hover:bg-[#333] group-hover:text-white transition-all">
+          <div className="w-9 h-9 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center text-[#888] group-hover:bg-indigo-600 group-hover:text-white transition-all">
             <Settings className="w-5 h-5" />
           </div>
           <div>
