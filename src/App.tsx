@@ -1309,9 +1309,9 @@ export default function App() {
           <div className="space-y-3 animate-fade-in">
             <div
               onClick={() => handleNavigate('duties')}
-              className="flex items-center gap-3 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99]"
+              className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] shadow-sm group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-indigo-600/15 text-indigo-400 border border-indigo-500/20 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Users className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -1326,9 +1326,9 @@ export default function App() {
 
             <div
               onClick={() => handleNavigate('birthdays')}
-              className="flex items-center gap-3 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99]"
+              className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] shadow-sm group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-pink-500/15 text-pink-400 border border-pink-500/20 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -1402,7 +1402,7 @@ export default function App() {
   };
 
   return (
-    <div className="max-w-[500px] mx-auto min-h-screen bg-[#0a0a0a] text-[#ededed] flex flex-col font-sans pb-safe">
+    <div className="max-w-[500px] mx-auto min-h-screen bg-[#09090B] text-white flex flex-col font-sans pb-safe">
       <Topbar
         currentScreen={currentScreen}
         screenHistory={screenHistory}
@@ -1417,7 +1417,7 @@ export default function App() {
 
       {/* Floating Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#181818] border border-[#333] px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white flex items-center gap-2.5 animate-slide-up max-w-[90vw] pointer-events-none">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#121215] border border-[#27272A] px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white flex items-center gap-2.5 animate-slide-up max-w-[90vw] pointer-events-none">
           <span className="text-base">{toast.type === 'error' ? '❌' : toast.type === 'success' ? '✅' : 'ℹ️'}</span>
           <span>{toast.msg}</span>
         </div>

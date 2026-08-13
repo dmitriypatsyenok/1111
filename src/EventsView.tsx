@@ -45,14 +45,14 @@ export const EventsView: React.FC<EventsViewProps> = ({
     <div className="space-y-3.5 animate-fade-in">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-md shadow-indigo-500/20 transition-all"
+        className="w-full py-3 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-sm transition-all"
       >
         <Plus className="w-4 h-4" />
         <span>{translate('add_event', lang)}</span>
       </button>
 
       {sortedEvents.length === 0 ? (
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+        <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
           {translate('no_events', lang)}
         </div>
       ) : (
@@ -63,7 +63,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
             return (
               <div
                 key={ev.id}
-                className="flex items-center justify-between gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-4 shadow-sm"
+                className="flex items-center justify-between gap-3.5 bg-[#121215] border border-[#27272A] rounded-2xl p-4 shadow-sm"
               >
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="text-xs font-bold text-white truncate">
@@ -71,12 +71,12 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   </div>
                   <div className="flex items-center gap-3 text-[11px] text-[#888]">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                      <Calendar className="w-3.5 h-3.5 text-zinc-400" />
                       {dateStr}
                     </span>
                     {ev.time && (
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
                         {ev.time}
                       </span>
                     )}
@@ -88,7 +88,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                     onDeleteEvent(ev.id);
                     haptic('success');
                   }}
-                  className="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center hover:bg-rose-500/25 transition-all shrink-0"
+                  className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center hover:bg-rose-500/20 transition-all shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -101,9 +101,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
       {/* Add Event Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+          <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+              <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
               {translate('add_event', lang)}
             </h3>
 
@@ -127,7 +127,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                       ? 'Напрыклад: тэст па фізіцы'
                       : 'Например: тест по физике'
                   }
-                  className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+                  className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400 placeholder:text-[#666]"
                 />
               </div>
 
@@ -140,7 +140,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                     type="date"
                     value={date}
                     onChange={e => setDate(e.target.value)}
-                    className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400"
                   />
                 </div>
 
@@ -152,7 +152,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                     type="time"
                     value={time}
                     onChange={e => setTime(e.target.value)}
-                    className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400"
                   />
                 </div>
               </div>
@@ -167,13 +167,13 @@ export const EventsView: React.FC<EventsViewProps> = ({
             <div className="flex gap-2.5 pt-1">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="flex-1 py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-white font-bold hover:bg-[#222] transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-xs text-white font-bold hover:bg-zinc-700 transition-all"
               >
                 {translate('cancel', lang)}
               </button>
               <button
                 onClick={handleSave}
-                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-white hover:bg-zinc-200 text-xs text-black font-bold shadow-sm transition-all"
               >
                 {translate('save', lang)}
               </button>

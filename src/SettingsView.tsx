@@ -187,8 +187,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           {/* Russian */}
           <div
             onClick={() => onSetLang('ru')}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
-              lang === 'ru' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            className={`flex items-center justify-between bg-[#121215] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              lang === 'ru' ? 'border-zinc-400 bg-[#18181C]' : 'border-[#27272A] hover:border-zinc-600'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -197,18 +197,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                lang === 'ru' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                lang === 'ru' ? 'border-white bg-white' : 'border-zinc-700'
               }`}
             >
-              {lang === 'ru' && <Check className="w-3 h-3 text-white" />}
+              {lang === 'ru' && <Check className="w-3 h-3 text-black stroke-[3]" />}
             </div>
           </div>
 
           {/* Belarusian */}
           <div
             onClick={() => onSetLang('be')}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
-              lang === 'be' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            className={`flex items-center justify-between bg-[#121215] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              lang === 'be' ? 'border-zinc-400 bg-[#18181C]' : 'border-[#27272A] hover:border-zinc-600'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -217,10 +217,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                lang === 'be' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                lang === 'be' ? 'border-white bg-white' : 'border-zinc-700'
               }`}
             >
-              {lang === 'be' && <Check className="w-3 h-3 text-white" />}
+              {lang === 'be' && <Check className="w-3 h-3 text-black stroke-[3]" />}
             </div>
           </div>
         </div>
@@ -239,25 +239,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onSetTheme('dark');
               haptic('light');
             }}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
-              theme === 'dark' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            className={`flex items-center justify-between bg-[#121215] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              theme === 'dark' ? 'border-zinc-400 bg-[#18181C]' : 'border-[#27272A] hover:border-zinc-600'
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#14161d] border border-[#262a38] flex items-center justify-center shrink-0 shadow-inner">
-                <Moon className="w-4 h-4 text-indigo-400" />
+              <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
+                <Moon className="w-4 h-4 text-white" />
               </div>
               <div>
                 <div className="text-xs font-bold text-white">{translate('theme_dark', lang)}</div>
-                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Зручная цёмная палітра' : 'Комфортная тёмная гамма'}</div>
+                <div className="text-[10px] text-[#888]">{lang === 'be' ? 'Зручная цёмная палітра' : 'Комфортная тёмная гамма'}</div>
               </div>
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                theme === 'dark' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                theme === 'dark' ? 'border-white bg-white' : 'border-zinc-700'
               }`}
             >
-              {theme === 'dark' && <Check className="w-3 h-3 text-white" />}
+              {theme === 'dark' && <Check className="w-3 h-3 text-black stroke-[3]" />}
             </div>
           </div>
 
@@ -267,25 +267,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onSetTheme('light');
               haptic('light');
             }}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
-              theme === 'light' ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+            className={`flex items-center justify-between bg-[#121215] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+              theme === 'light' ? 'border-zinc-400 bg-[#18181C]' : 'border-[#27272A] hover:border-zinc-600'
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#ffffff] border border-[#e2e8f0] flex items-center justify-center shrink-0 shadow-inner">
-                <Sun className="w-4 h-4 text-amber-500" />
+              <div className="w-9 h-9 rounded-xl bg-white border border-zinc-300 flex items-center justify-center shrink-0">
+                <Sun className="w-4 h-4 text-black" />
               </div>
               <div>
                 <div className="text-xs font-bold text-white">{translate('theme_light', lang)}</div>
-                <div className="text-[10px] text-[#777]">{lang === 'be' ? 'Лаканічная светлая палітра' : 'Чистая светлая гамма'}</div>
+                <div className="text-[10px] text-[#888]">{lang === 'be' ? 'Лаканічная светлая палітра' : 'Чистая светлая гамма'}</div>
               </div>
             </div>
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                theme === 'light' ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                theme === 'light' ? 'border-white bg-white' : 'border-zinc-700'
               }`}
             >
-              {theme === 'light' && <Check className="w-3 h-3 text-white" />}
+              {theme === 'light' && <Check className="w-3 h-3 text-black stroke-[3]" />}
             </div>
           </div>
         </div>
@@ -308,9 +308,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               const isSelected = activeProfile === pKey;
               const title = getProfileFullTitle(pKey, schedules, lang);
               const getIcon = () => {
-                if (pKey === 'math') return <Ruler className="w-4 h-4 text-indigo-400" />;
-                if (pKey === 'chem') return <FlaskConical className="w-4 h-4 text-indigo-400" />;
-                return <BookOpen className="w-4 h-4 text-indigo-400" />;
+                if (pKey === 'math') return <Ruler className="w-4 h-4 text-white" />;
+                if (pKey === 'chem') return <FlaskConical className="w-4 h-4 text-white" />;
+                return <BookOpen className="w-4 h-4 text-white" />;
               };
 
               return (
@@ -320,22 +320,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     onSetProfile(pKey);
                     haptic('light');
                   }}
-                  className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
-                    isSelected ? 'border-indigo-500 bg-indigo-600/15' : 'border-[#1f1f1f] hover:border-[#333]'
+                  className={`flex items-center justify-between bg-[#121215] border rounded-2xl p-3.5 cursor-pointer transition-all active:scale-[0.99] shadow-sm ${
+                    isSelected ? 'border-zinc-400 bg-[#18181C]' : 'border-[#27272A] hover:border-zinc-600'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
                       {getIcon()}
                     </div>
                     <span className="text-xs font-bold text-white">{title}</span>
                   </div>
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      isSelected ? 'border-indigo-500 bg-indigo-600' : 'border-[#333]'
+                      isSelected ? 'border-white bg-white' : 'border-zinc-700'
                     }`}
                   >
-                    {isSelected && <Check className="w-3 h-3 text-white" />}
+                    {isSelected && <Check className="w-3 h-3 text-black stroke-[3]" />}
                   </div>
                 </div>
               );
@@ -345,14 +345,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Admin Panel Section - Highlighted Container */}
-      <div className="relative bg-[#0b0c10] border-2 border-indigo-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl shadow-indigo-950/50 space-y-4 pt-4 overflow-hidden">
-        {/* Glowing top backdrop highlight */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500" />
-
+      <div className="relative bg-[#121215] border border-[#27272A] rounded-3xl p-4 sm:p-5 shadow-sm space-y-4 pt-4 overflow-hidden">
         {/* Section Header */}
-        <div className="flex items-center justify-between border-b border-[#1f2130] pb-3">
+        <div className="flex items-center justify-between border-b border-[#27272A] pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <Shield className="w-4 h-4" />
             </div>
             <div>
@@ -364,23 +361,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
             </div>
           </div>
-          <span className="text-[10px] text-indigo-300 font-bold bg-indigo-500/20 border border-indigo-500/40 px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-[10px] text-zinc-300 font-bold bg-zinc-800 border border-zinc-700 px-2.5 py-1 rounded-full uppercase tracking-wider">
             Admin
           </span>
         </div>
 
         {/* 1. Расписание */}
-        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
-            <Calendar className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <Calendar className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Расклад урокаў' : 'Расписание уроков'}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div
               onClick={() => downloadJSON(formatScheduleForExport(schedules), 'data_schedules.json')}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Download className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -391,9 +388,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div
               onClick={() => schedFileRef.current?.click()}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Upload className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -408,9 +405,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onResetSchedule();
               haptic('medium');
             }}
-            className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-amber-500/15 hover:border-amber-500/40 transition-all active:scale-[0.98]"
+            className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
           >
-            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-amber-400 flex items-center justify-center shrink-0">
               <RotateCcw className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -421,17 +418,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* 2. Домашние задания */}
-        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
-            <BookOpen className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <BookOpen className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Дамашнія заданні' : 'Домашние задания'}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div
               onClick={() => downloadJSON(homework, 'data_homework.json')}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Download className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -442,9 +439,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div
               onClick={() => hwFileRef.current?.click()}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Upload className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -456,9 +453,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <div
             onClick={onClearAllHomework}
-            className="flex items-center gap-2.5 bg-rose-500/10 border border-rose-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-rose-500/15 hover:border-rose-500/40 transition-all active:scale-[0.98]"
+            className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
           >
-            <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
               <Trash2 className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -469,17 +466,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* 3. Дни рождения */}
-        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
-            <Gift className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <Gift className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Дні нараджэння' : 'Дни рождения'}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div
               onClick={() => downloadJSON((birthdays || []).filter(b => b && b.name && !b.name.includes('Иванова')), 'data_birthdays.json')}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Download className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -490,9 +487,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div
               onClick={() => bdayFileRef.current?.click()}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Upload className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -508,9 +505,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onResetBirthdays();
                 haptic('medium');
               }}
-              className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-amber-500/15 hover:border-amber-500/40 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-amber-400 flex items-center justify-center shrink-0">
                 <RotateCcw className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -522,17 +519,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* 4. Дежурства */}
-        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
-            <ClipboardList className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <ClipboardList className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Дзяжурствы' : 'Дежурства класса'}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div
               onClick={() => downloadJSON(duties, 'data_duties.json')}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Download className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -543,9 +540,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div
               onClick={() => dutyFileRef.current?.click()}
-              className="flex items-center gap-2.5 bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 cursor-pointer hover:bg-[#1f2231] hover:border-indigo-500/50 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
                 <Upload className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -559,9 +556,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           {onClearAllDuties && (
             <div
               onClick={onClearAllDuties}
-              className="flex items-center gap-2.5 bg-rose-500/10 border border-rose-500/25 rounded-xl p-2.5 cursor-pointer hover:bg-rose-500/15 hover:border-rose-500/40 transition-all active:scale-[0.98]"
+              className="flex items-center gap-2.5 bg-[#121215] border border-[#27272A] rounded-xl p-2.5 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.98]"
             >
-              <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
                 <Trash2 className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -573,14 +570,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* 5. Столовая и Опросы */}
-        <div className="bg-[#12131a] border border-[#202333] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-400 border-b border-[#1c1e2b] pb-2">
-            <Utensils className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-white border-b border-[#27272A] pb-2">
+            <Utensils className="w-4 h-4 text-zinc-400" />
             <span>{lang === 'be' ? 'Сталавая і Апытанні' : 'Столовая и Опросы'}</span>
           </div>
-          <div className="bg-[#181a24] border border-[#282b3c] rounded-xl p-2.5 space-y-2">
+          <div className="bg-[#121215] border border-[#27272A] rounded-xl p-2.5 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
                 <Trash2 className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -598,7 +595,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 <select
                   value={selectedDeletePollId}
                   onChange={e => setSelectedDeletePollId(e.target.value)}
-                  className="flex-1 bg-[#12131a] border border-[#282b3c] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                  className="flex-1 bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-400"
                 >
                   {allPolls.map(p => (
                     <option key={p.id} value={p.id}>
@@ -613,7 +610,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       onDeletePoll(selectedDeletePollId);
                     }
                   }}
-                  className="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 rounded-xl font-bold text-xs transition-all active:scale-95 shrink-0"
+                  className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all active:scale-95 shrink-0 cursor-pointer"
                 >
                   {lang === 'be' ? 'Выдаліць' : 'Удалить'}
                 </button>
@@ -623,24 +620,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* 6. Опасная зона (Обнулить все данные приложения) */}
-        <div className="bg-[#181216] border border-rose-500/40 rounded-2xl p-3.5 space-y-2.5 shadow-md shadow-rose-950/20">
-          <div className="flex items-center gap-2 text-xs font-bold text-rose-400 border-b border-rose-500/20 pb-2">
-            <AlertTriangle className="w-4 h-4" />
+        <div className="bg-[#18181C] border border-[#27272A] rounded-2xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-rose-400 border-b border-[#27272A] pb-2">
+            <AlertTriangle className="w-4 h-4 text-rose-400" />
             <span>{lang === 'be' ? 'Скід усіх даных' : 'Сброс всех данных'}</span>
           </div>
 
           <div
             onClick={onClearAllData}
-            className="flex items-center gap-3 bg-gradient-to-r from-rose-950/60 to-red-950/60 border border-rose-500/50 rounded-xl p-3 cursor-pointer hover:border-rose-500 transition-all active:scale-[0.99]"
+            className="flex items-center gap-3 bg-[#121215] border border-[#27272A] rounded-xl p-3 cursor-pointer hover:bg-zinc-800 hover:border-zinc-500 transition-all active:scale-[0.99]"
           >
-            <div className="w-8 h-8 rounded-lg bg-rose-500/25 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-rose-400 flex items-center justify-center shrink-0">
               <Trash2 className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-rose-200">
+              <div className="text-xs font-bold text-rose-400">
                 {translate('clear_all_data', lang)}
               </div>
-              <div className="text-[10px] text-rose-300/70">
+              <div className="text-[10px] text-[#888]">
                 {translate('clear_all_data_d', lang)}
               </div>
             </div>
@@ -651,11 +648,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Telegram Notifications Config */}
       <div className="space-y-2">
         <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1 flex items-center gap-1.5">
-          <Bell className="w-3 h-3 text-indigo-400" />
+          <Bell className="w-3 h-3 text-zinc-400" />
           {translate('tg_bot_title', lang)}
         </div>
 
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 space-y-3">
+        <div className="bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 space-y-3">
           <div>
             <label className="text-[11px] font-semibold text-[#888] block mb-1">
               Bot Token (Telegram):
@@ -671,7 +668,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 }
               }}
               placeholder={translate('tg_bot_token_ph', lang)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
+              className="w-full bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-zinc-400 transition-all"
             />
           </div>
 
@@ -690,14 +687,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 }
               }}
               placeholder={translate('tg_chat_id_ph', lang)}
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-indigo-500 transition-all"
+              className="w-full bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#555] focus:outline-none focus:border-zinc-400 transition-all"
             />
           </div>
 
           <div className="flex flex-col gap-2 pt-2">
             <button
               onClick={handleSaveTg}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.99] shadow-md shadow-indigo-600/20"
+              className="w-full py-2.5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.99] shadow-sm cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
               {lang === 'be' ? 'Захаваць налады' : 'Сохранить настройки'}

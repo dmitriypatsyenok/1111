@@ -41,9 +41,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
         <div className="space-y-2.5">
           {profileKeys.map(pKey => {
             const getIcon = () => {
-              if (pKey === 'math') return <Ruler className="w-5 h-5 text-indigo-400" />;
-              if (pKey === 'chem') return <FlaskConical className="w-5 h-5 text-purple-400" />;
-              return <BookOpen className="w-5 h-5 text-emerald-400" />;
+              if (pKey === 'math') return <Ruler className="w-5 h-5 text-zinc-300" />;
+              if (pKey === 'chem') return <FlaskConical className="w-5 h-5 text-zinc-300" />;
+              return <BookOpen className="w-5 h-5 text-zinc-300" />;
             };
 
             const name = getProfileFullTitle(pKey, schedules, lang);
@@ -52,9 +52,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
               <div
                 key={pKey}
                 onClick={() => onSelectProfile(pKey)}
-                className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group shadow-sm"
+                className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group shadow-sm"
               >
-                <div className="w-10 h-10 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center shrink-0 group-hover:bg-indigo-600/20 group-hover:border-indigo-500/40 transition-all">
+                <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-black transition-all">
                   {getIcon()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -62,7 +62,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                     {name}
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
+                <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
               </div>
             );
           })}
@@ -79,15 +79,15 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   return (
     <div className="space-y-3.5 animate-fade-in">
       {/* Segmented Control for Days */}
-      <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
+      <div className="flex bg-[#121215] p-1 rounded-2xl border border-[#27272A] gap-1">
         {dayKeys.map(d => (
           <button
             key={d}
             onClick={() => onSelectDay(d)}
             className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
               d === activeDay
-                ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-                : 'text-[#888] hover:bg-[#252525] hover:text-white'
+                ? 'bg-white text-black font-bold shadow-sm'
+                : 'text-[#888] hover:bg-[#18181C] hover:text-white'
             }`}
           >
             {daysDict?.[d] || d}
@@ -96,12 +96,12 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       </div>
 
       <div className="text-sm font-bold text-white px-1 flex items-center gap-2">
-        <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+        <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
         {fullDaysDict?.[activeDay] || activeDay}
       </div>
 
       {rawList.length === 0 ? (
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+        <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
           {translate('no_lessons', lang)}
         </div>
       ) : (
@@ -122,9 +122,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
             return (
               <div
                 key={idx}
-                className="flex items-start gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 hover:border-indigo-500/30 transition-all"
+                className="flex items-start gap-3.5 bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 hover:border-zinc-500 transition-all"
               >
-                <div className="w-7 h-7 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                   {num}
                 </div>
                 <div className="flex-1 min-w-0">

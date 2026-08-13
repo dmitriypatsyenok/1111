@@ -74,21 +74,21 @@ export const Topbar: React.FC<TopbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-[#0f0f0f]/95 backdrop-blur-md border-b border-[#1f1f1f] select-none">
+    <header className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-[#09090B]/95 backdrop-blur-md border-b border-[#27272A] select-none">
       <button
         id="topbar-back-btn"
         onClick={onBack}
-        className={`w-9 h-9 rounded-xl flex items-center justify-center bg-[#1a1a1a] border border-[#2a2a2a] text-[#ededed] hover:border-indigo-500/50 hover:text-white transition-all active:scale-95 cursor-pointer ${
+        className={`w-9 h-9 rounded-xl flex items-center justify-center bg-[#121215] border border-[#27272A] text-white hover:border-zinc-500 hover:bg-[#18181C] transition-all active:scale-95 cursor-pointer ${
           showBack ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         aria-label="Назад"
       >
-        <ChevronLeft className="w-5 h-5 text-gray-300" />
+        <ChevronLeft className="w-5 h-5 text-zinc-300" />
       </button>
 
       <div className="flex-1 min-w-0">
         <h1 className="text-[17px] font-bold text-white tracking-tight truncate flex items-center gap-2">
-          <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+          <span className="w-1.5 h-4 bg-white rounded-full inline-block shrink-0"></span>
           {getTitle()}
         </h1>
       </div>

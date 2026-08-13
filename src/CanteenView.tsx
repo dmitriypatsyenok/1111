@@ -185,9 +185,9 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           {/* Create Poll Card */}
           <div
             onClick={handleOpenCreateModal}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group shadow-sm"
+            className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group shadow-sm"
           >
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <Vote className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -198,7 +198,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 {translate('poll_create_d', lang)}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
+            <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
           </div>
 
           {canteenMsg && (
@@ -220,14 +220,14 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             }}
             className={`flex items-center gap-3.5 border rounded-3xl p-4 cursor-pointer transition-all active:scale-[0.99] group ${
               isPollActive
-                ? 'bg-[#0f0f0f] border-[#1f1f1f] hover:border-indigo-500/50 hover:bg-[#141414]'
-                : 'bg-[#0f0f0f]/60 border-[#1f1f1f] opacity-75'
+                ? 'bg-[#121215] border-[#27272A] hover:border-zinc-500 hover:bg-[#18181C]'
+                : 'bg-[#121215]/60 border-[#27272A] opacity-75'
             }`}
           >
             <div
               className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
                 isPollActive
-                  ? 'bg-indigo-600/15 border-indigo-500/20 text-indigo-400'
+                  ? 'bg-zinc-800 border-zinc-700 text-white'
                   : 'bg-rose-500/15 border-rose-500/20 text-rose-400'
               }`}
             >
@@ -241,15 +241,15 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 {translate('poll_vote_d', lang)}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
+            <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
           </div>
 
           {/* Results Archive Button */}
           <div
             onClick={() => onNavigate('canteen-history')}
-            className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group shadow-sm"
+            className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group shadow-sm"
           >
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
               <BarChart2 className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -260,35 +260,35 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                 {translate('poll_results_d', lang)}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
+            <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
           </div>
         </div>
 
         {/* Create Poll Date Selection Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+            <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Vote className="w-4 h-4 text-indigo-400" />
+                <Vote className="w-4 h-4 text-zinc-300" />
                 <span>{lang === 'be' ? 'Стварыць апытанне ў сталовай' : 'Создать опрос в столовой'}</span>
               </h3>
 
-              <div className="space-y-2 bg-[#161616] p-3.5 rounded-2xl border border-[#2a2a2a]">
+              <div className="space-y-2 bg-[#18181C] p-3.5 rounded-2xl border border-[#27272A]">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider">
                     {lang === 'be' ? 'Дата апытання' : 'Дата опроса'}:
                   </span>
-                  <span className="text-xs font-bold text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 px-2 py-0.5 rounded-lg">
+                  <span className="text-xs font-bold text-white bg-zinc-800 border border-zinc-700 px-2 py-0.5 rounded-lg">
                     {formatCustomDate(customPollDate || calcDefaultPollDate(), 'weekday_day_month', lang)}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 pt-1 border-t border-[#222]">
-                  <Calendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <div className="flex items-center gap-2 pt-1 border-t border-[#27272A]">
+                  <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                   <input
                     type="date"
                     value={customPollDate || calcDefaultPollDate()}
                     onChange={e => setCustomPollDate(e.target.value)}
-                    className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white p-2 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                    className="w-full bg-[#121215] border border-[#27272A] rounded-xl text-xs text-white p-2 focus:outline-none focus:border-zinc-400 cursor-pointer"
                   />
                 </div>
               </div>
@@ -296,7 +296,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
               <div className="flex gap-2.5">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 py-3 rounded-2xl bg-[#1a1a1a] hover:bg-[#222] text-xs font-bold text-[#aaa] border border-[#2a2a2a] cursor-pointer"
+                  className="flex-1 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-white border border-zinc-700 cursor-pointer transition-all"
                 >
                   {translate('cancel', lang)}
                 </button>
@@ -306,7 +306,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     setShowCreateModal(false);
                     haptic('success');
                   }}
-                  className="flex-1 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 cursor-pointer"
+                  className="flex-1 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-xs font-bold text-black cursor-pointer transition-all shadow-sm"
                 >
                   {lang === 'be' ? 'Запусціць' : 'Запустить'}
                 </button>
@@ -333,17 +333,17 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           {/* Eat */}
           <div
             onClick={() => onVote('eat')}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
+            className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'eat'
-                ? 'border-indigo-500 bg-indigo-600/15 shadow-md shadow-indigo-500/10'
-                : 'border-[#1f1f1f] hover:bg-[#141414] hover:border-indigo-500/30'
+                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
               <span className="text-xl">🍽</span>
               <span>{translate('v_eat', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'eat' ? 'bg-indigo-600 text-white' : 'bg-[#1a1a1a] text-[#888]'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'eat' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.eat || 0}
             </div>
           </div>
@@ -351,17 +351,17 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           {/* No */}
           <div
             onClick={() => onVote('no')}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
+            className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'no'
-                ? 'border-indigo-500 bg-indigo-600/15 shadow-md shadow-indigo-500/10'
-                : 'border-[#1f1f1f] hover:bg-[#141414] hover:border-indigo-500/30'
+                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
               <span className="text-xl">🚫</span>
               <span>{translate('v_no', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'no' ? 'bg-indigo-600 text-white' : 'bg-[#1a1a1a] text-[#888]'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'no' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.no || 0}
             </div>
           </div>
@@ -369,17 +369,17 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
           {/* Absent */}
           <div
             onClick={() => onVote('abs')}
-            className={`flex items-center justify-between bg-[#0f0f0f] border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
+            className={`flex items-center justify-between border rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.99] ${
               myVote === 'abs'
-                ? 'border-indigo-500 bg-indigo-600/15 shadow-md shadow-indigo-500/10'
-                : 'border-[#1f1f1f] hover:bg-[#141414] hover:border-indigo-500/30'
+                ? 'border-white bg-[#18181C] text-white shadow-sm'
+                : 'bg-[#121215] border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500'
             }`}
           >
             <div className="flex items-center gap-3 text-xs font-bold text-white">
               <span className="text-xl">🏠</span>
               <span>{translate('v_abs', lang)}</span>
             </div>
-            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'abs' ? 'bg-indigo-600 text-white' : 'bg-[#1a1a1a] text-[#888]'}`}>
+            <div className={`text-xs font-bold px-2.5 py-1 rounded-xl ${myVote === 'abs' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'}`}>
               {currentPoll.abs || 0}
             </div>
           </div>
@@ -402,9 +402,9 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             setShowAnalyticsModal(true);
             haptic('medium');
           }}
-          className="w-full py-3.5 px-4 rounded-2xl bg-[#0f0f0f] border border-[#222] hover:bg-[#141414] hover:border-indigo-500/40 text-xs font-bold text-white transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-sm active:scale-[0.99]"
+          className="w-full py-3.5 px-4 rounded-2xl bg-[#121215] border border-[#27272A] hover:bg-[#18181C] hover:border-zinc-500 text-xs font-bold text-white transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-sm active:scale-[0.99]"
         >
-          <div className="w-7 h-7 rounded-xl bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0 font-bold">
+          <div className="w-7 h-7 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0 font-bold">
             <TrendingUp className="w-4 h-4" />
           </div>
           <span>{translate('canteen_analytics_btn', lang)}</span>
@@ -416,7 +416,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
         </div>
 
         {allPollsHistory.length === 0 ? (
-          <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+          <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
             {lang === 'be' ? 'Архіў апытанняў пусты' : 'Архив опросов пуст'}
           </div>
         ) : (
@@ -437,10 +437,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                     onSelectPollDetail(p, targetStr);
                     onNavigate('canteen-result');
                   }}
-                  className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group space-y-2.5 shadow-sm"
+                  className="bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group space-y-2.5 shadow-sm"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 font-bold text-xs">
+                    <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0 font-bold text-xs">
                       📅
                     </div>
                     <div className="flex-1 min-w-0">
@@ -451,7 +451,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                         {translate('created', lang)} {createdStr}
                       </div>
                     </div>
-                    <div className="text-xs font-bold text-indigo-400 bg-indigo-600/15 border border-indigo-500/30 px-2.5 py-1 rounded-xl">
+                    <div className="text-xs font-bold text-white bg-zinc-800 border border-zinc-700 px-2.5 py-1 rounded-xl">
                       {totalVoters} 👥
                     </div>
                   </div>
@@ -628,10 +628,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setAnalyticsCategory('eat'); haptic('light'); }}
-                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'eat'
-                        ? 'bg-emerald-500/15 border-emerald-500/60 text-emerald-300 shadow-lg shadow-emerald-500/10 scale-[1.02]'
-                        : 'bg-[#141414] border-[#222] text-[#888] hover:border-[#333] hover:text-white'
+                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
                     <span className="text-xl">🍽️</span>
@@ -643,10 +643,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setAnalyticsCategory('no'); haptic('light'); }}
-                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'no'
-                        ? 'bg-rose-500/15 border-rose-500/60 text-rose-300 shadow-lg shadow-rose-500/10 scale-[1.02]'
-                        : 'bg-[#141414] border-[#222] text-[#888] hover:border-[#333] hover:text-white'
+                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
                     <span className="text-xl">🚫</span>
@@ -658,10 +658,10 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setAnalyticsCategory('abs'); haptic('light'); }}
-                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 active:scale-[0.96] ${
                       analyticsCategory === 'abs'
-                        ? 'bg-amber-500/15 border-amber-500/60 text-amber-300 shadow-lg shadow-amber-500/10 scale-[1.02]'
-                        : 'bg-[#141414] border-[#222] text-[#888] hover:border-[#333] hover:text-white'
+                        ? 'bg-white text-black font-bold border-white shadow-sm'
+                        : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:text-white hover:border-zinc-500'
                     }`}
                   >
                     <span className="text-xl">🏠</span>
@@ -793,13 +793,13 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             setVoterFilter(voterFilter === 'eat' ? 'all' : 'eat');
             haptic('light');
           }}
-          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'eat'
-              ? 'bg-emerald-500/15 border-emerald-500/60 text-emerald-300 shadow-md shadow-emerald-500/10 scale-[1.02]'
-              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+              ? 'bg-white text-black font-bold border-white shadow-sm'
+              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className="text-xl font-black text-emerald-400">
+          <div className={`text-xl font-black ${voterFilter === 'eat' ? 'text-black' : 'text-emerald-400'}`}>
             {activePoll.eat || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -813,13 +813,13 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             setVoterFilter(voterFilter === 'no' ? 'all' : 'no');
             haptic('light');
           }}
-          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'no'
-              ? 'bg-rose-500/15 border-rose-500/60 text-rose-300 shadow-md shadow-rose-500/10 scale-[1.02]'
-              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+              ? 'bg-white text-black font-bold border-white shadow-sm'
+              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className="text-xl font-black text-rose-400">
+          <div className={`text-xl font-black ${voterFilter === 'no' ? 'text-black' : 'text-rose-400'}`}>
             {activePoll.no || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -833,13 +833,13 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
             setVoterFilter(voterFilter === 'abs' ? 'all' : 'abs');
             haptic('light');
           }}
-          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.98] ${
+          className={`p-3 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 active:scale-[0.96] ${
             voterFilter === 'abs'
-              ? 'bg-amber-500/15 border-amber-500/60 text-amber-300 shadow-md shadow-amber-500/10 scale-[1.02]'
-              : 'bg-[#0f0f0f] border-[#1f1f1f] text-[#888] hover:border-[#333] hover:text-white'
+              ? 'bg-white text-black font-bold border-white shadow-sm'
+              : 'bg-[#18181C] border-[#27272A] text-zinc-400 hover:border-zinc-500 hover:text-white'
           }`}
         >
-          <div className="text-xl font-black text-[#aaa]">
+          <div className={`text-xl font-black ${voterFilter === 'abs' ? 'text-black' : 'text-zinc-300'}`}>
             {activePoll.abs || 0}
           </div>
           <div className="text-[10px] font-bold uppercase tracking-wider">
@@ -850,7 +850,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
       <button
         onClick={onToggleEditPast}
-        className="w-full py-2.5 rounded-2xl bg-[#161616] border border-[#2a2a2a] text-xs font-bold text-white hover:bg-[#222] hover:border-indigo-500/40 transition-all cursor-pointer"
+        className="w-full py-3 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs shadow-sm transition-all cursor-pointer active:scale-[0.96]"
       >
         {isEditingPast
           ? translate('btn_lock_past', lang)
@@ -858,37 +858,37 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
       </button>
 
       {isEditingPast && (
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3 animate-fade-in">
+        <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 space-y-3 animate-fade-in">
           <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest">
             {translate('poll_change_vote', lang)}
           </div>
           <div className="space-y-2">
             <div
               onClick={() => onVotePastPoll('eat')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'eat'
-                  ? 'border-indigo-500 bg-indigo-600/15 text-white'
-                  : 'border-[#2a2a2a] bg-[#161616] text-[#888] hover:text-white'
+                  ? 'border-white bg-white text-black shadow-sm'
+                  : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
               🍽 {translate('v_eat', lang)}
             </div>
             <div
               onClick={() => onVotePastPoll('no')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'no'
-                  ? 'border-indigo-500 bg-indigo-600/15 text-white'
-                  : 'border-[#2a2a2a] bg-[#161616] text-[#888] hover:text-white'
+                  ? 'border-white bg-white text-black shadow-sm'
+                  : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
               🚫 {translate('v_no', lang)}
             </div>
             <div
               onClick={() => onVotePastPoll('abs')}
-              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`p-3 rounded-2xl border text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-[0.96] ${
                 myVoteInPast === 'abs'
-                  ? 'border-indigo-500 bg-indigo-600/15 text-white'
-                  : 'border-[#2a2a2a] bg-[#161616] text-[#888] hover:text-white'
+                  ? 'border-white bg-white text-black shadow-sm'
+                  : 'border-[#27272A] bg-[#18181C] text-zinc-300 hover:text-white hover:border-zinc-500'
               }`}
             >
               🏠 {translate('v_abs', lang)}

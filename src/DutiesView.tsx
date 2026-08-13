@@ -169,7 +169,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           placeholder={translate('duty_search_placeholder', lang)}
-          className="w-full bg-[#161616] border border-[#2a2a2a] rounded-full text-xs text-white pl-10 pr-4 py-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+          className="w-full bg-[#121215] border border-[#27272A] rounded-full text-xs text-white pl-10 pr-4 py-3 focus:outline-none focus:border-zinc-400 placeholder:text-[#666]"
         />
         <Search className="w-4 h-4 text-[#888] absolute left-3.5 top-3.5" />
       </div>
@@ -182,7 +182,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
           </div>
 
           {searchResults.length === 0 ? (
-            <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+            <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
               {translate('no_duty_found', lang)}
             </div>
           ) : (
@@ -190,16 +190,16 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
               {searchResults.map((res, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 shadow-sm"
+                  className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 shadow-sm"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center shrink-0">
                     <User className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-white truncate">
                       {res.studentName}
                     </div>
-                    <div className="text-[11px] text-indigo-400 mt-0.5">
+                    <div className="text-[11px] text-zinc-300 mt-0.5">
                       {translate('duty_on_days', lang)}{' '}
                       <span className="font-semibold text-white">
                         {res.dayTitle} — {translateZoneName(res.zoneName, lang)}
@@ -215,15 +215,15 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
         /* 2-LEVEL DUTY VIEW */
         <div className="space-y-3.5">
           {/* Day Tabs */}
-          <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
+          <div className="flex bg-[#121215] p-1 rounded-2xl border border-[#27272A] gap-1">
             {dayKeys.map(d => (
               <button
                 key={d}
                 onClick={() => onSelectDay(d)}
                 className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
                   d === activeDay
-                    ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-                    : 'text-[#888] hover:bg-[#252525] hover:text-white'
+                    ? 'bg-white text-black font-bold shadow-sm'
+                    : 'text-[#888] hover:bg-[#18181C] hover:text-white'
                 }`}
               >
                 {daysDict?.[d] || d}
@@ -233,12 +233,12 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
 
           <div className="flex items-center justify-between px-1">
             <div className="text-sm font-bold text-white flex items-center gap-2">
-              <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+              <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
               {fullDaysDict?.[activeDay] || activeDay}
             </div>
             <button
               onClick={() => setIsZoneModalOpen(true)}
-              className="px-3.5 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-md shadow-indigo-500/20 transition-all"
+              className="px-3.5 py-2 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{translate('create_duty_zone', lang)}</span>
@@ -247,7 +247,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
 
           {/* Zones List */}
           {currentDayZones.length === 0 ? (
-            <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+            <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
               {translate('no_duties_day', lang)}
             </div>
           ) : (
@@ -255,17 +255,17 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
               {currentDayZones.map(zone => (
                 <div
                   key={zone.id}
-                  className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3 shadow-sm"
+                  className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 space-y-3 shadow-sm"
                 >
-                  <div className="flex items-center justify-between border-b border-[#1f1f1f] pb-2.5">
-                    <div className="flex items-center gap-2 text-xs font-bold text-indigo-400">
-                      <MapPin className="w-4 h-4 text-indigo-400" />
+                  <div className="flex items-center justify-between border-b border-[#27272A] pb-2.5">
+                    <div className="flex items-center gap-2 text-xs font-bold text-white">
+                      <MapPin className="w-4 h-4 text-zinc-400" />
                       <span>{translateZoneName(zone.name, lang)}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => openEditModal(zone)}
-                        className="w-7 h-7 rounded-xl bg-indigo-600/15 text-indigo-400 flex items-center justify-center hover:bg-indigo-600/25 transition-all"
+                        className="w-7 h-7 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center hover:bg-zinc-700 hover:text-white transition-all"
                         title={translate('edit', lang)}
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -277,7 +277,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                             haptic('success');
                           }
                         }}
-                        className="w-7 h-7 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center hover:bg-rose-500/25 transition-all"
+                        className="w-7 h-7 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center hover:bg-rose-500/25 transition-all"
                         title={translate('delete', lang)}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -295,7 +295,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                       {zone.students.map((st, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between bg-[#161616] border border-[#222] rounded-xl px-3 py-2"
+                          className="flex items-center justify-between bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2"
                         >
                           <span className="text-xs text-white font-medium">
                             {st}
@@ -317,7 +317,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   {/* Multi-Assign & Edit Button */}
                   <button
                     onClick={() => openEditModal(zone)}
-                    className="w-full py-2.5 rounded-2xl bg-[#161616] hover:bg-[#1f1f1f] text-xs font-bold text-indigo-400 border border-[#2a2a2a] hover:border-indigo-500/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    className="w-full py-2.5 rounded-2xl bg-[#18181C] hover:bg-zinc-800 text-xs font-bold text-white border border-[#27272A] hover:border-zinc-500 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>{translate('assign_student', lang)}</span>
@@ -332,9 +332,9 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
       {/* CREATE ZONE MODAL */}
       {isZoneModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+          <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+              <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
               {translate('create_duty_zone', lang)}
             </h3>
 
@@ -347,10 +347,10 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                 <button
                   key={preset}
                   onClick={() => handleCreateZoneSubmit(translateZoneName(preset, lang))}
-                  className="py-2.5 px-3 rounded-2xl bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1f1f1f] text-xs text-white font-bold text-left transition-all flex items-center justify-between"
+                  className="py-2.5 px-3 rounded-2xl bg-[#18181C] border border-[#27272A] hover:border-zinc-500 hover:bg-zinc-800 text-xs text-white font-bold text-left transition-all flex items-center justify-between"
                 >
                   <span>{translateZoneName(preset, lang)}</span>
-                  <Plus className="w-3.5 h-3.5 text-indigo-400" />
+                  <Plus className="w-3.5 h-3.5 text-zinc-400" />
                 </button>
               ))}
             </div>
@@ -370,20 +370,20 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                 }
               }}
               placeholder={translate('zone_name_placeholder', lang)}
-              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+              className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400 placeholder:text-[#666]"
             />
 
             <div className="flex gap-2.5 pt-1">
               <button
                 onClick={() => setIsZoneModalOpen(false)}
-                className="flex-1 py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-white font-bold hover:bg-[#222] transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-xs text-white font-bold hover:bg-zinc-700 transition-all"
               >
                 {translate('cancel', lang)}
               </button>
               <button
                 onClick={() => handleCreateZoneSubmit(customZoneName)}
                 disabled={!customZoneName.trim()}
-                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 disabled:opacity-40 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-white hover:bg-zinc-200 text-xs text-black font-bold shadow-sm transition-all"
               >
                 {translate('save', lang)}
               </button>
@@ -395,13 +395,13 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
       {/* EDIT ZONE & MULTI-STUDENT ASSIGN MODAL */}
       {editingZone && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up max-h-[85vh] overflow-y-auto custom-scrollbar">
+          <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up max-h-[85vh] overflow-y-auto custom-scrollbar">
             <h3 className="text-sm font-bold text-white flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+                <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
                 {translate('edit_duty_zone', lang)}
               </span>
-              <span className="text-xs text-indigo-400 font-medium">
+              <span className="text-xs text-zinc-400 font-medium">
                 {translate('selected_count', lang)} {selectedStudents.length}
               </span>
             </h3>
@@ -422,7 +422,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   }
                 }}
                 placeholder={translate('zone_name_placeholder', lang)}
-                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400"
               />
             </div>
 
@@ -436,7 +436,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   <button
                     type="button"
                     onClick={handleSelectAllRoster}
-                    className="text-indigo-400 hover:text-indigo-300 font-semibold"
+                    className="text-white hover:underline font-semibold"
                   >
                     {translate('select_all', lang)}
                   </button>
@@ -457,11 +457,11 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                 value={rosterFilter}
                 onChange={e => setRosterFilter(e.target.value)}
                 placeholder={lang === 'be' ? 'Пошук па спісе...' : 'Поиск по списку...'}
-                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-xl text-xs text-white px-3 py-2 focus:outline-none focus:border-indigo-500 placeholder:text-[#555]"
+                className="w-full bg-[#18181C] border border-[#27272A] rounded-xl text-xs text-white px-3 py-2 focus:outline-none focus:border-zinc-400 placeholder:text-[#555]"
               />
 
               {/* Roster Checkbox List */}
-              <div className="max-h-48 overflow-y-auto bg-[#141414] border border-[#222] rounded-2xl p-2 space-y-1 custom-scrollbar">
+              <div className="max-h-48 overflow-y-auto bg-[#18181C] border border-[#27272A] rounded-2xl p-2 space-y-1 custom-scrollbar">
                 {filteredRoster.length === 0 ? (
                   <div className="text-[11px] text-[#666] text-center py-3">
                     {lang === 'be' ? 'Вучні не знойдзены' : 'Ученики не найдены'}
@@ -475,15 +475,15 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                         onClick={() => toggleStudent(b.name)}
                         className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all ${
                           isSelected
-                            ? 'bg-indigo-600/20 border border-indigo-500/40 text-white font-bold'
-                            : 'bg-[#1a1a1a] hover:bg-[#222] text-[#aaa] border border-transparent'
+                            ? 'bg-white text-black font-bold'
+                            : 'bg-zinc-800/80 hover:bg-zinc-800 text-[#aaa] border border-transparent'
                         }`}
                       >
                         <span className="text-xs">{b.name}</span>
                         <div
                           className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
                             isSelected
-                              ? 'bg-indigo-600 border-indigo-500 text-white'
+                              ? 'bg-black border-black text-white'
                               : 'border-[#444] bg-[#222]'
                           }`}
                         >
@@ -512,20 +512,20 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   }
                 }}
                 placeholder={translate('custom_student_ph', lang)}
-                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+                className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3 focus:outline-none focus:border-zinc-400 placeholder:text-[#666]"
               />
             </div>
 
             <div className="flex gap-2.5 pt-2">
               <button
                 onClick={() => setEditingZone(null)}
-                className="flex-1 py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-white font-bold hover:bg-[#222] transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-xs text-white font-bold hover:bg-zinc-700 transition-all"
               >
                 {translate('cancel', lang)}
               </button>
               <button
                 onClick={handleSaveEditedZone}
-                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-white hover:bg-zinc-200 text-xs text-black font-bold shadow-sm transition-all"
               >
                 {translate('save', lang)}
               </button>

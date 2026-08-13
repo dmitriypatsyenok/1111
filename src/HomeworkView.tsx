@@ -134,9 +134,9 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
     return (
       <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+        <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center text-xl shrink-0">
               🌍
             </div>
             <div>
@@ -161,12 +161,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                     onNavigate('hw-detail');
                     haptic('selection');
                   }}
-                  className="w-full bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1c1c1c] rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
+                  className="w-full bg-[#18181C] border border-[#27272A] hover:border-zinc-500 rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🇬🇧</span>
                     <div>
-                      <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                      <div className="text-xs font-bold text-white group-hover:text-zinc-200 transition-colors">
                         {lang === 'be' ? 'Англійская мова' : 'Английский язык'}
                       </div>
                       <div className="text-[10px] text-[#777] mt-0.5">
@@ -194,12 +194,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                     onNavigate('hw-detail');
                     haptic('selection');
                   }}
-                  className="w-full bg-[#161616] border border-[#2a2a2a] hover:border-indigo-500/50 hover:bg-[#1c1c1c] rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
+                  className="w-full bg-[#18181C] border border-[#27272A] hover:border-zinc-500 rounded-2xl p-3.5 flex items-center justify-between text-left transition-all active:scale-[0.99] group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🇩🇪</span>
                     <div>
-                      <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                      <div className="text-xs font-bold text-white group-hover:text-zinc-200 transition-colors">
                         {lang === 'be' ? 'Нямецкая мова' : 'Немецкий язык'}
                       </div>
                       <div className="text-[10px] text-[#777] mt-0.5">
@@ -219,7 +219,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
           <button
             onClick={() => setShowForeignModal(false)}
-            className="w-full py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-[#aaa] hover:text-white font-bold hover:bg-[#222] transition-all cursor-pointer"
+            className="w-full py-2.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 hover:text-white font-bold hover:bg-zinc-700 transition-all cursor-pointer"
           >
             {translate('cancel', lang)}
           </button>
@@ -235,11 +235,11 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
     return (
       <div className="space-y-3.5 animate-fade-in">
         {/* Profile Selector at the top of Homework */}
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-3.5 space-y-2">
+        <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-3.5 space-y-2">
           <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
             {lang === 'be' ? 'Абярыце профіль' : 'Выберите профиль'}
           </div>
-          <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
+          <div className="flex bg-[#18181C] p-1 rounded-2xl border border-[#27272A] gap-1">
             {availableProfileKeys.map(pKey => {
               const profTitle = getProfileTitle(pKey, schedules, lang);
               const isActive = effectiveProfile === pKey;
@@ -252,8 +252,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   }}
                   className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
                     isActive
-                      ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-                      : 'text-[#888] hover:bg-[#252525] hover:text-white'
+                      ? 'bg-white text-black font-bold shadow-sm'
+                      : 'text-[#888] hover:bg-zinc-800 hover:text-white'
                   }`}
                 >
                   {profTitle}
@@ -266,9 +266,9 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
         {/* Search Subject Action Card */}
         <div
           onClick={() => onNavigate('hw-subjects')}
-          className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group shadow-sm"
+          className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-3xl p-4 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group shadow-sm"
         >
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0">
             <Search className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
@@ -279,7 +279,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               {translate('search_subject_d', lang)}
             </div>
           </div>
-          <ChevronRight className="w-5 h-5 text-[#555] group-hover:text-indigo-400 transition-colors" />
+          <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
         </div>
 
         <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest px-1">
@@ -287,15 +287,15 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
         </div>
 
         {/* Segmented Control for Days */}
-        <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
+        <div className="flex bg-[#121215] p-1 rounded-2xl border border-[#27272A] gap-1">
           {dayKeys.map(d => (
             <button
               key={d}
               onClick={() => onSelectHwDay(d)}
               className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
                 d === activeHwDay
-                  ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-                  : 'text-[#888] hover:bg-[#252525] hover:text-white'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-[#888] hover:bg-[#18181C] hover:text-white'
               }`}
             >
               {daysDict?.[d] || d}
@@ -305,7 +305,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
 
         {/* Lesson List */}
         {rawList.length === 0 ? (
-          <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center text-[#888] text-xs">
+          <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center text-[#888] text-xs">
             {translate('no_lessons', lang)}
           </div>
         ) : (
@@ -333,9 +333,9 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                 <div
                   key={idx}
                   onClick={() => handleSubjectSelect(subjKey)}
-                  className="flex items-center gap-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.99] group"
+                  className="flex items-center gap-3.5 bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.99] group"
                 >
-                  <div className="w-7 h-7 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-xs font-bold flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-100 text-xs font-bold flex items-center justify-center shrink-0">
                     {num}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -352,7 +352,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                       </div>
                     )}
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#555] group-hover:text-indigo-400 transition-colors" />
+                  <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
                 </div>
               );
             })}
@@ -385,7 +385,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             value={subjectSearch}
             onChange={e => setSubjectSearch(e.target.value)}
             placeholder={lang === 'be' ? 'Пошук прадмета па назве...' : 'Поиск предмета по названию...'}
-            className="w-full bg-[#161616] border border-[#2a2a2a] rounded-full text-xs text-white pl-10 pr-4 py-3 focus:outline-none focus:border-indigo-500 placeholder:text-[#666]"
+            className="w-full bg-[#121215] border border-[#27272A] rounded-full text-xs text-white pl-10 pr-4 py-3 focus:outline-none focus:border-zinc-400 placeholder:text-[#666]"
           />
           <Search className="w-4 h-4 text-[#888] absolute left-3.5 top-3.5" />
         </div>
@@ -402,12 +402,12 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               <div
                 key={s.key}
                 onClick={() => handleSubjectSelect(s.key)}
-                className="relative bg-[#0f0f0f] border border-[#1f1f1f] rounded-2xl p-3.5 cursor-pointer hover:bg-[#141414] hover:border-indigo-500/50 transition-all active:scale-[0.98] group"
+                className="relative bg-[#121215] border border-[#27272A] rounded-2xl p-3.5 cursor-pointer hover:bg-[#18181C] hover:border-zinc-500 transition-all active:scale-[0.98] group"
               >
                 {hasHw && (
                   <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 )}
-                <div className="text-xs font-bold text-white pr-3 group-hover:text-indigo-300 transition-colors">
+                <div className="text-xs font-bold text-white pr-3 group-hover:text-zinc-200 transition-colors">
                   {s[lang]}
                 </div>
               </div>
@@ -451,8 +451,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   return (
     <div className="space-y-3.5 animate-fade-in">
       {/* Subject Banner */}
-      <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0 text-xl">
+      <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center shrink-0 text-xl">
           {dbItem?.ic || '📚'}
         </div>
         <div className="flex-1 min-w-0">
@@ -466,13 +466,13 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-[#1a1a1a] p-1 rounded-2xl border border-[#2a2a2a] gap-1">
+      <div className="flex bg-[#121215] p-1 rounded-2xl border border-[#27272A] gap-1">
         <button
           onClick={() => setActiveTab('history')}
           className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
             activeTab === 'history'
-              ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-              : 'text-[#888] hover:bg-[#252525] hover:text-white'
+              ? 'bg-white text-black font-bold shadow-sm'
+              : 'text-[#888] hover:bg-[#18181C] hover:text-white'
           }`}
         >
           {translate('hw_history', lang)}
@@ -481,8 +481,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
           onClick={() => setActiveTab('create')}
           className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
             activeTab === 'create'
-              ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20'
-              : 'text-[#888] hover:bg-[#252525] hover:text-white'
+              ? 'bg-white text-black font-bold shadow-sm'
+              : 'text-[#888] hover:bg-[#18181C] hover:text-white'
           }`}
         >
           {translate('hw_create', lang)}
@@ -492,7 +492,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       {activeTab === 'history' && (
         <div className="space-y-3">
           {currentHwList.length === 0 ? (
-            <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-8 text-center space-y-3">
+            <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-8 text-center space-y-3">
               <div className="text-[#888] text-xs">
                 {translate('no_hw', lang)}
               </div>
@@ -501,7 +501,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   setActiveTab('create');
                   haptic('light');
                 }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold hover:bg-indigo-600/30 transition-all cursor-pointer active:scale-95 shadow-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-all cursor-pointer active:scale-95 shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{translate('hw_create', lang)}</span>
@@ -511,7 +511,7 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
             currentHwList.map(item => (
               <div
                 key={item.id}
-                className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3 shadow-sm"
+                className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 space-y-3 shadow-sm"
               >
                 <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 rounded-full">
                   <Calendar className="w-3.5 h-3.5" />
@@ -523,15 +523,15 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                 <div className="text-xs text-white leading-relaxed whitespace-pre-wrap font-medium select-text">
                   {item.text}
                 </div>
-                <div className="flex gap-2 pt-2 border-t border-[#1f1f1f]">
+                <div className="flex gap-2 pt-2 border-t border-[#27272A]">
                   <button
                     onClick={() => {
                       setEditModalItem(item);
                       setEditText(item.text);
                     }}
-                    className="flex-1 py-2 rounded-xl bg-[#1a1a1a] hover:bg-[#222] text-xs font-bold text-white border border-[#2a2a2a] flex items-center justify-center gap-1.5 transition-all"
+                    className="flex-1 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-white border border-zinc-700 flex items-center justify-center gap-1.5 transition-all"
                   >
-                    <Edit2 className="w-3.5 h-3.5 text-indigo-400" />
+                    <Edit2 className="w-3.5 h-3.5 text-zinc-300" />
                     <span>{translate('edit', lang)}</span>
                   </button>
                   <button
@@ -554,8 +554,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       )}
 
       {activeTab === 'create' && (
-        <div className="bg-[#0f0f0f] border border-[#1f1f1f] rounded-3xl p-4 space-y-3.5">
-          <div className="flex flex-col gap-2 bg-[#161616] p-3 rounded-2xl border border-[#2a2a2a]">
+        <div className="bg-[#121215] border border-[#27272A] rounded-3xl p-4 space-y-3.5">
+          <div className="flex flex-col gap-2 bg-[#18181C] p-3 rounded-2xl border border-[#27272A]">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-[#888] uppercase tracking-wider">
                 {lang === 'be' ? 'Дата здачы' : 'Дата сдачи'}:
@@ -565,13 +565,13 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-2 pt-1 border-t border-[#222]">
-              <Calendar className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <div className="flex items-center gap-2 pt-1 border-t border-[#27272A]">
+              <Calendar className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
               <input
                 type="date"
                 value={effectiveDueDate}
                 onChange={e => setCustomDueDate(e.target.value)}
-                className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl text-xs text-white px-2.5 py-1.5 focus:outline-none focus:border-indigo-500 w-full cursor-pointer"
+                className="bg-[#121215] border border-[#27272A] rounded-xl text-xs text-white px-2.5 py-1.5 focus:outline-none focus:border-zinc-400 w-full cursor-pointer"
               />
             </div>
           </div>
@@ -593,13 +593,13 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                 ? 'Напрыклад: с. 42, №5'
                 : 'Например: с. 42, №5'
             }
-            className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y placeholder:text-[#666] select-text pointer-events-auto"
+            className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-zinc-400 resize-y placeholder:text-[#666] select-text pointer-events-auto"
           />
 
           <button
             onClick={handleCreateSubmit}
             disabled={!inputText.trim()}
-            className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-lg shadow-indigo-500/20 transition-all"
+            className="w-full py-3 rounded-2xl bg-white hover:bg-zinc-200 disabled:opacity-40 text-black font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-sm transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>{translate('save_hw_btn', lang)}</span>
@@ -610,9 +610,9 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
       {/* Edit Homework Modal */}
       {editModalItem && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="w-full max-w-md bg-[#0f0f0f] border border-[#2a2a2a] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
+          <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-slide-up">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <span className="w-2 h-4 bg-indigo-500 rounded-full inline-block"></span>
+              <span className="w-1.5 h-4 bg-white rounded-full inline-block"></span>
               {translate('hw_edit_title', lang)}
             </h3>
             <textarea
@@ -627,18 +627,18 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
                   }
                 }
               }}
-              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-indigo-500 resize-y select-text pointer-events-auto"
+              className="w-full bg-[#18181C] border border-[#27272A] rounded-2xl text-xs text-white p-3.5 min-h-[100px] focus:outline-none focus:border-zinc-400 resize-y select-text pointer-events-auto"
             />
             <div className="flex gap-2.5">
               <button
                 onClick={() => setEditModalItem(null)}
-                className="flex-1 py-2.5 rounded-2xl bg-[#1a1a1a] border border-[#2a2a2a] text-xs text-white font-bold hover:bg-[#222] transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-zinc-800 border border-zinc-700 text-xs text-white font-bold hover:bg-zinc-700 transition-all"
               >
                 {translate('cancel', lang)}
               </button>
               <button
                 onClick={handleEditSubmit}
-                className="flex-1 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold shadow-lg shadow-indigo-500/20 transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-white hover:bg-zinc-200 text-xs text-black font-bold shadow-sm transition-all"
               >
                 {translate('save', lang)}
               </button>
