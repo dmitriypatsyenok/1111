@@ -179,7 +179,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {translate('hi', lang)}
           </h2>
         </div>
-        <div className="text-xs text-[#888] capitalize font-medium text-right">
+        <div className="text-xs text-[#888] font-medium text-right">
           {formatCustomDate(new Date(), 'weekday_day_month', lang)}
         </div>
       </div>

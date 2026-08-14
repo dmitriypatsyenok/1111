@@ -92,7 +92,7 @@ export const SUBJECT_DB: Record<string, SubjectMeta> = {
   geography:   { key: "geography", ru: "География", be: "Геаграфія", ic: "" },
   society:     { key: "society", ru: "Обществоведение", be: "Грамадазнаўства", ic: "" },
   astronomy:   { key: "astronomy", ru: "Астрономия", be: "Астраномія", ic: "" },
-  pe:          { key: "pe", ru: "Физкультура", be: "Фізкультура", ic: "" },
+  pe:          { key: "pe", ru: "Физкультура", be: "Фізічная культура", ic: "" },
   cs:          { key: "cs", ru: "Информатика", be: "Інфарматыка", ic: "" },
   dopriz:      { key: "dopriz", ru: "Доприз/Мед", be: "Дапрыз/Мед", ic: "" },
   class_hr:    { key: "class_hr", ru: "Классный час", be: "Класная гадзіна", ic: "" },
@@ -116,7 +116,7 @@ export const SUBJECT_LIST = [
   { key: "astronomy",ru: "Астрономия", be: "Астраномія" },
   { key: "dopriz",   ru: "Допризывная подготовка", be: "Дапрызыўная падрыхтоўка" },
   { key: "med",      ru: "Медицинская подготовка", be: "Медыцынская падрыхтоўка" },
-  { key: "pe",       ru: "Физкультура", be: "Фізкультура" },
+  { key: "pe",       ru: "Физкультура", be: "Фізічная культура" },
   { key: "cs",       ru: "Информатика", be: "Інфарматыка" }
 ];
 

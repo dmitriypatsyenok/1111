@@ -47,11 +47,12 @@ export function formatCustomDate(
 
   if (formatType === 'weekday_day_month') {
     const w = isBe ? WEEKDAYS_BE[weekdayIdx] : WEEKDAYS_RU[weekdayIdx];
-    const m = isBe ? MONTHS_BE_GEN[monthIdx] : MONTHS_RU_GEN[monthIdx];
-    return `${w}, ${dayNum} ${m}`;
+    const wCap = w.charAt(0).toUpperCase() + w.slice(1);
+    const m = (isBe ? MONTHS_BE_GEN[monthIdx] : MONTHS_RU_GEN[monthIdx]).toLowerCase();
+    return `${wCap}, ${dayNum} ${m}`;
   }
   if (formatType === 'day_month_long') {
-    const m = isBe ? MONTHS_BE_GEN[monthIdx] : MONTHS_RU_GEN[monthIdx];
+    const m = (isBe ? MONTHS_BE_GEN[monthIdx] : MONTHS_RU_GEN[monthIdx]).toLowerCase();
     return `${dayNum} ${m}`;
   }
   if (formatType === 'day_month_short') {
@@ -151,7 +152,16 @@ export function parseLessonName(rawName: string, subjectDb: Record<string, any> 
 
   // 6. History of Belarus (История Беларуси)
   if (n.includes('история беларуси') || n.includes('гісторыя беларусі') || n.includes('ист. беларус') || n.includes('гіст. беларус')) {
-    return { key: "history", ru: "История Беларуси", be: "Гісторыя Беларуси", ic: "🏛" };
+    return { key: "history", ru: "История Беларуси", be: "Гісторыя Беларусі", ic: "" };
+  }
+
+  // 7. Physical Education (Физкультура / Фізічная культура)
+  if (
+    n.includes('физкульт') || n.includes('фізкульт') ||
+    n.includes('фізічн') || n.includes('физическ') ||
+    n === 'pe' || n === 'фіз-ра' || n === 'физ-ра'
+  ) {
+    return subjectDb.pe || { key: "pe", ru: "Физкультура", be: "Фізічная культура", ic: "" };
   }
 
   for (let key in subjectDb) {

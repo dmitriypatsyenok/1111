@@ -42,7 +42,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         const cleanKey = extractSubjectKey(activeSubjectKey || '');
         const dbItem = SUBJECT_DB[cleanKey];
         if (dbItem) {
-          return `${dbItem.ic} ${dbItem[lang]}`;
+          return dbItem.ic ? `${dbItem.ic} ${dbItem[lang]}` : dbItem[lang];
         }
         const found = SUBJECT_LIST.find(s => s.key === cleanKey);
         if (found) {
