@@ -13,121 +13,6 @@ interface HomeViewProps {
   onNavigate: (screen: ScreenType) => void;
 }
 
-function calculateWidgetData(
-  schedules: ScheduleProfiles,
-  activeProfile: ProfileKey,
-  lang: Language
-): { iconType: 'bell' | 'sun' | 'coffee' | 'sparkles'; title: string; sub: string } {
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-
-  if (dayOfWeek === 0 || dayOfWeek === 6) {
-    return {
-      iconType: 'sun',
-      title: lang === 'be' ? 'Выхадны дзень' : 'Выходной день',
-      sub: lang === 'be' ? 'Заняткаў няма, адпачывайце!' : 'Занятий нет, отдыхайте!'
-    };
-  }
-
-  const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
-  const dayKey = dayKeysMap[dayOfWeek - 1];
-  const sched = (schedules[activeProfile] || schedules.base || Object.values(schedules || {})[0] || {})[dayKey] || [];
-
-  let lastLessonIdx = -1;
-  for (let i = sched.length - 1; i >= 0; i--) {
-    if (sched[i] && typeof sched[i] === 'string' && sched[i].trim()) {
-      lastLessonIdx = i;
-      break;
-    }
-  }
-
-  if (lastLessonIdx === -1) {
-    return {
-      iconType: 'coffee',
-      title: translate('no_lessons', lang),
-      sub: lang === 'be' ? 'На сёння ўрокаў няма' : 'На сегодня уроков нет'
-    };
-  }
-
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  const timeTable = [
-    { num: 1, start: 8 * 60, end: 8 * 60 + 45 },
-    { num: 2, start: 8 * 60 + 55, end: 9 * 60 + 40 },
-    { num: 3, start: 9 * 60 + 55, end: 10 * 60 + 40 },
-    { num: 4, start: 10 * 60 + 55, end: 11 * 60 + 40 },
-    { num: 5, start: 11 * 60 + 55, end: 12 * 60 + 40 },
-    { num: 6, start: 12 * 60 + 50, end: 13 * 60 + 35 },
-    { num: 7, start: 13 * 60 + 45, end: 14 * 60 + 30 },
-    { num: 8, start: 14 * 60 + 40, end: 15 * 60 + 25 }
-  ];
-
-  const lastSlotIdx = Math.min(lastLessonIdx, timeTable.length - 1);
-  const lastSlotEnd = timeTable[lastSlotIdx].end;
-
-  if (currentMinutes < timeTable[0].start) {
-    const firstLessonStr = sched[0] || '';
-    const meta = parseLessonName(firstLessonStr, SUBJECT_DB);
-    const nameText = meta[lang] || firstLessonStr;
-    return {
-      iconType: 'sun',
-      title: lang === 'be' ? 'Урокі яшчэ не пачаліся' : 'Уроки еще не начались',
-      sub: `${lang === 'be' ? 'Першы ўрок у 08:00: ' : 'Первый урок в 08:00: '}${nameText}`
-    };
-  }
-
-  if (currentMinutes > lastSlotEnd) {
-    return {
-      iconType: 'sparkles',
-      title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
-      sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
-    };
-  }
-
-  for (let i = 0; i <= lastSlotIdx; i++) {
-    const slot = timeTable[i];
-    if (currentMinutes >= slot.start && currentMinutes <= slot.end) {
-      const left = slot.end - currentMinutes;
-      const lessonStr = sched[i] || '';
-      if (!lessonStr.trim()) {
-        return {
-          iconType: 'coffee',
-          title: `${lang === 'be' ? 'Аконька (урок' : 'Окно (урок'} ${slot.num})`,
-          sub: `${lang === 'be' ? 'Да канца' : 'До конца'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
-        };
-      } else {
-        const meta = parseLessonName(lessonStr, SUBJECT_DB);
-        const nameText = meta[lang] || lessonStr;
-        return {
-          iconType: 'bell',
-          title: `${lang === 'be' ? 'Зараз урок' : 'Сейчас урок'} ${slot.num}: ${nameText}`,
-          sub: `${lang === 'be' ? 'Да канца ўрока' : 'До конца урока'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
-        };
-      }
-    }
-
-    if (i < lastSlotIdx) {
-      const nextSlot = timeTable[i + 1];
-      if (currentMinutes > slot.end && currentMinutes < nextSlot.start) {
-        const left = nextSlot.start - currentMinutes;
-        const nextLessonStr = sched[i + 1] || '';
-        const meta = parseLessonName(nextLessonStr, SUBJECT_DB);
-        const nameText = meta[lang] || nextLessonStr || (lang === 'be' ? 'Аконька' : 'Окно');
-        return {
-          iconType: 'coffee',
-          title: `${lang === 'be' ? 'Перапынак! Наступны' : 'Перемена! Следующий'} №${nextSlot.num}: ${nameText}`,
-          sub: `${lang === 'be' ? 'Да ўрока засталося' : 'До урока осталось'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
-        };
-      }
-    }
-  }
-
-  return {
-    iconType: 'sparkles',
-    title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
-    sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
-  };
-}
-
 export const HomeView: React.FC<HomeViewProps> = ({
   birthdays,
   schedules,
@@ -135,32 +20,144 @@ export const HomeView: React.FC<HomeViewProps> = ({
   lang,
   onNavigate
 }) => {
-  const getTodayBirthdays = () => {
+  const [todayBdays, setTodayBdays] = useState<BirthdayItem[]>([]);
+  const [widgetData, setWidgetData] = useState<{ iconType: 'bell' | 'sun' | 'coffee' | 'sparkles'; title: string; sub: string }>({
+    iconType: 'bell',
+    title: 'Загрузка...',
+    sub: ''
+  });
+
+  // Calculate today's birthdays
+  useEffect(() => {
     const now = new Date();
     const d = now.getDate();
     const m = now.getMonth() + 1;
-    return (birthdays || []).filter(b => {
+    const matches = (birthdays || []).filter(b => {
       if (!b?.date || (b.name && b.name.includes('Иванова'))) return false;
       const parts = b.date.trim().split('.');
       if (parts.length < 2) return false;
       return parseInt(parts[0], 10) === d && parseInt(parts[1], 10) === m;
     });
-  };
-
-  const [todayBdays, setTodayBdays] = useState<BirthdayItem[]>(getTodayBirthdays);
-  const [widgetData, setWidgetData] = useState(() =>
-    calculateWidgetData(schedules, activeProfile, lang)
-  );
-
-  // Calculate today's birthdays
-  useEffect(() => {
-    setTodayBdays(getTodayBirthdays());
+    setTodayBdays(matches);
   }, [birthdays]);
 
   // Update Live Lesson Widget
   useEffect(() => {
     function updateWidget() {
-      setWidgetData(calculateWidgetData(schedules, activeProfile, lang));
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        setWidgetData({
+          iconType: 'sun',
+          title: lang === 'be' ? 'Выхадны дзень' : 'Выходной день',
+          sub: lang === 'be' ? 'Заняткаў няма, адпачывайце!' : 'Занятий нет, отдыхайте!'
+        });
+        return;
+      }
+
+      const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
+      const dayKey = dayKeysMap[dayOfWeek - 1];
+      const sched = (schedules[activeProfile] || schedules.base || Object.values(schedules || {})[0] || {})[dayKey] || [];
+
+      let lastLessonIdx = -1;
+      for (let i = sched.length - 1; i >= 0; i--) {
+        if (sched[i] && typeof sched[i] === 'string' && sched[i].trim()) {
+          lastLessonIdx = i;
+          break;
+        }
+      }
+
+      if (lastLessonIdx === -1) {
+        setWidgetData({
+          iconType: 'coffee',
+          title: translate('no_lessons', lang),
+          sub: lang === 'be' ? 'На сёння ўрокаў няма' : 'На сегодня уроков нет'
+        });
+        return;
+      }
+
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const timeTable = [
+        { num: 1, start: 8 * 60, end: 8 * 60 + 45 },
+        { num: 2, start: 8 * 60 + 55, end: 9 * 60 + 40 },
+        { num: 3, start: 9 * 60 + 55, end: 10 * 60 + 40 },
+        { num: 4, start: 10 * 60 + 55, end: 11 * 60 + 40 },
+        { num: 5, start: 11 * 60 + 55, end: 12 * 60 + 40 },
+        { num: 6, start: 12 * 60 + 50, end: 13 * 60 + 35 },
+        { num: 7, start: 13 * 60 + 45, end: 14 * 60 + 30 },
+        { num: 8, start: 14 * 60 + 40, end: 15 * 60 + 25 }
+      ];
+
+      const lastSlotIdx = Math.min(lastLessonIdx, timeTable.length - 1);
+      const lastSlotEnd = timeTable[lastSlotIdx].end;
+
+      if (currentMinutes < timeTable[0].start) {
+        const firstLessonStr = sched[0] || '';
+        const meta = parseLessonName(firstLessonStr, SUBJECT_DB);
+        const nameText = meta[lang] || firstLessonStr;
+        setWidgetData({
+          iconType: 'sun',
+          title: lang === 'be' ? 'Урокі яшчэ не пачаліся' : 'Уроки еще не начались',
+          sub: `${lang === 'be' ? 'Першы ўрок у 08:00: ' : 'Первый урок в 08:00: '}${nameText}`
+        });
+        return;
+      }
+
+      if (currentMinutes > lastSlotEnd) {
+        setWidgetData({
+          iconType: 'sparkles',
+          title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
+          sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
+        });
+        return;
+      }
+
+      for (let i = 0; i <= lastSlotIdx; i++) {
+        const slot = timeTable[i];
+        if (currentMinutes >= slot.start && currentMinutes <= slot.end) {
+          const left = slot.end - currentMinutes;
+          const lessonStr = sched[i] || '';
+          if (!lessonStr.trim()) {
+            setWidgetData({
+              iconType: 'coffee',
+              title: `${lang === 'be' ? 'Аконька (урок' : 'Окно (урок'} ${slot.num})`,
+              sub: `${lang === 'be' ? 'Да канца' : 'До конца'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
+            });
+          } else {
+            const meta = parseLessonName(lessonStr, SUBJECT_DB);
+            const nameText = meta[lang] || lessonStr;
+            setWidgetData({
+              iconType: 'bell',
+              title: `${lang === 'be' ? 'Зараз урок' : 'Сейчас урок'} ${slot.num}: ${nameText}`,
+              sub: `${lang === 'be' ? 'Да канца ўрока' : 'До конца урока'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
+            });
+          }
+          return;
+        }
+
+        if (i < lastSlotIdx) {
+          const nextSlot = timeTable[i + 1];
+          if (currentMinutes > slot.end && currentMinutes < nextSlot.start) {
+            const left = nextSlot.start - currentMinutes;
+            const nextLessonStr = sched[i + 1] || '';
+            const meta = parseLessonName(nextLessonStr, SUBJECT_DB);
+            const nameText = meta[lang] || nextLessonStr || (lang === 'be' ? 'Аконька' : 'Окно');
+            setWidgetData({
+              iconType: 'coffee',
+              title: `${lang === 'be' ? 'Перапынак! Наступны' : 'Перемена! Следующий'} №${nextSlot.num}: ${nameText}`,
+              sub: `${lang === 'be' ? 'Да ўрока засталося' : 'До урока осталось'}: ${left} ${lang === 'be' ? 'хв' : 'мин'}`
+            });
+            return;
+          }
+        }
+      }
+
+      setWidgetData({
+        iconType: 'sparkles',
+        title: lang === 'be' ? 'Урокі завершаны!' : 'Уроки завершены!',
+        sub: lang === 'be' ? 'Добрага адпачынку!' : 'Хорошего отдыха!'
+      });
     }
 
     updateWidget();
