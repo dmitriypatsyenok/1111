@@ -23,17 +23,30 @@ import {
 import { initTelegramApp, haptic, tg, getTelegramUserName, sendNotification } from './telegram';
 import { Topbar } from './Topbar';
 import { HomeView } from './HomeView';
-import { ScheduleView } from './ScheduleView';
-import { HomeworkView } from './HomeworkView';
-import { CanteenView } from './CanteenView';
-import { EventsView } from './EventsView';
-import { DutiesView } from './DutiesView';
-import { BirthdaysView } from './BirthdaysView';
-import { SettingsView } from './SettingsView';
 import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
 import { translate, getProfileFullTitle } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { subscribeToDoc, updateDocData } from './firebase';
+
+// Lazy load secondary views for fast initial load and lightweight main bundle
+const ScheduleView = React.lazy(() => import('./ScheduleView').then(m => ({ default: m.ScheduleView })));
+const HomeworkView = React.lazy(() => import('./HomeworkView').then(m => ({ default: m.HomeworkView })));
+const CanteenView = React.lazy(() => import('./CanteenView').then(m => ({ default: m.CanteenView })));
+const EventsView = React.lazy(() => import('./EventsView').then(m => ({ default: m.EventsView })));
+const DutiesView = React.lazy(() => import('./DutiesView').then(m => ({ default: m.DutiesView })));
+const BirthdaysView = React.lazy(() => import('./BirthdaysView').then(m => ({ default: m.BirthdaysView })));
+const SettingsView = React.lazy(() => import('./SettingsView').then(m => ({ default: m.SettingsView })));
+
+function ViewSkeleton() {
+  return (
+    <div className="space-y-3 animate-pulse p-1">
+      <div className="h-10 bg-zinc-800/40 rounded-2xl w-full" />
+      <div className="h-28 bg-zinc-800/30 rounded-3xl w-full" />
+      <div className="h-20 bg-zinc-800/30 rounded-3xl w-full" />
+      <div className="h-20 bg-zinc-800/30 rounded-3xl w-full" />
+    </div>
+  );
+}
 
 export default function App() {
   // Telegram setup
@@ -1413,7 +1426,11 @@ export default function App() {
         onBack={handleBack}
       />
 
-      <main className="flex-1 p-3 pb-6">{renderScreen()}</main>
+      <main className="flex-1 p-3 pb-6">
+        <React.Suspense fallback={<ViewSkeleton />}>
+          {renderScreen()}
+        </React.Suspense>
+      </main>
 
       {/* Floating Toast Notification */}
       {toast && (
