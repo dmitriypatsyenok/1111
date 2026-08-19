@@ -216,67 +216,11 @@ export default function App() {
 
   // Real-time Firebase Synchronization across devices
   useEffect(() => {
+    // 1. Critical immediate subscriptions (main screen & settings)
     const unsubSchedules = subscribeToDoc<ScheduleProfiles>(
       'schedules',
       data => { if (data && typeof data === 'object') setSchedules(data); },
       () => updateDocData('schedules', schedules)
-    );
-    const unsubHomework = subscribeToDoc<HomeworkStore>(
-      'homework',
-      data => { if (data && typeof data === 'object') setHomework(data); },
-      () => updateDocData('homework', homework)
-    );
-    const unsubDuties = subscribeToDoc<DutiesStore>(
-      'duties',
-      data => { if (data && typeof data === 'object') setDuties(data); },
-      () => updateDocData('duties', duties)
-    );
-    const unsubBirthdays = subscribeToDoc<BirthdayItem[]>(
-      'birthdays',
-      data => {
-        if (Array.isArray(data)) {
-          const cleaned = data.filter(b => b && b.name && !b.name.includes('Иванова'));
-          setBirthdays(cleaned);
-          if (cleaned.length !== data.length) {
-            updateDocData('birthdays', cleaned);
-          }
-        }
-      },
-      () => updateDocData('birthdays', birthdays)
-    );
-    const unsubEvents = subscribeToDoc<ClassEvent[]>(
-      'events',
-      data => { if (Array.isArray(data)) setEvents(data); },
-      () => updateDocData('events', events)
-    );
-    const unsubPoll = subscribeToDoc<PollData>(
-      'currentPoll',
-      data => {
-        if (data && typeof data === 'object') {
-          setCurrentPoll(data);
-          setSelectedPollDetail(prev => (prev && prev.id === data.id ? data : prev));
-        }
-      },
-      () => updateDocData('currentPoll', currentPoll)
-    );
-    const unsubPollHistory = subscribeToDoc<PollData[]>(
-      'pollHistory',
-      data => {
-        if (Array.isArray(data)) {
-          setPollHistory(data);
-          setSelectedPollDetail(prev => {
-            if (!prev) return prev;
-            const updated = data.find(p => p.id === prev.id);
-            return updated || prev;
-          });
-        }
-      },
-      () => updateDocData('pollHistory', pollHistory)
-    );
-    const unsubIsPollActive = subscribeToDoc<boolean>(
-      'isPollActive',
-      data => { if (typeof data === 'boolean') setIsPollActive(data); },
-      () => updateDocData('isPollActive', isPollActive)
     );
     const unsubTgConfig = subscribeToDoc<{
       token: string;
@@ -298,17 +242,85 @@ export default function App() {
       },
       () => updateDocData('tgConfig', tgConfig)
     );
+    const unsubHomework = subscribeToDoc<HomeworkStore>(
+      'homework',
+      data => { if (data && typeof data === 'object') setHomework(data); },
+      () => updateDocData('homework', homework)
+    );
+    const unsubPoll = subscribeToDoc<PollData>(
+      'currentPoll',
+      data => {
+        if (data && typeof data === 'object') {
+          setCurrentPoll(data);
+          setSelectedPollDetail(prev => (prev && prev.id === data.id ? data : prev));
+        }
+      },
+      () => updateDocData('currentPoll', currentPoll)
+    );
+
+    // 2. Secondary subscriptions queued with a micro-delay to keep UI at 60 FPS on mobile startup
+    let unsubDuties: () => void = () => {};
+    let unsubBirthdays: () => void = () => {};
+    let unsubEvents: () => void = () => {};
+    let unsubPollHistory: () => void = () => {};
+    let unsubIsPollActive: () => void = () => {};
+
+    const timer = setTimeout(() => {
+      unsubDuties = subscribeToDoc<DutiesStore>(
+        'duties',
+        data => { if (data && typeof data === 'object') setDuties(data); },
+        () => updateDocData('duties', duties)
+      );
+      unsubBirthdays = subscribeToDoc<BirthdayItem[]>(
+        'birthdays',
+        data => {
+          if (Array.isArray(data)) {
+            const cleaned = data.filter(b => b && b.name && !b.name.includes('Иванова'));
+            setBirthdays(cleaned);
+            if (cleaned.length !== data.length) {
+              updateDocData('birthdays', cleaned);
+            }
+          }
+        },
+        () => updateDocData('birthdays', birthdays)
+      );
+      unsubEvents = subscribeToDoc<ClassEvent[]>(
+        'events',
+        data => { if (Array.isArray(data)) setEvents(data); },
+        () => updateDocData('events', events)
+      );
+      unsubPollHistory = subscribeToDoc<PollData[]>(
+        'pollHistory',
+        data => {
+          if (Array.isArray(data)) {
+            setPollHistory(data);
+            setSelectedPollDetail(prev => {
+              if (!prev) return prev;
+              const updated = data.find(p => p.id === prev.id);
+              return updated || prev;
+            });
+          }
+        },
+        () => updateDocData('pollHistory', pollHistory)
+      );
+      unsubIsPollActive = subscribeToDoc<boolean>(
+        'isPollActive',
+        data => { if (typeof data === 'boolean') setIsPollActive(data); },
+        () => updateDocData('isPollActive', isPollActive)
+      );
+    }, 60);
 
     return () => {
+      clearTimeout(timer);
       unsubSchedules();
+      unsubTgConfig();
       unsubHomework();
+      unsubPoll();
       unsubDuties();
       unsubBirthdays();
       unsubEvents();
-      unsubPoll();
       unsubPollHistory();
       unsubIsPollActive();
-      unsubTgConfig();
     };
   }, []);
 

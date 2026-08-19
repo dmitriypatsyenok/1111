@@ -43,3 +43,4 @@ export async function updateDocData<T>(docId: string, content: T) {
     console.error(`Error updating ${docId} in Firebase:`, err);
   }
 }
+
