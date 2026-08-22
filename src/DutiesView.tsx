@@ -346,7 +346,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
               {STANDARD_DUTY_ZONES.map(preset => (
                 <button
                   key={preset}
-                  onClick={() => handleCreateZoneSubmit(translateZoneName(preset, lang))}
+                  onClick={() => handleCreateZoneSubmit(preset)}
                   className="py-2.5 px-3 rounded-2xl bg-[#18181C] border border-[#27272A] hover:border-zinc-500 hover:bg-zinc-800 text-xs text-white font-bold text-left transition-all flex items-center justify-between"
                 >
                   <span>{translateZoneName(preset, lang)}</span>

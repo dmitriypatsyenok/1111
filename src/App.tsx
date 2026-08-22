@@ -31,7 +31,7 @@ import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
 import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
-import { translate, getProfileFullTitle } from './i18n';
+import { translate, getProfileFullTitle, translateZoneName } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { subscribeToDoc, updateDocData } from './firebase';
 
@@ -200,6 +200,12 @@ export default function App() {
     };
   });
 
+  const [birthdaysNotified, setBirthdaysNotified] = useState<{
+    lastNotifiedDate?: string;
+  }>(() => ({
+    lastNotifiedDate: localStorage.getItem('ierihon_last_bday_notified') || ''
+  }));
+
   const [tgConfig, setTgConfig] = useState<{
     token: string;
     chatId: string;
@@ -283,6 +289,17 @@ export default function App() {
           }
         },
         () => updateDocData('birthdays', birthdays)
+      );
+      subscribeToDoc<{ lastNotifiedDate?: string }>(
+        'birthdays_notified',
+        data => {
+          if (data && typeof data === 'object') {
+            setBirthdaysNotified(data);
+            if (data.lastNotifiedDate) {
+              localStorage.setItem('ierihon_last_bday_notified', data.lastNotifiedDate);
+            }
+          }
+        }
       );
       unsubEvents = subscribeToDoc<ClassEvent[]>(
         'events',
@@ -386,10 +403,12 @@ export default function App() {
       const todayDDMM = `${day}.${month}`;
       const todayYMD = formatLocalDateToYYYYMMDD(now);
 
-      const lastNotified = localStorage.getItem('ierihon_last_bday_notified');
-      if (lastNotified !== todayYMD) {
+      const localLastNotified = localStorage.getItem('ierihon_last_bday_notified');
+      const remoteLastNotified = birthdaysNotified?.lastNotifiedDate;
+
+      if (localLastNotified !== todayYMD && remoteLastNotified !== todayYMD) {
         const todayBirthdays = birthdays.filter(b => {
-          if (!b.date) return false;
+          if (!b.date || (b.name && b.name.includes('Иванова'))) return false;
           const parts = b.date.trim().split('.');
           if (parts.length >= 2) {
             const d = parts[0].padStart(2, '0');
@@ -403,17 +422,25 @@ export default function App() {
           const names = todayBirthdays.map(b => b.name).join(', ');
           const ruTitle = '🎂 День рождения сегодня!';
           const ruMsg = `Сегодня празднует: ${names}! Поздравляем! 🎉`;
+
+          localStorage.setItem('ierihon_last_bday_notified', todayYMD);
+          setBirthdaysNotified({ lastNotifiedDate: todayYMD });
+          updateDocData('birthdays_notified', {
+            lastNotifiedDate: todayYMD,
+            notifiedNames: names,
+            notifiedAt: new Date().toISOString()
+          });
+
           sendNotification(
             lang === 'be' ? '🎂 Дзень нараджэння сёння!' : ruTitle,
             lang === 'be' ? `Сёння святкуе: ${names}! Віншуем! 🎉` : ruMsg,
             ruTitle,
             ruMsg
           );
-          localStorage.setItem('ierihon_last_bday_notified', todayYMD);
         }
       }
     }
-  }, [birthdays, lang]);
+  }, [birthdays, birthdaysNotified?.lastNotifiedDate]);
 
   useEffect(() => {
     localStorage.setItem('ierihon_events', JSON.stringify(events));
@@ -467,11 +494,12 @@ export default function App() {
 
   // DUTY ZONE HANDLERS (2-level system)
   const handleCreateZone = (dayKey: DayKey, zoneName: string) => {
+    const canonicalName = translateZoneName(zoneName.trim(), 'ru');
     setDuties(prev => {
       const dayZones = prev[dayKey] || [];
       const newZone = {
         id: 'zone_' + Date.now(),
-        name: zoneName,
+        name: canonicalName,
         students: []
       };
       const nextDuties = {
@@ -482,11 +510,33 @@ export default function App() {
       return nextDuties;
     });
 
+    const dayNameRu: Record<DayKey, string> = {
+      pn: 'Понедельник',
+      vt: 'Вторник',
+      sr: 'Среда',
+      cht: 'Четверг',
+      pt: 'Пятница'
+    };
+    const dayNameBe: Record<DayKey, string> = {
+      pn: 'Панядзелак',
+      vt: 'Аўторак',
+      sr: 'Серада',
+      cht: 'Чацвер',
+      pt: 'Пятніца'
+    };
+
+    const ruZoneName = translateZoneName(zoneName, 'ru');
+    const beZoneName = translateZoneName(zoneName, 'be');
+
     const ruTitle = '🧹 Новая зона дежурства';
-    const ruMsg = zoneName;
+    const ruMsg = `День: ${dayNameRu[dayKey] || dayKey}\nЗона: ${ruZoneName}`;
+
+    const beTitle = '🧹 Новая зона дзяжурства';
+    const beMsg = `Дзень: ${dayNameBe[dayKey] || dayKey}\nЗона: ${beZoneName}`;
+
     sendNotification(
-      lang === 'be' ? '🧹 Новая зона дзяжурства' : ruTitle,
-      zoneName,
+      lang === 'be' ? beTitle : ruTitle,
+      lang === 'be' ? beMsg : ruMsg,
       ruTitle,
       ruMsg
     );
@@ -536,13 +586,14 @@ export default function App() {
     newName: string,
     students: string[]
   ) => {
+    const canonicalName = translateZoneName(newName.trim(), 'ru');
     setDuties(prev => {
       const dayZones = prev[dayKey] || [];
       const updatedZones = dayZones.map(z => {
         if (z.id === zoneId) {
           return {
             ...z,
-            name: newName.trim() || z.name,
+            name: canonicalName || z.name,
             students
           };
         }

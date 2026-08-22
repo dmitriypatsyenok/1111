@@ -368,17 +368,27 @@ export function getProfileFullTitle(pKey: string, schedules?: any, lang: Languag
 
 export function translateZoneName(name: string, lang: Language = 'ru'): string {
   if (!name) return name;
-  const lower = name.trim().toLowerCase();
+  const trimmed = name.trim();
+  const lower = trimmed.toLowerCase();
   if (lang === 'be') {
     if (lower === 'столовая' || lower === 'сталовая') return 'Сталовая';
     if (lower === '1 этаж' || lower === '1 паверх') return '1 паверх';
     if (lower === '2 этаж' || lower === '2 паверх') return '2 паверх';
     if (lower === '3 этаж' || lower === '3 паверх') return '3 паверх';
+    return trimmed
+      .replace(/\b1\s*этаж\b/gi, '1 паверх')
+      .replace(/\b2\s*этаж\b/gi, '2 паверх')
+      .replace(/\b3\s*этаж\b/gi, '3 паверх')
+      .replace(/\bстоловая\b/gi, 'Сталовая');
   } else {
     if (lower === 'сталовая' || lower === 'столовая') return 'Столовая';
     if (lower === '1 паверх' || lower === '1 этаж') return '1 этаж';
     if (lower === '2 паверх' || lower === '2 этаж') return '2 этаж';
     if (lower === '3 паверх' || lower === '3 этаж') return '3 этаж';
+    return trimmed
+      .replace(/\b1\s*паверх\b/gi, '1 этаж')
+      .replace(/\b2\s*паверх\b/gi, '2 этаж')
+      .replace(/\b3\s*паверх\b/gi, '3 этаж')
+      .replace(/\bсталовая\b/gi, 'Столовая');
   }
-  return name;
 }
