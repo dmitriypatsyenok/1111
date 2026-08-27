@@ -302,10 +302,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
         <div className="space-y-2">
           {(() => {
-            const allProfileKeys = Object.keys(schedules || {}).filter(k => k !== 'base');
+            const allProfileKeys = Object.keys(schedules || {});
             const profileKeys = [
-              ...['math', 'chem'].filter(k => allProfileKeys.includes(k)),
-              ...allProfileKeys.filter(k => !['math', 'chem'].includes(k))
+              ...['base', 'math', 'chem'].filter(k => allProfileKeys.includes(k)),
+              ...allProfileKeys.filter(k => !['base', 'math', 'chem'].includes(k))
             ] as ProfileKey[];
 
             return profileKeys.map(pKey => {

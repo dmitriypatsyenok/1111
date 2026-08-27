@@ -31,7 +31,7 @@ import { DutiesView } from './DutiesView';
 import { BirthdaysView } from './BirthdaysView';
 import { SettingsView } from './SettingsView';
 import { parseAndNormalizeSchedule, extractSubjectKey, getNextSchoolDay, getNextLessonDate, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
-import { translate, getProfileFullTitle, translateZoneName, getStudentDisplayName } from './i18n';
+import { translate, getProfileFullTitle, translateZoneName } from './i18n';
 import { Users, Calendar } from 'lucide-react';
 import { subscribeToDoc, updateDocData } from './firebase';
 
@@ -84,8 +84,8 @@ export default function App() {
 
   const [activeProfile, setActiveProfile] = useState<ProfileKey>(() => {
     const saved = localStorage.getItem('ierihon_profile');
-    if (saved === 'math' || saved === 'chem') return saved;
-    return 'math';
+    if (saved === 'base' || saved === 'math' || saved === 'chem') return saved;
+    return 'base';
   });
 
   const getTodayDayKey = (): DayKey => {
@@ -147,8 +147,7 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const cleaned = parsed.filter(b => b && b.name && !b.name.includes('Иванова') && !b.name.includes('Каверзникова') && !b.name.includes('Рыбарт'));
-          if (cleaned.length > 0) return cleaned;
+          return parsed.filter(b => b && b.name && !b.name.includes('Иванова'));
         }
       } catch (e) { /* ignore */ }
     }
@@ -226,17 +225,7 @@ export default function App() {
     // 1. Critical immediate subscriptions (main screen & settings)
     const unsubSchedules = subscribeToDoc<ScheduleProfiles>(
       'schedules',
-      data => {
-        if (data && typeof data === 'object') {
-          if ('base' in data) {
-            const { base, ...rest } = data as any;
-            setSchedules(rest);
-            updateDocData('schedules', rest);
-          } else {
-            setSchedules(data);
-          }
-        }
-      },
+      data => { if (data && typeof data === 'object') setSchedules(data); },
       () => updateDocData('schedules', schedules)
     );
     const unsubTgConfig = subscribeToDoc<{
@@ -292,7 +281,7 @@ export default function App() {
         'birthdays',
         data => {
           if (Array.isArray(data)) {
-            const cleaned = data.filter(b => b && b.name && !b.name.includes('Иванова') && !b.name.includes('Каверзникова') && !b.name.includes('Рыбарт'));
+            const cleaned = data.filter(b => b && b.name && !b.name.includes('Иванова'));
             setBirthdays(cleaned);
             if (cleaned.length !== data.length) {
               updateDocData('birthdays', cleaned);
@@ -430,24 +419,21 @@ export default function App() {
         });
 
         if (todayBirthdays.length > 0) {
-          const namesRu = todayBirthdays.map(b => getStudentDisplayName(b, 'ru')).join(', ');
-          const namesBe = todayBirthdays.map(b => getStudentDisplayName(b, 'be')).join(', ');
+          const names = todayBirthdays.map(b => b.name).join(', ');
           const ruTitle = '🎂 День рождения сегодня!';
-          const ruMsg = `Сегодня празднует: ${namesRu}! Поздравляем! 🎉`;
-          const beTitle = '🎂 Дзень нараджэння сёння!';
-          const beMsg = `Сёння святкуе: ${namesBe}! Віншуем! 🎉`;
+          const ruMsg = `Сегодня празднует: ${names}! Поздравляем! 🎉`;
 
           localStorage.setItem('ierihon_last_bday_notified', todayYMD);
           setBirthdaysNotified({ lastNotifiedDate: todayYMD });
           updateDocData('birthdays_notified', {
             lastNotifiedDate: todayYMD,
-            notifiedNames: namesRu,
+            notifiedNames: names,
             notifiedAt: new Date().toISOString()
           });
 
           sendNotification(
-            lang === 'be' ? beTitle : ruTitle,
-            lang === 'be' ? beMsg : ruMsg,
+            lang === 'be' ? '🎂 Дзень нараджэння сёння!' : ruTitle,
+            lang === 'be' ? `Сёння святкуе: ${names}! Віншуем! 🎉` : ruMsg,
             ruTitle,
             ruMsg
           );
@@ -676,14 +662,14 @@ export default function App() {
     const subjNameBe = dbItem ? dbItem.be : baseKey;
 
     let isProf = false;
-    if (baseKey === 'rus_lang') {
-      isProf = true;
-    } else if (subjectKey.startsWith('prof_') || subjectKey.startsWith('math_') || subjectKey.startsWith('chem_')) {
+    if (subjectKey.startsWith('prof_') || subjectKey.startsWith('math_') || subjectKey.startsWith('chem_')) {
       isProf = true;
     } else if (subjectKey.startsWith('base_')) {
       isProf = false;
     } else {
-      if (['math', 'algebra', 'geometry'].includes(baseKey)) {
+      if (baseKey === 'rus_lang') {
+        isProf = activeProfile === 'math' || activeProfile === 'chem';
+      } else if (['math', 'algebra', 'geometry'].includes(baseKey)) {
         isProf = activeProfile === 'math';
       } else if (baseKey === 'chem') {
         isProf = activeProfile === 'chem';
@@ -853,7 +839,7 @@ export default function App() {
       const emptyPollHistory: PollData[] = [];
 
       setSchedules(DEFAULT_SCHEDULES);
-      setActiveProfile('math');
+      setActiveProfile('base');
       setHomework(emptyHw);
       setDuties(emptyDuties);
       setEvents(emptyEvents);
@@ -863,8 +849,7 @@ export default function App() {
       setIsPollActive(false);
 
       localStorage.setItem('ierihon_schedules', JSON.stringify(DEFAULT_SCHEDULES));
-      localStorage.setItem('ierihon_active_profile', 'math');
-      localStorage.setItem('ierihon_profile', 'math');
+      localStorage.setItem('ierihon_active_profile', 'base');
       localStorage.setItem('ierihon_homework', JSON.stringify(emptyHw));
       localStorage.setItem('ierihon_duties', JSON.stringify(emptyDuties));
       localStorage.setItem('ierihon_events', JSON.stringify(emptyEvents));

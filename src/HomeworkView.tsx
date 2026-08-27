@@ -102,10 +102,8 @@ export const HomeworkView: React.FC<HomeworkViewProps> = ({
   const daysDict = translate('t_days_s', lang) as any;
 
   // Profile keys list
-  const availableProfileKeys = (schedules && Object.keys(schedules).length > 0)
-    ? (Object.keys(schedules).filter(k => k !== 'base') as ProfileKey[])
-    : ['math', 'chem'];
-  const effectiveProfile = availableProfileKeys.includes(activeProfile) ? activeProfile : (availableProfileKeys[0] || 'math');
+  const availableProfileKeys = (schedules && Object.keys(schedules).length > 0) ? (Object.keys(schedules) as ProfileKey[]) : ['base'];
+  const effectiveProfile = availableProfileKeys.includes(activeProfile) ? activeProfile : availableProfileKeys[0];
 
   const getSubjectHwListLocal = (subjKey: string) => {
     return getSubjectHwList(subjKey, effectiveProfile, homeworkStore);

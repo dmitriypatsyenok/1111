@@ -1,9 +1,7 @@
 {
-  "name": "1111",
-  "main": "src/worker.ts",
-  "compatibility_date": "2024-09-23",
+  "name": "111",
+  "compatibility_date": "2024-01-01",
   "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS"
+    "directory": "./dist"
   }
 }

@@ -34,7 +34,6 @@ export interface DutiesStore {
 
 export interface BirthdayItem {
   name: string;
-  nameBe?: string;
   date: string; // "DD.MM"
 }
 

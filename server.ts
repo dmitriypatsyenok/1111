@@ -61,13 +61,7 @@ async function checkAndSendBirthdayNotifications() {
     });
 
     if (todayBirthdays.length > 0) {
-      const names = todayBirthdays.map((b: any) => {
-        const raw = String(b.name || '').trim();
-        if (raw.includes(',')) {
-          return raw.split(',')[0].trim();
-        }
-        return raw;
-      }).join(', ');
+      const names = todayBirthdays.map((b: any) => b.name).join(', ');
       const text = `<b>🎂 День рождения сегодня!</b>\nСегодня празднует: ${names}! Поздравляем! 🎉`;
 
       // Set lock in Firestore first to prevent duplicate sends across instances
