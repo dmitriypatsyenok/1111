@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Language, PollData, PollStatus, ScreenType } from './types';
-import { translate } from './i18n';
+import { translate, getStudentDisplayName } from './i18n';
 import { formatCustomDate, getNextSchoolDay, formatMonthYear, parseLocalDate, formatLocalDateToYYYYMMDD } from './dateFormatter';
 import { Vote, BarChart2, CheckCircle2, XCircle, Home, Edit3, ChevronRight, Calendar, TrendingUp, PieChart, Users, Award, Filter, Sparkles, Utensils, UserX, AlertTriangle } from 'lucide-react';
 import { haptic, getTelegramUserName } from './telegram';
@@ -609,7 +609,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                                       : 'bg-[#202020] text-[#ccc] border-[#333] hover:border-indigo-500/50 hover:text-white'
                                   }`}
                                 >
-                                  <span>{st.name}</span>
+                                  <span>{getStudentDisplayName(st.name, lang)}</span>
                                   <span className={`text-[9px] font-mono ${isSelected ? 'text-indigo-200' : 'text-indigo-400'}`}>
                                     {st.tag}
                                   </span>
@@ -723,7 +723,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                                       {st.name.charAt(0).toUpperCase()}
                                     </div>
                                     <div className="min-w-0">
-                                      <div className="text-xs font-bold text-white truncate">{st.name}</div>
+                                      <div className="text-xs font-bold text-white truncate">{getStudentDisplayName(st.name, lang)}</div>
                                       <div className="text-[10px] text-[#888]">
                                         {count} {lang === 'be' ? 'раз(ы)' : 'раз(а)'}
                                       </div>
@@ -946,7 +946,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
 
               return (
                 <div key={i} className="py-2.5 flex items-center justify-between text-xs text-white">
-                  <span className="font-semibold">{v.name}</span>
+                  <span className="font-semibold">{getStudentDisplayName(v.name, lang)}</span>
                   <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${colorClass}`}>
                     {stLbl}
                   </span>
@@ -1077,7 +1077,7 @@ export const CanteenView: React.FC<CanteenViewProps> = ({
                                 {st.name.charAt(0).toUpperCase()}
                               </div>
                               <div className="min-w-0">
-                                <div className="text-xs font-bold text-white truncate">{st.name}</div>
+                                <div className="text-xs font-bold text-white truncate">{getStudentDisplayName(st.name, lang)}</div>
                                 <div className="text-[10px] text-[#888]">
                                   {lang === 'be' ? 'Апытанняў' : 'Опросов'}: {st.totalVotes}
                                 </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BirthdayItem, Language } from './types';
-import { translate } from './i18n';
+import { translate, getStudentDisplayName } from './i18n';
 import { getMonthNominal } from './dateFormatter';
 import { Cake, Calendar, Gift, Sparkles } from 'lucide-react';
 
@@ -52,7 +52,7 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             </div>
             <div className="text-xs text-white mt-0.5 font-bold">
-              {todayBdays.map(b => b.name).join(', ')}
+              {todayBdays.map(b => getStudentDisplayName(b, lang)).join(', ')}
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold text-white truncate">
-                        {item.name}
+                        {getStudentDisplayName(item, lang)}
                       </div>
                       <div className="text-[11px] text-zinc-300 font-semibold mt-0.5">
                         {item.date}
@@ -100,3 +100,4 @@ export const BirthdaysView: React.FC<BirthdaysViewProps> = ({ birthdays, lang })
     </div>
   );
 };
+

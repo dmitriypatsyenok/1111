@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BirthdayItem, DayKey, DutiesStore, DutyZone, Language } from './types';
-import { translate, translateZoneName } from './i18n';
+import { translate, translateZoneName, getStudentDisplayName } from './i18n';
 import { STANDARD_DUTY_ZONES } from './defaultData';
 import { Plus, Search, Trash2, UserPlus, MapPin, User, Edit2, Check } from 'lucide-react';
 import { haptic } from './telegram';
@@ -132,7 +132,8 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
 
       zones.forEach(z => {
         z.students.forEach(sName => {
-          if (sName.toLowerCase().includes(queryClean)) {
+          const sDisp = getStudentDisplayName(sName, lang).toLowerCase();
+          if (sName.toLowerCase().includes(queryClean) || sDisp.includes(queryClean)) {
             searchResults.push({
               studentName: sName,
               dayKey: dKey,
@@ -156,9 +157,14 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
       }
     });
   }
-  const filteredRoster = combinedRoster.filter(b =>
-    b.name.toLowerCase().includes(rosterFilter.trim().toLowerCase())
-  );
+  const filteredRoster = combinedRoster.filter(b => {
+    const f = rosterFilter.trim().toLowerCase();
+    if (!f) return true;
+    return (
+      b.name.toLowerCase().includes(f) ||
+      getStudentDisplayName(b.name, lang).toLowerCase().includes(f)
+    );
+  });
 
   return (
     <div className="space-y-3.5 animate-fade-in">
@@ -197,7 +203,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-white truncate">
-                      {res.studentName}
+                      {getStudentDisplayName(res.studentName, lang)}
                     </div>
                     <div className="text-[11px] text-zinc-300 mt-0.5">
                       {translate('duty_on_days', lang)}{' '}
@@ -298,7 +304,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                           className="flex items-center justify-between bg-[#18181C] border border-[#27272A] rounded-xl px-3 py-2"
                         >
                           <span className="text-xs text-white font-medium">
-                            {st}
+                            {getStudentDisplayName(st, lang)}
                           </span>
                           <button
                             onClick={() => {
@@ -479,7 +485,7 @@ export const DutiesView: React.FC<DutiesViewProps> = ({
                             : 'bg-zinc-800/80 hover:bg-zinc-800 text-[#aaa] border border-transparent'
                         }`}
                       >
-                        <span className="text-xs">{b.name}</span>
+                        <span className="text-xs">{getStudentDisplayName(b.name, lang)}</span>
                         <div
                           className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
                             isSelected

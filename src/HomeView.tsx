@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BirthdayItem, Language, ProfileKey, ScheduleProfiles, ScreenType } from './types';
-import { translate } from './i18n';
+import { translate, getStudentDisplayName } from './i18n';
 import { formatCustomDate, parseLessonName } from './dateFormatter';
 import { SUBJECT_DB } from './defaultData';
 import { BookOpen, Calendar, Settings, Users, Utensils, Ruler, Cake, Bell, Sun, Coffee, Sparkles } from 'lucide-react';
@@ -31,7 +31,7 @@ function calculateWidgetData(
 
   const dayKeysMap: Array<'pn' | 'vt' | 'sr' | 'cht' | 'pt'> = ['pn', 'vt', 'sr', 'cht', 'pt'];
   const dayKey = dayKeysMap[dayOfWeek - 1];
-  const sched = (schedules[activeProfile] || schedules.base || Object.values(schedules || {})[0] || {})[dayKey] || [];
+  const sched = (schedules[activeProfile] || schedules.math || schedules.chem || Object.values(schedules || {})[0] || {})[dayKey] || [];
 
   let lastLessonIdx = -1;
   for (let i = sched.length - 1; i >= 0; i--) {
@@ -202,7 +202,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {translate('today_birthdays', lang)}
             </div>
             <div className="text-xs text-white mt-0.5 font-medium truncate">
-              {todayBdays.map(b => b.name).join(', ')}
+              {todayBdays.map(b => getStudentDisplayName(b, lang)).join(', ')}
             </div>
           </div>
         </div>
