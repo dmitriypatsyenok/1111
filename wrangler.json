@@ -1,7 +1,9 @@
 {
-  "name": "111",
-  "compatibility_date": "2024-01-01",
+  "name": "1111",
+  "compatibility_date": "2024-09-23",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
   }
 }
